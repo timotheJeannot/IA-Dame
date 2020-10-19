@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/jeannot/Documents/M2/IA-DAME/IA-Dame/build/test_gf.cc
+gf/Action.h
+-
+gf/Clock.h
+-
+gf/Color.h
+-
+gf/EntityContainer.h
+-
+gf/Event.h
+-
+gf/RenderWindow.h
+-
+gf/ViewContainer.h
+-
+gf/Views.h
+-
+gf/Window.h
+-
+

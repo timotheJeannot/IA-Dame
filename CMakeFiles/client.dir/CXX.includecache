@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/jeannot/Documents/M2/IA-DAME/IA-Dame/build/client.cc
+iostream
+-
+cstring
+-
+string
+-
+gf/TcpSocket.h
+-
+gf/Packet.h
+-
+protocole.h
+/home/jeannot/Documents/M2/IA-DAME/IA-Dame/build/protocole.h
+
+/home/jeannot/Documents/M2/IA-DAME/IA-Dame/build/protocole.h
+
