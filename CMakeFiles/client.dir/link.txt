@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/client.dir/build/client.cc.o  -o client  -lgf0 -lgfnet0 

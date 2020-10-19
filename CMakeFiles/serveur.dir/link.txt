@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/serveur.dir/build/serveur.cc.o  -o serveur  -lgf0 -lgfnet0 
