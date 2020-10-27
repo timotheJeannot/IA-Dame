@@ -5,16 +5,16 @@ project(TEST_GF
 find_package(gf REQUIRED)
 #find_package(gfnet0 REQUIRED)
 add_executable(test_gf 
-  build/test_gf.cc
+  test_gf.cc
   # and the rest of your sources
 )
 
 add_executable(client
-	build/client.cc
+	Client/client.cc
 )
 
 add_executable(serveur
-	build/serveur.cc
+	Serveur/serveur.cc
 )
 
 
@@ -29,11 +29,13 @@ target_link_libraries(test_gf
 target_link_libraries(client
 	gf0
 	gfnet0
+	gfcore0
 )
 
 target_link_libraries(serveur
 	gf0
 	gfnet0
+	gfcore0
 )
 
 
