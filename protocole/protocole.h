@@ -55,13 +55,14 @@ template<typename Archive>
 
  typedef enum { UN, DEUX, TROIS, QUATRE, CINQ , SIX , SEPT , HUIT , NEUF , DIX } Num;
 
- typedef struct  {
-    Num l;           /* Ligne de la position d'un pion */
-    Num c;          /* Colonne de la position d'un pion */
-}Case;
+ struct Case {
+ 	static constexpr gf::Id type = "Case"_id;
+	Num l;           /* Ligne de la position d'un pion */
+	Num c;          /* Colonne de la position d'un pion */
+};
 
 template<typename Archive>
-  Archive operator|(Archive& ar, Case& data) {
+  Archive& operator|(Archive& ar, Case& data) {
     return ar | data.l | data.c;
   }
 
@@ -72,13 +73,14 @@ template<typename Archive>
 /* Choix du pion */
  typedef enum { PION , DAME} TypePion;
 
- typedef struct {
-    Coul coulPion;          /* Couleur du pion */
-    TypePion typePion;      /* Type du pion joue */
-}Pion ;
+struct Pion{
+	static constexpr gf::Id type = "Pion"_id;
+	Coul coulPion;          /* Couleur du pion */
+	TypePion typePion;      /* Type du pion joue */
+} ;
 
 template<typename Archive>
-  Archive operator|(Archive& ar, Pion& data) {
+  Archive& operator|(Archive& ar, Pion& data) {
     return ar | data.coulPion | data.typePion;
   }
 
@@ -88,16 +90,16 @@ template<typename Archive>
 struct CoupReq{
     static constexpr gf::Id type = "CoupReq"_id;
     IdReq     idRequest;     /* Identificateur de la requete */
-    int        numPartie;     /* Numero de la partie (commencant a 1) */
-    bool       estBloque;     /* Info si le joueur est bloque (vrai) ou non */
+    bool      estBloque;     /* Info si le joueur est bloque (vrai) ou non */
     Pion      pion;          /* Info sur le pion joue */
-    Case      posPion;       /* Position de la case du pion joue */
+    Case      posPionAv;       /* Position de la case du pion avant le coup */
+    Case      posPionAp;	/* Position de la case du pion avant le coup */
     PropCoup  propCoup;      /* Propriete du coup proposee par le joueur */
 };
 
 template<typename Archive>
   Archive operator|(Archive& ar, CoupReq& data) {
-    return ar | data.idRequest | data.numPartie | data.estBloque | data.pion | data.posPion | data.propCoup ;
+    return ar | data.idRequest | data.estBloque | data.pion | data.posPionAv | data.posPionAp | data.propCoup ;
   }
 
 /* Validite du coup */

@@ -71,10 +71,185 @@ int main(int argc, char ** argv)
 
     gf::Packet packet;
     packet.is(req);
-    socket.sendPacket(packet);
+    if(gf::SocketStatus::Data != socket.sendPacket(packet))
+    {
+        cerr<<"erreur lors de l'envoie de demande partie au serveur";
+        socket.~TcpSocket();
+        return -1;
+    }
 
+    if( gf::SocketStatus::Data != socket.recvPacket(packet))
+    {
+        cerr<<"erreur lors de la réception de confirmation de partie du serveur";
+        socket.~TcpSocket();
+        return -1;
+    }
+
+    auto repPartie = packet.as<PartieRep>();
+
+    Coul couleur ;
+    if(repPartie.validCoulPion == OK)
+    {
+      couleur = (req.coulPion == BLANC)? BLANC : NOIR;
+    }
+    else
+    {
+      couleur = (req.coulPion == BLANC)? NOIR : BLANC;
+    }
+    
+    
+
+    /************** Début de partie ********************/
     while (true)
     {
+        if(couleur == BLANC) // On commence
+        {
+          
+          CoupReq coup ;
+          coup.idRequest = COUP;
+          coup.estBloque = false;
+          Pion pion ;
+          pion.coulPion = couleur;
+          pion.typePion = PION;
+          coup.pion = pion;
+          coup.propCoup = CONT ;
+
+          cout<<"Donnez la coordonnée vertical pour le choix de la pièce \n";
+          int x;
+          cin>>x;
+          cout<<"Donnez la coordonnée horizontal pour le choix de la pièce \n";
+          int y ;
+          cin>>y;
+
+          Case c;
+          c.l = Num (y);
+          c.c = (Num) x;
+
+          coup.posPionAv = c;
+
+          cout<<"Donnez la coordonnée vertical pour le choix de la  future position de la pièce \n";
+          cin>>x;
+          cout<<"Donnez la coordonnée horizontal pour le choix de la future position de la pièce \n";
+          cin>>y;
+
+          c.l = Num (y);
+          c.c = (Num) x;
+
+          coup.posPionAp = c;
+
+          packet.is(coup);
+          if(gf::SocketStatus::Data != socket.sendPacket(packet))
+          {
+              cerr<<"erreur lors de l'envoie de coup";
+              socket.~TcpSocket();
+              return -1;
+          }
+
+          if( gf::SocketStatus::Data != socket.recvPacket(packet))
+          {
+              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
+              socket.~TcpSocket();
+              return -1;
+          }
+
+          auto coupRep = packet.as<CoupRep>();
+
+
+          if( gf::SocketStatus::Data != socket.recvPacket(packet))
+          {
+              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
+              socket.~TcpSocket();
+              return -1;
+          }
+
+          auto coupAdv = packet.as<CoupReq>();
+
+          if( gf::SocketStatus::Data != socket.recvPacket(packet))
+          {
+              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
+              socket.~TcpSocket();
+              return -1;
+          }
+
+          auto coupAdvRep = packet.as<CoupRep>();
+          
+
+
+        }
+        else
+        {
+
+          if( gf::SocketStatus::Data != socket.recvPacket(packet))
+          {
+              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
+              socket.~TcpSocket();
+              return -1;
+          }
+
+          auto coupAdv = packet.as<CoupReq>();
+
+          if( gf::SocketStatus::Data != socket.recvPacket(packet))
+          {
+              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
+              socket.~TcpSocket();
+              return -1;
+          }
+
+          auto coupAdvRep = packet.as<CoupRep>();
+
+          CoupReq coup ;
+          coup.idRequest = COUP;
+          coup.estBloque = false;
+          Pion pion ;
+          pion.coulPion = couleur;
+          pion.typePion = PION;
+          coup.pion = pion;
+          coup.propCoup = CONT ;
+
+          cout<<"Donnez la coordonnée vertical pour le choix de la pièce \n";
+          int x;
+          cin>>x;
+          cout<<"Donnez la coordonnée horizontal pour le choix de la pièce \n";
+          int y ;
+          cin>>y;
+
+          Case c;
+          c.l = Num (y);
+          c.c = (Num) x;
+
+          coup.posPionAv = c;
+
+          cout<<"Donnez la coordonnée vertical pour le choix de la  future position de la pièce \n";
+          cin>>x;
+          cout<<"Donnez la coordonnée horizontal pour le choix de la future position de la pièce \n";
+          cin>>y;
+
+          c.l = Num (y);
+          c.c = (Num) x;
+
+          coup.posPionAp = c;
+
+          packet.is(coup);
+          if(gf::SocketStatus::Data != socket.sendPacket(packet))
+          {
+              cerr<<"erreur lors de l'envoie de coup";
+              socket.~TcpSocket();
+              return -1;
+          }
+
+          if( gf::SocketStatus::Data != socket.recvPacket(packet))
+          {
+              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
+              socket.~TcpSocket();
+              return -1;
+          }
+
+          auto coupRep = packet.as<CoupRep>();
+
+          
+
+          
+        }
         
     }
     
