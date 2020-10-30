@@ -17,7 +17,7 @@ class Joueur {
     Joueur(std::string c, std::list<Piece> pc);
     Joueur();
 
-    void coup(Piece av , Piece ap);
+    void coup(Piece p);
     
     
 };

@@ -2,18 +2,16 @@
 #define DEF_PION
 
 #include "Case.h"
-#include "Plateau.h"
+#include "Piece.h"
 
-class Pion:Piece{
-    bool pris;
-    Case c;
+class Pion: public Piece{
 
 public:
 
     Pion( Case ca,bool p);
     Pion(Case ca);
     Pion(int colonne , int ligne);
-    virtual void deplacement(Case vise, Plateau pl) = 0;
+    std::list<Case> deplacementPossible();
 };
 
 #endif

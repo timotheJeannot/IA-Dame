@@ -8,6 +8,7 @@
 
 class  Piece{
 
+protected:
     bool pris;
     Case c;
 
@@ -21,7 +22,7 @@ public:
     bool Pris();
     void setPris(bool b);
     void setCase(Case ca);
-    virtual void deplacement(Case vise, Plateau pl) = 0;
+    virtual std::list<Case> deplacementPossible() = 0;
 
 
 };

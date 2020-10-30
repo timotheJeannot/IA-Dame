@@ -11,7 +11,7 @@ Joueur::Joueur()
 
 }
 
-void Joueur::coup(Piece )
+void Joueur::coup(Piece p)
 {
-    pieces.
+
 }
