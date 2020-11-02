@@ -3,7 +3,7 @@
 
 
 class Case{
-    int colonne;
+    int colonne; // ligne et colonne sont >= 0 et <= 9 case en haut à gauche a pour position (0,0)
     int ligne;
 
 public :

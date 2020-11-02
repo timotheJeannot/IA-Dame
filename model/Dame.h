@@ -7,17 +7,18 @@
 
 #include "Case.h"
 #include "Piece.h"
-
+#include "Plateau.h"
 
 
 class Dame: public Piece{
 public:
 
     Dame();
-    Dame(Case ca,bool p);
-    Dame(Case ca);
-    Dame(int colonne , int ligne);
-    std::list<Case> deplacementPossible();
+    Dame(Case ca,bool p , bool b);
+    Dame(Case ca , bool b);
+    Dame(int colonne , int ligne , bool b);
+    std::vector<Case> deplacementPossible(Plateau p);
+    std::vector<Case> deplacementPrisePossible(Plateau p); // les deplacements qui font une prise
 };
 
 

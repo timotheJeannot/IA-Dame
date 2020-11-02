@@ -1,7 +1,7 @@
 #ifndef DEF_JOUEUR
 #define DEF_JOUEUR
 
-#include <list>
+#include <vector>
 #include<string>
 
 #include "Piece.h"
@@ -10,14 +10,14 @@
 class Joueur {
     std::string couleur;
     Plateau plateau;
-    std::list<Piece> pieces;
+    std::vector<Piece> pieces;
 
     public :
 
-    Joueur(std::string c, std::list<Piece> pc);
+    Joueur(std::string c, std::vector<Piece> pc);
     Joueur();
 
-    void coup(Piece p);
+    //void coup(Piece p);
     
     
 };

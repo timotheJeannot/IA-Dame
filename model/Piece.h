@@ -11,18 +11,21 @@ class  Piece{
 protected:
     bool pris;
     Case c;
+    bool blanc;
 
 public:
 
-    Piece( Case ca,bool p);
-    Piece(Case ca);
-    Piece(int colonne , int ligne);
+    Piece( Case ca,bool p , bool b);
+    Piece(Case ca , bool b);
+    Piece(int colonne , int ligne , bool b);
     Piece();
     Case getCase();
-    bool Pris();
+    bool getPris();
+    bool getBlanc();
     void setPris(bool b);
     void setCase(Case ca);
-    virtual std::list<Case> deplacementPossible() = 0;
+    void setBlanc(bool b);
+    virtual std::vector<Case> deplacementPossible(Plateau p) = 0;
 
 
 };
