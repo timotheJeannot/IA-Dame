@@ -18,33 +18,33 @@ using namespace gf::literals;
 	       ERR_PARTIE,  /* Erreur sur la demande de partie */
 	       ERR_COUP,    /* Erreur sur le coup joue */
 	       ERR_TYP      /* Erreur sur le type de requete */
-} CodeRep;
+} TCodeRep;
 
 /* 
  * Structures demande de partie
  */ 
- typedef enum { BLANC, NOIR } Coul;
+ typedef enum { BLANC, NOIR } TCoul;
 
-struct PartieReq{
-    static constexpr gf::Id type = "PartieReq"_id;
+struct TPartieReq{
+    static constexpr gf::Id type = "TPartieReq"_id;
     IdReq idReq;               /* Identificateur de la requete */
     std::string nomJoueur;      /* Nom du joueur */
-    Coul coulPion;             /* Couleur souhaitee du pion */
+    TCoul coulPion;             /* Couleur souhaitee du pion */
 } ;
 
 template<typename Archive>
-  Archive operator|(Archive& ar, PartieReq& data) {
+  Archive operator|(Archive& ar, TPartieReq& data) {
     return ar | data.idReq | data.nomJoueur | data.coulPion;
   }
 
 
 
- typedef enum { OK, KO } ValidCoul;
+ typedef enum { OK, KO } TValidCoul;
 struct PartieRep{
     static constexpr gf::Id type = "PartieRep"_id;
-    CodeRep err;                   /* Code de retour */
+    TCodeRep err;                   /* Code de retour */
     std::string nomAdvers;         /* Nom du joueur adverse */
-    ValidCoul validCoulPion;       /* Validation de la couleur pour le pion */
+    TValidCoul validCoulPion;       /* Validation de la couleur pour le pion */
 } ;
 
 template<typename Archive>
@@ -53,16 +53,16 @@ template<typename Archive>
   }
 
 
- typedef enum { UN, DEUX, TROIS, QUATRE, CINQ , SIX , SEPT , HUIT , NEUF , DIX } Num;
+ typedef enum { UN, DEUX, TROIS, QUATRE, CINQ , SIX , SEPT , HUIT , NEUF , DIX } TNum;
 
- struct Case {
- 	static constexpr gf::Id type = "Case"_id;
-	Num l;           /* Ligne de la position d'un pion */
-	Num c;          /* Colonne de la position d'un pion */
+ struct TCase {
+ 	static constexpr gf::Id type = "TCase"_id;
+	TNum l;           /* Ligne de la position d'un pion */
+	TNum c;          /* Colonne de la position d'un pion */
 };
 
 template<typename Archive>
-  Archive& operator|(Archive& ar, Case& data) {
+  Archive& operator|(Archive& ar, TCase& data) {
     return ar | data.l | data.c;
   }
 
@@ -71,50 +71,50 @@ template<typename Archive>
  */
 
 /* Choix du pion */
- typedef enum { PION , DAME} TypePion;
+ typedef enum { PION , DAME} TTypePion;
 
-struct Pion{
-	static constexpr gf::Id type = "Pion"_id;
-	Coul coulPion;          /* Couleur du pion */
-	TypePion typePion;      /* Type du pion joue */
+struct TPion{
+	static constexpr gf::Id type = "TPion"_id;
+	TCoul coulPion;          /* Couleur du pion */
+	TTypePion typePion;      /* Type du pion joue */
 } ;
 
 template<typename Archive>
-  Archive& operator|(Archive& ar, Pion& data) {
+  Archive& operator|(Archive& ar, TPion& data) {
     return ar | data.coulPion | data.typePion;
   }
 
 /* Propriete des coups */
- typedef enum { CONT, GAGNE, NUL, PERDU } PropCoup;
+ typedef enum { CONT, GAGNE, NUL, PERDU } TPropCoup;
 
-struct CoupReq{
-    static constexpr gf::Id type = "CoupReq"_id;
+struct TCoupReq{
+    static constexpr gf::Id type = "TCoupReq"_id;
     IdReq     idRequest;     /* Identificateur de la requete */
     bool      estBloque;     /* Info si le joueur est bloque (vrai) ou non */
-    Pion      pion;          /* Info sur le pion joue */
-    Case      posPionAv;       /* Position de la case du pion avant le coup */
-    Case      posPionAp;	/* Position de la case du pion avant le coup */
-    PropCoup  propCoup;      /* Propriete du coup proposee par le joueur */
+    TPion      pion;          /* Info sur le pion joue */
+    TCase      posPionAv;       /* Position de la case du pion avant le coup */
+    TCase      posPionAp;	/* Position de la case du pion avant le coup */
+    TPropCoup  propCoup;      /* Propriete du coup proposee par le joueur */
 };
 
 template<typename Archive>
-  Archive operator|(Archive& ar, CoupReq& data) {
+  Archive operator|(Archive& ar, TCoupReq& data) {
     return ar | data.idRequest | data.estBloque | data.pion | data.posPionAv | data.posPionAp | data.propCoup ;
   }
 
 /* Validite du coup */
- typedef enum { VALID, TRICHE } ValCoup; // pas de timeout dans un premier temps
+ typedef enum { VALID, TRICHE } TValCoup; // pas de timeout dans un premier temps
 
 /* Reponse a un coup */
-struct CoupRep {
-    static constexpr gf::Id type = "CoupRep"_id;
-    CodeRep  err;            /* Code de retour */
-    ValCoup  validCoup;      /* Validite du coup */
-    PropCoup propCoup;       /* Propriete du coup validee par l'arbitre */
+struct TCoupRep {
+    static constexpr gf::Id type = "TCoupRep"_id;
+    TCodeRep  err;            /* Code de retour */
+    TValCoup  validCoup;      /* Validite du coup */
+    TPropCoup propCoup;       /* Propriete du coup validee par l'arbitre */
 } ;
 
 template<typename Archive>
-  Archive operator|(Archive& ar, CoupRep& data) {
+  Archive operator|(Archive& ar, TCoupRep& data) {
     return ar | data.err | data.validCoup | data.propCoup;
   }
 

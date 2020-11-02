@@ -64,7 +64,7 @@ int main(int argc, char ** argv)
     packet.is(data);
     socket.sendPacket(packet);*/
 
-    PartieReq req;
+    TPartieReq req;
     req.idReq = PARTIE;
     req.nomJoueur = "joueur 1"; // à modifier
     req.coulPion = BLANC;
@@ -87,7 +87,7 @@ int main(int argc, char ** argv)
 
     auto repPartie = packet.as<PartieRep>();
 
-    Coul couleur ;
+    TCoul couleur ;
     if(repPartie.validCoulPion == OK)
     {
       couleur = (req.coulPion == BLANC)? BLANC : NOIR;
@@ -105,10 +105,10 @@ int main(int argc, char ** argv)
         if(couleur == BLANC) // On commence
         {
           
-          CoupReq coup ;
+          TCoupReq coup ;
           coup.idRequest = COUP;
           coup.estBloque = false;
-          Pion pion ;
+          TPion pion ;
           pion.coulPion = couleur;
           pion.typePion = PION;
           coup.pion = pion;
@@ -121,9 +121,9 @@ int main(int argc, char ** argv)
           int y ;
           cin>>y;
 
-          Case c;
-          c.l = Num (y);
-          c.c = (Num) x;
+          TCase c;
+          c.l = TNum (y);
+          c.c = (TNum) x;
 
           coup.posPionAv = c;
 
@@ -132,8 +132,8 @@ int main(int argc, char ** argv)
           cout<<"Donnez la coordonnée horizontal pour le choix de la future position de la pièce \n";
           cin>>y;
 
-          c.l = Num (y);
-          c.c = (Num) x;
+          c.l = TNum (y);
+          c.c = (TNum) x;
 
           coup.posPionAp = c;
 
@@ -152,7 +152,7 @@ int main(int argc, char ** argv)
               return -1;
           }
 
-          auto coupRep = packet.as<CoupRep>();
+          auto coupRep = packet.as<TCoupRep>();
 
 
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
@@ -162,7 +162,7 @@ int main(int argc, char ** argv)
               return -1;
           }
 
-          auto coupAdv = packet.as<CoupReq>();
+          auto coupAdv = packet.as<TCoupReq>();
 
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
@@ -171,7 +171,7 @@ int main(int argc, char ** argv)
               return -1;
           }
 
-          auto coupAdvRep = packet.as<CoupRep>();
+          auto coupAdvRep = packet.as<TCoupRep>();
           
 
 
@@ -186,7 +186,7 @@ int main(int argc, char ** argv)
               return -1;
           }
 
-          auto coupAdv = packet.as<CoupReq>();
+          auto coupAdv = packet.as<TCoupReq>();
 
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
@@ -195,12 +195,12 @@ int main(int argc, char ** argv)
               return -1;
           }
 
-          auto coupAdvRep = packet.as<CoupRep>();
+          auto coupAdvRep = packet.as<TCoupRep>();
 
-          CoupReq coup ;
+          TCoupReq coup ;
           coup.idRequest = COUP;
           coup.estBloque = false;
-          Pion pion ;
+          TPion pion ;
           pion.coulPion = couleur;
           pion.typePion = PION;
           coup.pion = pion;
@@ -213,9 +213,9 @@ int main(int argc, char ** argv)
           int y ;
           cin>>y;
 
-          Case c;
-          c.l = Num (y);
-          c.c = (Num) x;
+          TCase c;
+          c.l = TNum (y);
+          c.c = (TNum) x;
 
           coup.posPionAv = c;
 
@@ -224,8 +224,8 @@ int main(int argc, char ** argv)
           cout<<"Donnez la coordonnée horizontal pour le choix de la future position de la pièce \n";
           cin>>y;
 
-          c.l = Num (y);
-          c.c = (Num) x;
+          c.l = TNum (y);
+          c.c = (TNum) x;
 
           coup.posPionAp = c;
 
@@ -244,7 +244,7 @@ int main(int argc, char ** argv)
               return -1;
           }
 
-          auto coupRep = packet.as<CoupRep>();
+          auto coupRep = packet.as<TCoupRep>();
 
           
 

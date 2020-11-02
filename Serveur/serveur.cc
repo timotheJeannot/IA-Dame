@@ -57,7 +57,7 @@ int main(int argc, char ** argv)
                 return -1;
             }
             
-            auto req1 = packetC1.as<PartieReq>();
+            auto req1 = packetC1.as<TPartieReq>();
             cout<<req1.nomJoueur<<"\n";
             
             
@@ -70,7 +70,7 @@ int main(int argc, char ** argv)
             }
 
             
-            auto req2 = packetC2.as<PartieReq>();
+            auto req2 = packetC2.as<TPartieReq>();
             cout<<req2.nomJoueur<<"\n";
 
             /*******         Envoie de la validation de la requête de partie            ********/
@@ -122,11 +122,11 @@ int main(int argc, char ** argv)
                         return -1;
                     }
 
-                    auto coup = packetC1.as<CoupReq>();
+                    auto coup = packetC1.as<TCoupReq>();
 
                     cout<<"la position x du pion avant "<<(int) coup.posPionAv.c<<"\n";
 
-                    CoupRep coupRep ;
+                    TCoupRep coupRep ;
                     coupRep.err =ERR_OK;
                     coupRep.validCoup = VALID;
                     coupRep.propCoup = CONT;
@@ -167,7 +167,7 @@ int main(int argc, char ** argv)
                         return -1;
                     }
 
-                    auto coupC2 = packetC2.as<CoupReq>();
+                    auto coupC2 = packetC2.as<TCoupReq>();
 
                     cout<<"(adv) la position x du pion avant "<<(int) coupC2.posPionAv.c<<"\n";
 
@@ -215,11 +215,11 @@ int main(int argc, char ** argv)
                         return -1;
                     }
 
-                    auto coup = packetC2.as<CoupReq>();
+                    auto coup = packetC2.as<TCoupReq>();
 
                     cout<<"la position x du pion avant "<<(int) coup.posPionAv.c<<"\n";
 
-                    CoupRep coupRep ;
+                    TCoupRep coupRep ;
                     coupRep.err =ERR_OK;
                     coupRep.validCoup = VALID;
                     coupRep.propCoup = CONT;
@@ -257,7 +257,7 @@ int main(int argc, char ** argv)
                         return -1;
                     }
 
-                    auto coupC1 = packetC1.as<CoupReq>();
+                    auto coupC1 = packetC1.as<TCoupReq>();
 
                     cout<<"(adv) la position x du pion avant "<<(int) coupC1.posPionAv.c<<"\n";
 
