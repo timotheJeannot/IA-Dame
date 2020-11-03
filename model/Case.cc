@@ -6,10 +6,16 @@ Case::Case(int x , int y){
     ligne = y;
 }
 
-Case::Case(Case &ca){
+/*Case::Case( Case &ca){
     colonne = ca.getColonne();
     ligne = ca.getLigne();
+}*/
+
+Case::Case( Case *ca){
+    colonne = ca->getColonne();
+    ligne = ca->getLigne();
 }
+
 
 Case::Case()
 {
@@ -33,5 +39,14 @@ void Case::setColonne(int x)
 void Case::setLigne(int y )
 {
     ligne = y;
+}
+
+bool operator==(Case opL, Case opR)
+{
+    if(opL.getColonne() == opR.getColonne() && opL.getLigne() == opR.getLigne() )
+    {
+        return true;
+    }
+    return false;
 }
 

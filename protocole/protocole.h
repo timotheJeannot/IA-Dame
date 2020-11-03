@@ -4,6 +4,7 @@
 #include <gf/Id.h>
 #include <gf/SerializationOps.h>
 #include <string>
+#include <vector> 
 
 using namespace gf::literals;
 
@@ -93,13 +94,13 @@ struct TCoupReq{
     bool      estBloque;     /* Info si le joueur est bloque (vrai) ou non */
     TPion      pion;          /* Info sur le pion joue */
     TCase      posPionAv;       /* Position de la case du pion avant le coup */
-    TCase      posPionAp;	/* Position de la case du pion avant le coup */
+    std::vector<TCase> deplacements; /*suite de déplacement pour un coup */
     TPropCoup  propCoup;      /* Propriete du coup proposee par le joueur */
 };
 
 template<typename Archive>
   Archive operator|(Archive& ar, TCoupReq& data) {
-    return ar | data.idRequest | data.estBloque | data.pion | data.posPionAv | data.posPionAp | data.propCoup ;
+    return ar | data.idRequest | data.estBloque | data.pion | data.posPionAv | data.deplacements | data.propCoup ;
   }
 
 /* Validite du coup */

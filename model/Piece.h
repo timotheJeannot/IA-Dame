@@ -1,10 +1,11 @@
 #ifndef DEF_PIECE
 #define DEF_PIECE
 
-#include "Case.h"
-#include "Plateau.h"
 
-//class Case;
+//#include "Plateau.h"
+#include <vector> 
+
+#include "Case.h"
 
 class  Piece{
 
@@ -25,8 +26,8 @@ public:
     void setPris(bool b);
     void setCase(Case ca);
     void setBlanc(bool b);
-    virtual std::vector<Case> deplacementPossible(Plateau p) = 0;
-
+    //virtual std::vector<Case> deplacementPossible(Plateau p) = 0;    
+    virtual std::vector<Case> deplacementPossible(std::vector<std::vector<int>> p) = 0;
 
 };
 

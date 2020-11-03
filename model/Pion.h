@@ -1,8 +1,9 @@
 #ifndef DEF_PION
 #define DEF_PION
 
-#include "Case.h"
+
 #include "Piece.h"
+
 
 class Pion: public Piece{
 
@@ -12,8 +13,10 @@ public:
     Pion(Case ca , bool b);
     Pion(int colonne , int ligne, bool b);
     Pion();
-    std::vector<Case> deplacementPossible(Plateau p);
-    std::vector<Case> deplacementPrisePossible(Plateau p); // les deplacements qui font une prise
+    //std::vector<Case> deplacementPossible(Plateau p);
+    //std::vector<Case> deplacementPrisePossible(Plateau p); // les deplacements qui font une prise
+    std::vector<Case> deplacementPossible(std::vector<std::vector<int>> p);
+    std::vector<Case> deplacementPrisePossible(std::vector<std::vector<int>> p); // les deplacements qui font une prise
 };
 
 #endif

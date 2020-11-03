@@ -23,7 +23,7 @@ Dame::Dame(int colonne , int ligne, bool b):Piece(colonne, ligne,b){
 //http://www.ffjd.fr/Web/index.php?page=reglesdujeu
 // cette fonction indique dans une liste les cases qui sont disponibles pour un déplacement d'une dame sur les 4 diagonales.
 //attention on ne prend pas en compte la prise majoritaire pour l'instant. (voir le lien)
-std::vector<Case> Dame::deplacementPossible(Plateau p){
+std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
     /*
     std::list<Case> listCase;
     for(int i=c.getColonne()-1;i>0;i--){
@@ -47,7 +47,7 @@ std::vector<Case> Dame::deplacementPossible(Plateau p){
         }
     }
     */
-    std::vector<std::vector<int>> plateau = p.getPlateau();
+    std::vector<std::vector<int>> plateau = p;//p.getPlateau();
 
     ///// ------------ Diagonal en haut à gauche  ----------------- //////////
 
@@ -303,9 +303,9 @@ std::vector<Case> Dame::deplacementPossible(Plateau p){
     return listCase;
 }
 
-std::vector<Case> Dame::deplacementPrisePossible (Plateau p)
+std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> p)
 {
-    std::vector<std::vector<int>> plateau = p.getPlateau();
+    std::vector<std::vector<int>> plateau = p;//p.getPlateau();
 
     ///// ------------ Diagonal en haut à gauche  ----------------- //////////
 

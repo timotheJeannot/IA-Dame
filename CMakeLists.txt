@@ -9,11 +9,23 @@ add_executable(test_gf
   # and the rest of your sources
 )
 
+
+
 add_executable(client
+	model/Case.cc
+	model/Piece.cc
+	model/Pion.cc
+	model/Dame.cc
+	model/Plateau.cc
 	Client/client.cc
 )
 
 add_executable(serveur
+	model/Case.cc
+	model/Piece.cc
+	model/Pion.cc
+	model/Dame.cc
+	model/Plateau.cc
 	Serveur/serveur.cc
 )
 

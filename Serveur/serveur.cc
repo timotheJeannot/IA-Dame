@@ -6,6 +6,7 @@
 #include <gf/Packet.h>
 
 #include "../protocole/protocole.h"
+#include "../model/Plateau.h"
 using namespace gf::literals;
 using namespace std;
 
@@ -108,12 +109,17 @@ int main(int argc, char ** argv)
                 client2.~TcpSocket();
             }
             
+            Plateau plateau = Plateau();
+            // on va compter les pièces restantes pour savoir quand la partie est terminé
+            int nbPieceNoir = 15;
+            int nbPieceBlanche = 15;
             /****** Boucle de jeu ********/
             while(true)
             {
                 // le joueur 1 est blanc
                 if(req1.coulPion == BLANC)
                 {
+                    std::cout<<"test 0 debut serv \n";
                     if( gf::SocketStatus::Data != client1.recvPacket(packetC1))
                     {
                         cerr<<"erreur lors de la réception du packet du client 1";
@@ -121,17 +127,124 @@ int main(int argc, char ** argv)
                         client2.~TcpSocket();
                         return -1;
                     }
+                    std::cout<<"test 1";
 
                     auto coup = packetC1.as<TCoupReq>();
 
-                    cout<<"la position x du pion avant "<<(int) coup.posPionAv.c<<"\n";
+                    std::vector<TCase> deplacementsJ1 = coup.deplacements;
+                    TCase posPionAvJ1= coup.posPionAv;
+                    int xJ1 = (int) posPionAvJ1.c;
+                    int yJ1 = (int) posPionAvJ1.l;
+                    Pion pJ1;
+                    Dame dJ1 ;
+                    bool isDameJ1 = false;
+                    bool usePieceAdv = false;
+                    bool testErrCoup = false;
+                    if(plateau.getPlateau()[xJ1][yJ1] <0)
+                    {
+                        usePieceAdv = true;
+                    }
+                    else
+                    {
+                        if(plateau.getPlateau()[xJ1][yJ1] == 1)
+                        {
+                            pJ1 = Pion(xJ1,yJ1,true);
+                        }
+                        else
+                        {
+                            dJ1 = Dame(xJ1,yJ1,true);
+                            isDameJ1 = true;
+                        }
 
+                        int size = deplacementsJ1.size();                       
+                        if(isDameJ1)
+                        {
+                            TCase cnextJ1 = deplacementsJ1[0];
+                            int x2J1 = (int) cnextJ1.c;
+                            int y2J1 = (int) cnextJ1.l;
+                            Case cibleJ1(x2J1,y2J1);
+                            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(dJ1,cibleJ1);
+                            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size != 1))
+                            {
+                                testErrCoup = true;
+                            }
+                            if(retModifDeplacement == 1)
+                            {
+                                nbPieceNoir --;
+                            
+                                for(int i = 1 ; i <size; i++)
+                                {
+                                    cnextJ1 = deplacementsJ1[i];
+                                    x2J1 = (int) cnextJ1.c;
+                                    y2J1 = (int) cnextJ1.l;
+                                    cibleJ1.setColonne(x2J1);
+                                    cibleJ1.setLigne(y2J1);
+                                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(dJ1,cibleJ1); 
+                                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size-1))
+                                    {
+                                        testErrCoup = true;
+                                    }
+
+                                }
+                            }
+                            nbPieceNoir = nbPieceNoir - size +1;
+                        }
+                        else
+                        {
+                            TCase cnextJ1 = deplacementsJ1[0];
+                            int x2J1 = (int) cnextJ1.c;
+                            int y2J1 = (int) cnextJ1.l;
+                            Case cibleJ1(x2J1,y2J1);
+                            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(pJ1,cibleJ1);
+                            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size != 1))
+                            {
+                                testErrCoup = true;
+                            }
+                            if(retModifDeplacement == 1)
+                            {
+                                nbPieceNoir --;
+                            
+                                for(int i = 1 ; i <size; i++)
+                                {
+                                    cnextJ1 = deplacementsJ1[i];
+                                    x2J1 = (int) cnextJ1.c;
+                                    y2J1 = (int) cnextJ1.l;
+                                    cibleJ1.setColonne(x2J1);
+                                    cibleJ1.setLigne(y2J1);
+                                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(pJ1,cibleJ1); 
+                                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size-1))
+                                    {
+                                        testErrCoup = true;
+                                    }
+
+                                }
+                            }
+                            nbPieceNoir = nbPieceNoir - size +1;
+                        }
+                        plateau.enleverPiecesRafle();                   
+                    }
                     TCoupRep coupRep ;
-                    coupRep.err =ERR_OK;
-                    coupRep.validCoup = VALID;
-                    coupRep.propCoup = CONT;
+                    if(testErrCoup || usePieceAdv)
+                    {
+                        coupRep.err = ERR_COUP;
+                        coupRep.validCoup = TRICHE ; // je fais pas bien la différence entre ces deux infos du protocole
+                        //coupRep.propCoup = PERDU; // faut t'il envoyer ça à ce moment ?
+                    }
+                    else
+                    {
+                        coupRep.err =ERR_OK;
+                        coupRep.validCoup = VALID;
+                        cout<<plateau.afficheTerminal();
+                    }
+                    if(nbPieceNoir == 0)
+                    {
+                        coupRep.propCoup = GAGNE;
+                    }
+                    else
+                    {
+                        coupRep.propCoup = CONT;
+                    }
 
-                    
                     packetC1.is(coupRep);
 
                     if(gf::SocketStatus::Data != client1.sendPacket(packetC1))
@@ -159,6 +272,11 @@ int main(int argc, char ** argv)
                         client2.~TcpSocket();
                     }
 
+                    if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
+                    {
+                        break;                       
+                    }
+
                     if( gf::SocketStatus::Data != client2.recvPacket(packetC2))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
@@ -169,11 +287,118 @@ int main(int argc, char ** argv)
 
                     auto coupC2 = packetC2.as<TCoupReq>();
 
-                    cout<<"(adv) la position x du pion avant "<<(int) coupC2.posPionAv.c<<"\n";
+                    std::vector<TCase> deplacementsJ2= coupC2.deplacements;
+                    TCase posPionAvJ2= coupC2.posPionAv;
+                    int xJ2 = (int) posPionAvJ2.c;
+                    int yJ2 = (int) posPionAvJ2.l;
+                    Pion pJ2;
+                    Dame dJ2 ;
+                    bool isDameJ2 = false;
+                    usePieceAdv = false;
+                    bool testErrCoup2 = false;
+                    if(plateau.getPlateau()[xJ2][yJ2] >0)
+                    {
+                        usePieceAdv = true;
+                    }
+                    else
+                    {                    
+                        if(plateau.getPlateau()[xJ2][yJ2] == -1)
+                        {
+                            pJ2 = Pion(xJ2,yJ2,false);
+                        }
+                        else
+                        {
+                            dJ2 = Dame(xJ2,yJ2,false);
+                            isDameJ2 = true;
+                        }
 
-                    coupRep.err =ERR_OK;
-                    coupRep.validCoup = VALID;
-                    coupRep.propCoup = CONT;
+                        int size2 = deplacementsJ2.size();                        
+                        if(isDameJ2)
+                        {
+                            TCase cnextJ2 = deplacementsJ2[0];
+                            int x2J2 = (int) cnextJ2.c;
+                            int y2J2 = (int) cnextJ2.l;
+                            Case cibleJ2(x2J2,y2J2);
+                            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(dJ2,cibleJ2);
+                            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size2 != 1))
+                            {
+                                testErrCoup2 = true;
+                            }
+                            if(retModifDeplacement == 1)
+                            {
+                                nbPieceBlanche --;
+                            
+                                for(int i = 1 ; i <size2; i++)
+                                {
+                                    cnextJ2 = deplacementsJ2[i];
+                                    x2J2 = (int) cnextJ2.c;
+                                    y2J2 = (int) cnextJ2.l;
+                                    cibleJ2.setColonne(x2J2);
+                                    cibleJ2.setLigne(y2J2);
+                                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(dJ2,cibleJ2); 
+                                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
+                                    {
+                                        testErrCoup2 = true;
+                                    }
+
+                                }
+                            }
+                            nbPieceBlanche = nbPieceBlanche - size2 +1;
+                        }
+                        else
+                        {
+                            TCase cnextJ2 = deplacementsJ2[0];
+                            int x2J2 = (int) cnextJ2.c;
+                            int y2J2 = (int) cnextJ2.l;
+                            Case cibleJ2(x2J2,y2J2);
+                            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(pJ2,cibleJ2);
+                            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size2 != 1))
+                            {
+                                testErrCoup2 = true;
+                            }
+                            if(retModifDeplacement == 1)
+                            {
+                                nbPieceBlanche --;
+                            
+                                for(int i = 1 ; i <size2; i++)
+                                {
+                                    cnextJ2 = deplacementsJ2[i];
+                                    x2J2 = (int) cnextJ2.c;
+                                    y2J2 = (int) cnextJ2.l;
+                                    cibleJ2.setColonne(x2J2);
+                                    cibleJ2.setLigne(y2J2);
+                                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(pJ2,cibleJ2); 
+                                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
+                                    {
+                                        testErrCoup2 = true;
+                                    }
+                                }
+                            }
+                            nbPieceBlanche = nbPieceBlanche - size2 +1;
+                        }
+                        plateau.enleverPiecesRafle(); 
+                    }
+
+                    if(testErrCoup2 || usePieceAdv)
+                    {
+                        coupRep.err = ERR_COUP;
+                        coupRep.validCoup = TRICHE ; // je fais pas bien la différence entre ces deux infos du protocole
+                        //coupRep.propCoup = PERDU; // faut t'il envoyer ça à ce moment ?
+                    }
+                    else
+                    {
+                        coupRep.err =ERR_OK;
+                        coupRep.validCoup = VALID;
+                        cout<<plateau.afficheTerminal();
+                    }
+                    if(nbPieceBlanche == 0)
+                    {
+                        coupRep.propCoup = GAGNE;
+                    }
+                    else
+                    {
+                        coupRep.propCoup = CONT;
+                    }
 
                     packetC2.is(coupRep);
 
@@ -202,7 +427,10 @@ int main(int argc, char ** argv)
                         client2.~TcpSocket();
                     }
 
-                    
+                    if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
+                    {
+                        break;                       
+                    }
 
                 }
                 else // le joueur 2 est blanc
@@ -215,14 +443,122 @@ int main(int argc, char ** argv)
                         return -1;
                     }
 
-                    auto coup = packetC2.as<TCoupReq>();
+                    auto coupC2 = packetC2.as<TCoupReq>();
 
-                    cout<<"la position x du pion avant "<<(int) coup.posPionAv.c<<"\n";
+                    std::vector<TCase> deplacementsJ2= coupC2.deplacements;
+                    TCase posPionAvJ2= coupC2.posPionAv;
+                    int xJ2 = (int) posPionAvJ2.c;
+                    int yJ2 = (int) posPionAvJ2.l;
+                    Pion pJ2;
+                    Dame dJ2 ;
+                    bool isDameJ2 = false;
+                    bool usePieceAdv = false;
+                    bool testErrCoup2 = false;
+                    if(plateau.getPlateau()[xJ2][yJ2] <0)
+                    {
+                        usePieceAdv = true;
+                    }
+                    else
+                    {
+                        if(plateau.getPlateau()[xJ2][yJ2] == 1)
+                        {
+                            pJ2 = Pion(xJ2,yJ2,true);
+                        }
+                        else
+                        {
+                            dJ2 = Dame(xJ2,yJ2,true);
+                            isDameJ2 = true;
+                        }
 
+                        int size2 = deplacementsJ2.size();
+                        if(isDameJ2)
+                        {
+                            TCase cnextJ2 = deplacementsJ2[0];
+                            int x2J2 = (int) cnextJ2.c;
+                            int y2J2 = (int) cnextJ2.l;
+                            Case cibleJ2(x2J2,y2J2);
+                            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(dJ2,cibleJ2);
+                            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size2 != 1))
+                            {
+                                testErrCoup2 = true;
+                            }
+                            if(retModifDeplacement == 1)
+                            {
+                                nbPieceNoir --;
+                            
+                                for(int i = 1 ; i <size2; i++)
+                                {
+                                    cnextJ2 = deplacementsJ2[i];
+                                    x2J2 = (int) cnextJ2.c;
+                                    y2J2 = (int) cnextJ2.l;
+                                    cibleJ2.setColonne(x2J2);
+                                    cibleJ2.setLigne(y2J2);
+                                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(dJ2,cibleJ2); 
+                                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
+                                    {
+                                        testErrCoup2 = true;
+                                    }
+
+                                }
+                            }
+                            nbPieceNoir = nbPieceNoir - size2 +1;
+                        }
+                        else
+                        {
+                            TCase cnextJ2 = deplacementsJ2[0];
+                            int x2J2 = (int) cnextJ2.c;
+                            int y2J2 = (int) cnextJ2.l;
+                            Case cibleJ2(x2J2,y2J2);
+                            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(pJ2,cibleJ2);
+                            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size2 != 1))
+                            {
+                                testErrCoup2 = true;
+                            }
+                            if(retModifDeplacement == 1)
+                            {
+                                nbPieceNoir --;
+                            
+                                for(int i = 1 ; i <size2; i++)
+                                {
+                                    cnextJ2 = deplacementsJ2[i];
+                                    x2J2 = (int) cnextJ2.c;
+                                    y2J2 = (int) cnextJ2.l;
+                                    cibleJ2.setColonne(x2J2);
+                                    cibleJ2.setLigne(y2J2);
+                                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(pJ2,cibleJ2); 
+                                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
+                                    {
+                                        testErrCoup2 = true;
+                                    }
+                                }
+                            }
+                            nbPieceNoir = nbPieceNoir - size2 +1;
+                        }
+                        plateau.enleverPiecesRafle(); 
+
+                    }
                     TCoupRep coupRep ;
-                    coupRep.err =ERR_OK;
-                    coupRep.validCoup = VALID;
-                    coupRep.propCoup = CONT;
+
+                    if(testErrCoup2 || usePieceAdv)
+                    {
+                        coupRep.err = ERR_COUP;
+                        coupRep.validCoup = TRICHE ; // je fais pas bien la différence entre ces deux infos du protocole
+                        //coupRep.propCoup = PERDU; // faut t'il envoyer ça à ce moment ?
+                    }
+                    else
+                    {
+                        coupRep.err =ERR_OK;
+                        coupRep.validCoup = VALID;
+                        cout<<plateau.afficheTerminal();
+                    }
+                    if(nbPieceNoir == 0)
+                    {
+                        coupRep.propCoup = GAGNE;
+                    }
+                    else
+                    {
+                        coupRep.propCoup = CONT;
+                    }
 
                     packetC2.is(coupRep);
 
@@ -233,7 +569,7 @@ int main(int argc, char ** argv)
                         client2.~TcpSocket();
                     }
 
-                    packetC1.is(coup);
+                    packetC1.is(coupC2);
                     if(gf::SocketStatus::Data != client1.sendPacket(packetC1))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
@@ -248,6 +584,10 @@ int main(int argc, char ** argv)
                         client1.~TcpSocket();
                         client2.~TcpSocket();
                     }
+                    if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
+                    {
+                        break;                       
+                    }
 
                     if( gf::SocketStatus::Data != client1.recvPacket(packetC1))
                     {
@@ -259,7 +599,119 @@ int main(int argc, char ** argv)
 
                     auto coupC1 = packetC1.as<TCoupReq>();
 
-                    cout<<"(adv) la position x du pion avant "<<(int) coupC1.posPionAv.c<<"\n";
+                    std::vector<TCase> deplacementsJ1 = coupC1.deplacements;
+                    TCase posPionAvJ1= coupC1.posPionAv;
+                    int xJ1 = (int) posPionAvJ1.c;
+                    int yJ1 = (int) posPionAvJ1.l;
+                    Pion pJ1;
+                    Dame dJ1 ;
+                    bool isDameJ1 = false;
+                    usePieceAdv = false;
+                    bool testErrCoup = false;
+                    if(plateau.getPlateau()[xJ1][yJ1] >0)
+                    {
+                        usePieceAdv = true;
+                    }
+                    else
+                    {
+                        if(plateau.getPlateau()[xJ1][yJ1] == -1)
+                        {
+                            pJ1 = Pion(xJ1,yJ1,false);
+                        }
+                        else
+                        {
+                            dJ1 = Dame(xJ1,yJ1,false);
+                            isDameJ1 = true;
+                        }
+
+                        int size = deplacementsJ1.size();
+                        
+                        if(isDameJ1)
+                        {
+                            TCase cnextJ1 = deplacementsJ1[0];
+                            int x2J1 = (int) cnextJ1.c;
+                            int y2J1 = (int) cnextJ1.l;
+                            Case cibleJ1(x2J1,y2J1);
+                            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(dJ1,cibleJ1);
+                            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size != 1))
+                            {
+                                testErrCoup = true;
+                            }
+                            if(retModifDeplacement == 1)
+                            {
+                                nbPieceBlanche --;
+                            
+                                for(int i = 1 ; i <size; i++)
+                                {
+                                    cnextJ1 = deplacementsJ1[i];
+                                    x2J1 = (int) cnextJ1.c;
+                                    y2J1 = (int) cnextJ1.l;
+                                    cibleJ1.setColonne(x2J1);
+                                    cibleJ1.setLigne(y2J1);
+                                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(dJ1,cibleJ1); 
+                                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size-1))
+                                    {
+                                        testErrCoup = true;
+                                    }
+
+                                }
+                            }
+                            nbPieceBlanche = nbPieceBlanche - size +1;
+                        }
+                        else
+                        {
+                            TCase cnextJ1 = deplacementsJ1[0];
+                            int x2J1 = (int) cnextJ1.c;
+                            int y2J1 = (int) cnextJ1.l;
+                            Case cibleJ1(x2J1,y2J1);
+                            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(pJ1,cibleJ1);
+                            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size != 1))
+                            {
+                                testErrCoup = true;
+                            }
+                            if(retModifDeplacement == 1)
+                            {
+                                nbPieceBlanche --;
+                            
+                                for(int i = 1 ; i <size; i++)
+                                {
+                                    cnextJ1 = deplacementsJ1[i];
+                                    x2J1 = (int) cnextJ1.c;
+                                    y2J1 = (int) cnextJ1.l;
+                                    cibleJ1.setColonne(x2J1);
+                                    cibleJ1.setLigne(y2J1);
+                                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(pJ1,cibleJ1); 
+                                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size-1))
+                                    {
+                                        testErrCoup = true;
+                                    }
+
+                                }
+                            }
+                            nbPieceBlanche = nbPieceBlanche - size +1;
+                        }
+                        plateau.enleverPiecesRafle();
+                    }
+                    if(testErrCoup||usePieceAdv)
+                    {
+                        coupRep.err = ERR_COUP;
+                        coupRep.validCoup = TRICHE ; // je fais pas bien la différence entre ces deux infos du protocole
+                        //coupRep.propCoup = PERDU; // faut t'il envoyer ça à ce moment ?
+                    }
+                    else
+                    {
+                        coupRep.err =ERR_OK;
+                        coupRep.validCoup = VALID;
+                        cout<<plateau.afficheTerminal();
+                    }
+                    if(nbPieceBlanche == 0)
+                    {
+                        coupRep.propCoup = GAGNE;
+                    }
+                    else
+                    {
+                        coupRep.propCoup = CONT;
+                    }
 
                     coupRep.err =ERR_OK;
                     coupRep.validCoup = VALID;
@@ -291,28 +743,21 @@ int main(int argc, char ** argv)
                         client1.~TcpSocket();
                         client2.~TcpSocket();
                     }
-
+                    if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
+                    {
+                        break;                       
+                    }
 
                 }
             }
-            
-            
-
-            
+   
 
         }
 
         client2.~TcpSocket();
     }
 
-    
-
-    //fin de la connection
     client1.~TcpSocket();
-        
-    
-    
-
-    
+          
     return 0;
 }

@@ -4,12 +4,15 @@
 #include <list>
 #include <vector> 
 #include <algorithm>
+#include <iostream>
 
 #include "Case.h"
 #include "Piece.h"
 #include "Joueur.h"
 #include "Pion.h"
 #include "Dame.h"
+
+using namespace std;
 
 class  Plateau{
     std::list<Case> cases;
@@ -37,7 +40,8 @@ class  Plateau{
     int modifPlateauDeplacementNormal(Dame dame , Case cible);
     int modifPlateauDeplacementPrise(Pion pion , Case cible);
     int modifPlateauDeplacementPrise(Dame dame , Case cible);
-    void enleverPiecesRafle() // enlève les 3 , -3 après une fois que le coup est fini
+    void enleverPiecesRafle(); // enlève les 3 , -3 après une fois que le coup est fini
+    string afficheTerminal();
     
     
 

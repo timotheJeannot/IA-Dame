@@ -8,7 +8,7 @@
 #include "Plateau.h"
 
 class Joueur {
-    std::string couleur;
+    /*std::string couleur;
     Plateau plateau;
     std::vector<Piece> pieces;
 
@@ -16,7 +16,7 @@ class Joueur {
 
     Joueur(std::string c, std::vector<Piece> pc);
     Joueur();
-
+    */
     //void coup(Piece p);
     
     

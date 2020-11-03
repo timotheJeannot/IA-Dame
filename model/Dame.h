@@ -7,7 +7,6 @@
 
 #include "Case.h"
 #include "Piece.h"
-#include "Plateau.h"
 
 
 class Dame: public Piece{
@@ -17,8 +16,10 @@ public:
     Dame(Case ca,bool p , bool b);
     Dame(Case ca , bool b);
     Dame(int colonne , int ligne , bool b);
-    std::vector<Case> deplacementPossible(Plateau p);
-    std::vector<Case> deplacementPrisePossible(Plateau p); // les deplacements qui font une prise
+    //std::vector<Case> deplacementPossible(Plateau p);
+    //std::vector<Case> deplacementPrisePossible(Plateau p); // les deplacements qui font une prise
+    std::vector<Case> deplacementPossible(std::vector<std::vector<int>> p);
+    std::vector<Case> deplacementPrisePossible(std::vector<std::vector<int>> p); // les deplacements qui font une prise
 };
 
 

@@ -15,7 +15,7 @@ Pion::Pion(int colonne , int ligne , bool b):Piece(colonne, ligne,b){
 
 
 // on ne va pas prendre en compte la prise majoritaire pour l'instant
-std::vector<Case> Pion::deplacementPossible(Plateau p){
+std::vector<Case> Pion::deplacementPossible(std::vector<std::vector<int>> p){
     /*
     std::list<Case> listCase;
     for(int i=c.getColonne()-1;i>0;i--){
@@ -41,7 +41,7 @@ std::vector<Case> Pion::deplacementPossible(Plateau p){
     */
 
     std::vector<Case> listCase;
-    std::vector<std::vector<int>> plateau = p.getPlateau();
+    std::vector<std::vector<int>> plateau = p;//p.getPlateau();
     
     //---- cas des 4 prises possibles -----------//
     bool testPrise = false;
@@ -51,9 +51,13 @@ std::vector<Case> Pion::deplacementPossible(Plateau p){
         {
             if(c.getColonne()+2 <=9 && c.getLigne()+2 <=9)
             {
-                if(plateau[c.getColonne()+2][c.getLigne()+2 == 0])
+                if(plateau[c.getColonne()+2][c.getLigne()+2 ] == 0)
                 {
-                    listCase.push_back(Case(c.getColonne()+2,c.getLigne()+2));
+                    int x1 = c.getColonne()+2;
+                    int y1 = c.getLigne()+2;
+                    Case casePush (x1,y1);
+                    
+                    listCase.push_back(casePush);
                     testPrise = true;
                 }
             }
@@ -66,7 +70,7 @@ std::vector<Case> Pion::deplacementPossible(Plateau p){
         {
             if(c.getColonne() -2 >=0 && c.getLigne()+2 <=9)
             {
-                if(plateau[c.getColonne()-2][c.getLigne()+2 == 0])
+                if(plateau[c.getColonne()-2][c.getLigne()+2 ] == 0)
                 {
                     listCase.push_back(Case(c.getColonne()-2,c.getLigne()+2));
                     testPrise = true;
@@ -81,7 +85,7 @@ std::vector<Case> Pion::deplacementPossible(Plateau p){
         {
             if(c.getColonne() -2 >=0 && c.getLigne()-2 >=0)
             {
-                if(plateau[c.getColonne()-2][c.getLigne()-2 == 0])
+                if(plateau[c.getColonne()-2][c.getLigne()-2 ] == 0)
                 {
                     listCase.push_back(Case(c.getColonne()-2,c.getLigne()-2));
                     testPrise = true;
@@ -96,7 +100,7 @@ std::vector<Case> Pion::deplacementPossible(Plateau p){
         {
             if(c.getColonne() +2 <=9 && c.getLigne()-2 >=0)
             {
-                if(plateau[c.getColonne()+2][c.getLigne()-2 == 0])
+                if(plateau[c.getColonne()+2][c.getLigne()-2 ] == 0)
                 {
                     listCase.push_back(Case(c.getColonne()+2,c.getLigne()-2));
                     testPrise = true;
@@ -132,6 +136,7 @@ std::vector<Case> Pion::deplacementPossible(Plateau p){
             {
                 if(plateau[c.getColonne()+1][c.getLigne()-1] == 0)
                 {
+                    //std::cout<<"test 1 yolo : ("<<std::to_string(c.getColonne()+1)<<", "<<std::to_string(c.getLigne()-1)<<")\n";
                     listCase.push_back(Case(c.getColonne()+1,c.getLigne()-1));
                 }
             }
@@ -140,6 +145,7 @@ std::vector<Case> Pion::deplacementPossible(Plateau p){
             {
                 if(plateau[c.getColonne()-1][c.getLigne()-1] == 0)
                 {
+                    //std::cout<<"test 2 yolo : ("<<std::to_string(c.getColonne()-1)<<", "<<std::to_string(c.getLigne()-1)<<")\n";
                     listCase.push_back(Case(c.getColonne()-1,c.getLigne()-1));
                 }
             }
@@ -150,10 +156,10 @@ std::vector<Case> Pion::deplacementPossible(Plateau p){
    return listCase;
 }
 
-std::vector<Case> Pion::deplacementPrisePossible (Plateau p)
+std::vector<Case> Pion::deplacementPrisePossible (std::vector<std::vector<int>> p)
 {
     std::vector<Case> listCase;
-    std::vector<std::vector<int>> plateau = p.getPlateau();
+    std::vector<std::vector<int>> plateau = p;//p.getPlateau();
     
     //---- cas des 4 prises possibles -----------//
     if(c.getColonne()+1 <=9 &&  c.getLigne()+1 <=9)
@@ -162,7 +168,7 @@ std::vector<Case> Pion::deplacementPrisePossible (Plateau p)
         {
             if(c.getColonne()+2 <=9 && c.getLigne()+2 <=9)
             {
-                if(plateau[c.getColonne()+2][c.getLigne()+2 == 0])
+                if(plateau[c.getColonne()+2][c.getLigne()+2] == 0)
                 {
                     listCase.push_back(Case(c.getColonne()+2,c.getLigne()+2));
                 }
@@ -176,7 +182,7 @@ std::vector<Case> Pion::deplacementPrisePossible (Plateau p)
         {
             if(c.getColonne() -2 >=0 && c.getLigne()+2 <=9)
             {
-                if(plateau[c.getColonne()-2][c.getLigne()+2 == 0])
+                if(plateau[c.getColonne()-2][c.getLigne()+2 ] == 0)
                 {
                     listCase.push_back(Case(c.getColonne()-2,c.getLigne()+2));
                 }
@@ -190,7 +196,7 @@ std::vector<Case> Pion::deplacementPrisePossible (Plateau p)
         {
             if(c.getColonne() -2 >=0 && c.getLigne()-2 >=0)
             {
-                if(plateau[c.getColonne()-2][c.getLigne()-2 == 0])
+                if(plateau[c.getColonne()-2][c.getLigne()-2] == 0)
                 {
                     listCase.push_back(Case(c.getColonne()-2,c.getLigne()-2));
                 }
@@ -204,7 +210,7 @@ std::vector<Case> Pion::deplacementPrisePossible (Plateau p)
         {
             if(c.getColonne() +2 <=9 && c.getLigne()-2 >=0)
             {
-                if(plateau[c.getColonne()+2][c.getLigne()-2 == 0])
+                if(plateau[c.getColonne()+2][c.getLigne()-2 ] == 0)
                 {
                     listCase.push_back(Case(c.getColonne()+2,c.getLigne()-2));
                 }
