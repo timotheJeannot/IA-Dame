@@ -18,7 +18,7 @@ add_executable(client
 	model/Dame.cc
 	model/Plateau.cc
 	Client/client.cc
-)
+		Client/clientTools.cc Client/clientTools.h)
 
 add_executable(serveur
 	model/Case.cc
@@ -27,7 +27,7 @@ add_executable(serveur
 	model/Dame.cc
 	model/Plateau.cc
 	Serveur/serveur.cc
-)
+		Serveur/serverTools.h Serveur/serverTools.cc)
 
 
 target_link_libraries(test_gf

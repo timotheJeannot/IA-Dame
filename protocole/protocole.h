@@ -4,7 +4,7 @@
 #include <gf/Id.h>
 #include <gf/SerializationOps.h>
 #include <string>
-#include <vector> 
+#include <vector>
 
 using namespace gf::literals;
 
@@ -23,14 +23,13 @@ using namespace gf::literals;
 
 /* 
  * Structures demande de partie
- */ 
- typedef enum { BLANC, NOIR } TCoul;
+ */
 
 struct TPartieReq{
     static constexpr gf::Id type = "TPartieReq"_id;
     IdReq idReq;               /* Identificateur de la requete */
     std::string nomJoueur;      /* Nom du joueur */
-    TCoul coulPion;             /* Couleur souhaitee du pion */
+    int  coulPion;             /* Couleur souhaitee du pion */
 } ;
 
 template<typename Archive>
@@ -39,13 +38,11 @@ template<typename Archive>
   }
 
 
-
- typedef enum { OK, KO } TValidCoul;
 struct PartieRep{
     static constexpr gf::Id type = "PartieRep"_id;
     TCodeRep err;                   /* Code de retour */
     std::string nomAdvers;         /* Nom du joueur adverse */
-    TValidCoul validCoulPion;       /* Validation de la couleur pour le pion */
+    bool validCoulPion;       /* Validation de la couleur pour le pion */
 } ;
 
 template<typename Archive>
@@ -53,13 +50,10 @@ template<typename Archive>
     return ar | data.err | data.nomAdvers | data.validCoulPion;
   }
 
-
- typedef enum { UN, DEUX, TROIS, QUATRE, CINQ , SIX , SEPT , HUIT , NEUF , DIX } TNum;
-
  struct TCase {
  	static constexpr gf::Id type = "TCase"_id;
-	TNum l;           /* Ligne de la position d'un pion */
-	TNum c;          /* Colonne de la position d'un pion */
+	int l;           /* Ligne de la position d'un pion */
+	int c;          /* Colonne de la position d'un pion */
 };
 
 template<typename Archive>
@@ -76,7 +70,7 @@ template<typename Archive>
 
 struct TPion{
 	static constexpr gf::Id type = "TPion"_id;
-	TCoul coulPion;          /* Couleur du pion */
+	int coulPion;          /* Couleur du pion (1 pour Blanc & -1 pour Noir) */
 	TTypePion typePion;      /* Type du pion joue */
 } ;
 

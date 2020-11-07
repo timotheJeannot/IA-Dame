@@ -7,49 +7,67 @@ Plateau::Plateau(){
     for(int i =0 ; i< 10 ; i++)
     {
         plateau.push_back(std::vector<int>(10,0));  //std::vector<int>(10,0) = un tableau de taille 10 avec que des 0
+
+        for (int j = 0; j < 4; j++) {
+            if (i % 2 != 0 && j % 2 == 0) {
+                plateau[i][j] = -1;
+            } else if (i % 2 == 0 && j % 2 != 0) {
+                plateau[i][j] = -1;
+            }
+        }
+
+        for (int j = 6; j < 10; j++) {
+            if (i % 2 != 0 && j % 2 == 0) {
+                plateau[i][j] = 1;
+            } else if (i % 2 == 0 && j % 2 != 0) {
+                plateau[i][j] = 1;
+            }
+        }
+
     }
 
-    plateau[1][0] = -1;
-    plateau[3][0] = -1;
-    plateau[5][0] = -1;
-    plateau[7][0] = -1;
-    plateau[9][0] = -1;
-    plateau[0][1] = -1;
-    plateau[2][1] = -1;
-    plateau[4][1] = -1;
-    plateau[6][1] = -1;
-    plateau[8][1] = -1;
-    plateau[1][2] = -1;
-    plateau[3][2] = -1;
-    plateau[5][2] = -1;
-    plateau[7][2] = -1;
-    plateau[9][2] = -1;
-    plateau[0][3] = -1;
-    plateau[2][3] = -1;
-    plateau[4][3] = -1;
-    plateau[6][3] = -1;
-    plateau[8][3] = -1;
 
-    plateau[1][6] = 1;
-    plateau[3][6] = 1;
-    plateau[5][6] = 1;
-    plateau[7][6] = 1;
-    plateau[9][6] = 1;
-    plateau[0][7] = 1;
-    plateau[2][7] = 1;
-    plateau[4][7] = 1;
-    plateau[6][7] = 1;
-    plateau[8][7] = 1;
-    plateau[1][8] = 1;
-    plateau[3][8] = 1;
-    plateau[5][8] = 1;
-    plateau[7][8] = 1;
-    plateau[9][8] = 1;
-    plateau[0][9] = 1;
-    plateau[2][9] = 1;
-    plateau[4][9] = 1;
-    plateau[6][9] = 1;
-    plateau[8][9] = 1;
+//    plateau[1][0] = -1;
+//    plateau[3][0] = -1;
+//    plateau[5][0] = -1;
+//    plateau[7][0] = -1;
+//    plateau[9][0] = -1;
+//    plateau[0][1] = -1;
+//    plateau[2][1] = -1;
+//    plateau[4][1] = -1;
+//    plateau[6][1] = -1;
+//    plateau[8][1] = -1;
+//    plateau[1][2] = -1;
+//    plateau[3][2] = -1;
+//    plateau[5][2] = -1;
+//    plateau[7][2] = -1;
+//    plateau[9][2] = -1;
+//    plateau[0][3] = -1;
+//    plateau[2][3] = -1;
+//    plateau[4][3] = -1;
+//    plateau[6][3] = -1;
+//    plateau[8][3] = -1;
+//
+//    plateau[1][6] = 1;
+//    plateau[3][6] = 1;
+//    plateau[5][6] = 1;
+//    plateau[7][6] = 1;
+//    plateau[9][6] = 1;
+//    plateau[0][7] = 1;
+//    plateau[2][7] = 1;
+//    plateau[4][7] = 1;
+//    plateau[6][7] = 1;
+//    plateau[8][7] = 1;
+//    plateau[1][8] = 1;
+//    plateau[3][8] = 1;
+//    plateau[5][8] = 1;
+//    plateau[7][8] = 1;
+//    plateau[9][8] = 1;
+//    plateau[0][9] = 1;
+//    plateau[2][9] = 1;
+//    plateau[4][9] = 1;
+//    plateau[6][9] = 1;
+//    plateau[8][9] = 1;
 
 
    
@@ -344,6 +362,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
 
     int x2 = cible.getColonne();
     int y2 = cible.getLigne();
+
 
     plateau[x][y] = 0;
     dame.setCase(cible);
