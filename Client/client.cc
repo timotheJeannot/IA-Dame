@@ -9,10 +9,12 @@
 #include <gf/Packet.h>
 #include <gf/Id.h>
 #include <gf/SerializationOps.h>
+#include <gf/Widget.h>
 
-#include "../protocole/protocole.h"
-#include "../model/Plateau.h"
+
 #include "clientTools.h"
+
+
 
 using namespace gf::literals;
 using namespace std;
@@ -52,7 +54,6 @@ int main(int argc, char ** argv)
     if(gf::SocketStatus::Data != socket.sendPacket(packet))
     {
         cerr<<"erreur lors de l'envoi de demande partie au serveur";
-        socket.~TcpSocket();
         return -1;
     }
 
@@ -60,7 +61,6 @@ int main(int argc, char ** argv)
     if( gf::SocketStatus::Data != socket.recvPacket(packet))
     {
         cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-        socket.~TcpSocket();
         return -1;
     }
 
@@ -72,11 +72,13 @@ int main(int argc, char ** argv)
     cout<<"Vous jouez la couleur : "<<couleur<<" \n";
 
     /************** Début de partie ********************/
-    Plateau plateau = Plateau();
+    Plateau plateau;
     
     while (true)
     {
-        cout<<"Etat du plateau :\n"<<plateau.afficheTerminal(); 
+        //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+        plateau.graph.printStartPiece();
+
 
         if(couleur == 1) // On commence
         {
@@ -90,18 +92,17 @@ int main(int argc, char ** argv)
           if(gf::SocketStatus::Data != socket.sendPacket(packet))
           {
               cerr<<"erreur lors de l'envoi de coup";
-              socket.~TcpSocket();
               return -1;
           }
           std::cout<<"testC0\n";
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              socket.~TcpSocket();
               return -1;
           }
           std::cout<<"testC1\n";
-          cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+          //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+            plateau.printMovePiece();
 
             auto coupRep = packet.as<TCoupRep>();
 
@@ -109,7 +110,6 @@ int main(int argc, char ** argv)
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              socket.~TcpSocket();
               return -1;
           }
 
@@ -118,7 +118,6 @@ int main(int argc, char ** argv)
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              socket.~TcpSocket();
               return -1;
           }
 
@@ -129,7 +128,9 @@ int main(int argc, char ** argv)
             if(coupAdvRep.validCoup == VALID)
             {
                 modifCoupAdv(coupAdv, plateau, 1);
-                cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+                //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+                plateau.printMovePiece();
+
             }
           }
           else
@@ -145,7 +146,6 @@ int main(int argc, char ** argv)
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              socket.~TcpSocket();
               return -1;
           }
 
@@ -154,7 +154,6 @@ int main(int argc, char ** argv)
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              socket.~TcpSocket();
               return -1;
           }
 
@@ -165,7 +164,8 @@ int main(int argc, char ** argv)
             if(coupAdvRep.validCoup == VALID)
             {
                 modifCoupAdv(coupAdv, plateau, -1);
-                cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+                //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+                plateau.printMovePiece();
             }
           }
           else
@@ -184,17 +184,16 @@ int main(int argc, char ** argv)
           if(gf::SocketStatus::Data != socket.sendPacket(packet))
           {
               cerr<<"erreur lors de l'envoi de coup";
-              socket.~TcpSocket();
               return -1;
           }
 
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              socket.~TcpSocket();
               return -1;
           }
-            cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+            //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+            plateau.printMovePiece();
 
             auto coupRep = packet.as<TCoupRep>();
           
@@ -204,6 +203,5 @@ int main(int argc, char ** argv)
 
     // fin de communication
     cout<<"fin de la communication avec le serveur "<<serv<< "sur le port "<<port<<"\n";
-     socket.~TcpSocket();
     return 0;
 }
