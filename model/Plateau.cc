@@ -2,7 +2,7 @@
 
 // repère , la case en gaut à gauche à pour position (0,0)
 // 0 pas de pièce , 1 pion blanc , 2 dame blanc , -1 pion noir , -2 dame noir
-Plateau::Plateau(){
+Plateau::Plateau():graph(){
     
     for(int i =0 ; i< 10 ; i++)
     {
@@ -564,4 +564,31 @@ string Plateau::afficheTerminal()
         ret = ret + "\n---------------------------------------------------------------------\n";
     }
     return ret;
+}
+
+void Plateau::printMovePiece() {
+        graph.renderer.clear();
+        graph.printBoard();
+        for(int j=0;j<10;j++) {
+            for (int i = 0; i < 10; i++) {
+                switch(plateau[j][i]){
+                    case -2 : {
+                        GPiece(gf::Vector2f(graph.begin.height + ((j) * graph.sizeSquare), graph.begin.col + (i * graph.sizeSquare)+5.0f), graph.sizeCircle,
+                               gf::Color::Black).render(graph.renderer);
+                    }
+                    case -1 : {
+                        GPiece(gf::Vector2f(graph.begin.height + ((j) * graph.sizeSquare), graph.begin.col + (i * graph.sizeSquare)), graph.sizeCircle,
+                               gf::Color::Black).render(graph.renderer);
+                    }break;
+                    case 2: {
+                        GPiece(gf::Vector2f(graph.begin.height + ((j) * graph.sizeSquare), graph.begin.col + (i * graph.sizeSquare)+5.0f), graph.sizeCircle, gf::Color::White).render(graph.renderer);
+
+                    }
+                    case 1 : {
+                        GPiece(gf::Vector2f(graph.begin.height + ((j) * graph.sizeSquare), graph.begin.col + (i * graph.sizeSquare)), graph.sizeCircle, gf::Color::White).render(graph.renderer);
+                    }break;
+                }
+            }
+        }
+        graph.renderer.display();
 }

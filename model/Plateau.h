@@ -11,6 +11,7 @@
 #include "Joueur.h"
 #include "Pion.h"
 #include "Dame.h"
+#include "Graph.h"
 
 using namespace std;
 
@@ -22,9 +23,11 @@ class  Plateau{
                             // 0 pas de pièce , 1 pion blanc , 2 dame blanc , -1 pion noir , -2 dame noir
     std::vector<std::vector<int>> plateau;
 
-    public:
 
+    public:
+    Graph graph;
     Plateau();
+    void printMovePiece();
     std::vector<std::vector<int>>  getPlateau();
     /* pour les fonctions de modication de plateau après un déplacement:
     retour :
