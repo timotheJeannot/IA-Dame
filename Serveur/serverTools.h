@@ -1,7 +1,7 @@
 #ifndef TEST_GF_SERVERTOOLS_H
 #define TEST_GF_SERVERTOOLS_H
 
-#include <gf/SocketTypes.h>
+
 #include "../protocole/protocole.h"
 #include "../model/Plateau.h"
 

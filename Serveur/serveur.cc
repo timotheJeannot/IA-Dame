@@ -78,7 +78,10 @@ int main(int argc, char ** argv)
                 cerr<<"erreur lors de la réception du packet du client 2";
             }
             
-            Plateau plateau = Plateau();
+            //Plateau plateau = Plateau();
+            //Plateau plateau();
+            Plateau plateau;
+            
             // on va compter les pièces restantes pour savoir quand la partie est terminé
             int nbPieceNoir = 15;
             int nbPieceBlanche = 15;
