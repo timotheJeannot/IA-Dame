@@ -82,6 +82,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int& nbPieces, int couleur)
             int y2 = cnext.l;
             Case cible(x2,y2);
             int retModifDeplacement = plateau.modifPlateauDeplacementNormal(d,cible);
+            d.setCase(cible);
             if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size2 != 1))
             {
                 testErrCoup = true;
@@ -98,6 +99,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int& nbPieces, int couleur)
                     cible.setColonne(x2);
                     cible.setLigne(y2);
                     retModifDeplacement = plateau.modifPlateauDeplacementPrise(d,cible);
+                    d.setCase(cible);
                     if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
                     {
                         testErrCoup = true;
@@ -114,6 +116,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int& nbPieces, int couleur)
             int y2 =  cnext.l;
             Case cible(x2,y2);
             int retModifDeplacement = plateau.modifPlateauDeplacementNormal(p,cible);
+            p.setCase(cible);
             if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size2 != 1))
             {
                 testErrCoup = true;
@@ -130,6 +133,9 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int& nbPieces, int couleur)
                     cible.setColonne(x2);
                     cible.setLigne(y2);
                     retModifDeplacement = plateau.modifPlateauDeplacementPrise(p,cible);
+                    p.setCase(cible);
+                    cout<<"test de la mort numero 1 (server) : \\\\\\\\\\\\\\\\\\\\\\\\\\ \n";
+                    cout<<plateau.afficheTerminal();
                     if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
                     {
                         testErrCoup = true;

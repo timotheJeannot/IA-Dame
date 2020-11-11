@@ -107,11 +107,21 @@ int Plateau::modifPlateauDeplacementNormal(Pion pion, Case cible)
         if(x - x2 == 2 || x - x2 == -2) // il y a eu une prise
         {
             plateau[x +(x2-x)/2][y+(y2-y)/2] = 3;
+            if(y2 == 0) // transformation en dame
+            {
+                plateau[x2][y2] = 2;
+                return 0; // le tour prend fin si il y a eu une tranformation
+            }
             std::vector<Case> testPrise = pion.deplacementPrisePossible(this->getPlateau());
             if(testPrise.size() != 0)
             {
                 return 1;
             }
+        }
+        if(y2 == 0) // transformation en dame
+        {
+            plateau[x2][y2] = 2;
+            return 0; // le tour prend fin si il y a eu une tranformation
         }
     }
     else
@@ -120,11 +130,21 @@ int Plateau::modifPlateauDeplacementNormal(Pion pion, Case cible)
         if(x - x2 == 2 || x - x2 == -2) // il y a eu une prise
         {
             plateau[x +(x2-x)/2][y+(y2-y)/2] = -3;
+            if(y2 == 9) // transformation en dame
+            {
+                plateau[x2][y2] = -2;
+                return 0; // le tour prend fin si il y a eu une tranformation
+            }
             std::vector<Case> testPrise = pion.deplacementPrisePossible(this->getPlateau());
             if(testPrise.size() != 0)
             {
                 return 1;
             }
+        }
+        if(y2 == 9) // transformation en dame
+        {
+            plateau[x2][y2] = -2;
+            return 0; // le tour prend fin si il y a eu une tranformation
         }
     }
 
@@ -156,11 +176,21 @@ int Plateau::modifPlateauDeplacementPrise(Pion pion, Case cible)
         if(x - x2 == 2 || x - x2 == -2) // il y a eu une prise
         {
             plateau[x +(x2-x)/2][y+(y2-y)/2] = 3;
+            if(y2 == 0) // transformation en dame
+            {
+                plateau[x2][y2] = 2;
+                return 0; // le tour prend fin si il y a eu une tranformation
+            }
             std::vector<Case> testPrise = pion.deplacementPrisePossible(this->getPlateau());
             if(testPrise.size() != 0)
             {
                 return 1;
             }
+        }
+        if(y2 == 0) // transformation en dame
+        {
+            plateau[x2][y2] = 2;
+            return 0; // le tour prend fin si il y a eu une tranformation
         }
     }
     else
@@ -169,11 +199,21 @@ int Plateau::modifPlateauDeplacementPrise(Pion pion, Case cible)
         if(x - x2 == 2 || x - x2 == -2) // il y a eu une prise
         {
             plateau[x +(x2-x)/2][y+(y2-y)/2] = -3;
+            if(y2 == 9) // transformation en dame
+            {
+                plateau[x2][y2] = -2;
+                return 0; // le tour prend fin si il y a eu une tranformation
+            }
             std::vector<Case> testPrise = pion.deplacementPrisePossible(this->getPlateau());
             if(testPrise.size() != 0)
             {
                 return 1;
             }
+        }
+        if(y2 == 9) // transformation en dame
+        {
+            plateau[x2][y2] = -2;
+            return 0; // le tour prend fin si il y a eu une tranformation
         }
     }
 

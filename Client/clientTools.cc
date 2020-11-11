@@ -149,6 +149,8 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, int& err) {
             cin>>y2;
             Case cible(x2,y2);
             retModif= plateau.modifPlateauDeplacementPrise(p, cible);
+            cout<<"test de la mort numero 1 : \\\\\\\\\\\\\\\\\\\\\\\\\\ \n";
+            cout<<plateau.afficheTerminal();
             TCase cnext;
             cnext.c = x2;
             cnext.l = y2;
@@ -165,6 +167,12 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, int& err) {
         }
     }
     coup.deplacements = deplacements;
+    cout<<"deplacements : ";
+    for(int i =0; i < coup.deplacements.size(); i++)
+    {
+        cout<<to_string(coup.deplacements[i].c)<<" "<<to_string(coup.deplacements[i].l)<<" | |";
+    }
+    cout<<"\n";
     return coup;
 }
 
@@ -210,6 +218,7 @@ void modifCoupAdv(TCoupReq coupAdv, Plateau& plateau, int couleur) {
             int y2Adv = cnextAdv.l;
             Case cibleAdv(x2Adv,y2Adv);
             plateau.modifPlateauDeplacementNormal(dAdv,cibleAdv); // ce n'est pas grave si on ne différencie pas les deux types de déplacements, car le serveur à valider le coup
+            dAdv.setCase(cibleAdv);
 
         }
     }
@@ -222,6 +231,7 @@ void modifCoupAdv(TCoupReq coupAdv, Plateau& plateau, int couleur) {
             int y2Adv = cnextAdv.l;
             Case cibleAdv(x2Adv,y2Adv);
             plateau.modifPlateauDeplacementNormal(pAdv,cibleAdv); // ce n'est pas grave si on ne différencies pas les deux types de déplacements, car le serveur à valider le coup
+            pAdv.setCase(cibleAdv);
         }
     }
     plateau.enleverPiecesRafle();

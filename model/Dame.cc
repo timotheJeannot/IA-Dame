@@ -64,7 +64,7 @@ std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
         longueurDiagonalHG = c.getLigne();
     }
 
-    for(int i = 0; i < longueurDiagonalHG ; i++)
+    for(int i = 1; i <= longueurDiagonalHG ; i++)
     {
         // on regarde si la case est libre
         if(plateau[c.getColonne()-i][c.getLigne()-i] == 0)
@@ -119,7 +119,7 @@ std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
         longueurDiagonalHD = c.getLigne();
     }
 
-    for(int i = 0; i < longueurDiagonalHD ; i++)
+    for(int i = 1; i <= longueurDiagonalHD ; i++)
     {
         // on regarde si la case est libre
         if(plateau[c.getColonne()+i][c.getLigne()-i] == 0)
@@ -172,7 +172,7 @@ std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
         longueurDiagonalBD = 9-c.getLigne();
     }
 
-    for(int i = 0; i < longueurDiagonalBD ; i++)
+    for(int i = 1; i <= longueurDiagonalBD ; i++)
     {
         // on regarde si la case est libre
         if(plateau[c.getColonne()+i][c.getLigne()+i] == 0)
@@ -225,7 +225,7 @@ std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
         longueurDiagonalBG = 9-c.getLigne();
     }
 
-    for(int i = 0; i < longueurDiagonalBG ; i++)
+    for(int i = 1; i <= longueurDiagonalBG ; i++)
     {
         // on regarde si la case est libre
         if(plateau[c.getColonne()-i][c.getLigne()+i] == 0)
@@ -321,7 +321,7 @@ std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> 
         longueurDiagonalHG = c.getLigne();
     }
 
-    for(int i = 0; i < longueurDiagonalHG ; i++)
+    for(int i = 1; i <= longueurDiagonalHG ; i++)
     {
         
         
@@ -364,7 +364,7 @@ std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> 
         longueurDiagonalHD = c.getLigne();
     }
 
-    for(int i = 0; i < longueurDiagonalHD ; i++)
+    for(int i = 1; i <= longueurDiagonalHD ; i++)
     {
         
         // on regarde si il y une pièce de notre couleur qui nous bloque la diagonal
@@ -405,7 +405,7 @@ std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> 
         longueurDiagonalBD = 9-c.getLigne();
     }
 
-    for(int i = 0; i < longueurDiagonalBD ; i++)
+    for(int i = 1; i <= longueurDiagonalBD ; i++)
     {
 
         
@@ -446,7 +446,7 @@ std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> 
         longueurDiagonalBG = 9-c.getLigne();
     }
 
-    for(int i = 0; i < longueurDiagonalBG ; i++)
+    for(int i = 1; i <= longueurDiagonalBG ; i++)
     {
         // on regarde si il y une pièce de notre couleur qui nous bloque la diagonal
         if((plateau[c.getColonne()-i][c.getLigne()+i] >0 && blanc ) || (plateau[c.getColonne()-i][c.getLigne()+i] <0 && blanc == false))
