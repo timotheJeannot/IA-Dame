@@ -27,9 +27,10 @@ class  Plateau{
     public:
     Graph graph;
     Plateau();
+    Plateau(Plateau *p);
     void printMovePiece();
     std::vector<std::vector<int>>  getPlateau();
-    /* pour les fonctions de modication de plateau après un déplacement:
+    /* pour les méthodes de modication de plateau après un déplacement:
     retour :
         -1 si le coup n'est pas permi 
         0 si plus de prise sont possible après ce coup (sonne la fin du tour)
@@ -44,7 +45,18 @@ class  Plateau{
     int modifPlateauDeplacementPrise(Pion pion , Case cible);
     int modifPlateauDeplacementPrise(Dame dame , Case cible);
     void enleverPiecesRafle(); // enlève les 3 , -3 après une fois que le coup est fini
-    string afficheTerminal();
+    void listeCheminsPrise(Pion p, std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins , int& max); // Construit la liste de chemins avec prises possible pour le pion
+                                                    // chemin et listeChemin sont vide au premier appel de cette méthode
+                                                    // chemin correspond au chemin parcouru par le pion a fil des appels récursifs de la méthode
+                                                    // listeChemin correpond à la liste des chemins possibles avec des prises pour le pion
+                                                    //size est appelé avec 0 pour le premier appel, il représente la taille d'un des chemin avec le plus de prises
+    void listeCheminsPrise(Dame d, std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max);
+    std::vector<Case> priseMajoritaire(Pion p,std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max); // construit les cases qu'un pion peut prendre en prenant en compte la prise majoritaire
+    std::vector<Case> priseMajoritaire(Dame p,std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max);
+
+    std::vector<std::vector<Case>> PiecesJouable(bool blanc);   // construit les cases disponible des pièces jouable.
+                                                                // les pièces jouable sont les premières cases de chaque liste (et le reste des cases de la liste sont les cases dispo)
+    string afficheTerminal();  
     
     
 

@@ -220,3 +220,10 @@ std::vector<Case> Pion::deplacementPrisePossible (std::vector<std::vector<int>> 
 
     return listCase;
 }
+
+std::vector<Case> Pion::deplacementMajoritaire(std::vector<std::vector<int>> p)
+{
+    std::vector<Case> ret;
+
+    return ret;
+}

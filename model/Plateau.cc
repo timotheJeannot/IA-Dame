@@ -24,54 +24,13 @@ Plateau::Plateau():graph(){
             }
         }
 
-    }
-
-
-//    plateau[1][0] = -1;
-//    plateau[3][0] = -1;
-//    plateau[5][0] = -1;
-//    plateau[7][0] = -1;
-//    plateau[9][0] = -1;
-//    plateau[0][1] = -1;
-//    plateau[2][1] = -1;
-//    plateau[4][1] = -1;
-//    plateau[6][1] = -1;
-//    plateau[8][1] = -1;
-//    plateau[1][2] = -1;
-//    plateau[3][2] = -1;
-//    plateau[5][2] = -1;
-//    plateau[7][2] = -1;
-//    plateau[9][2] = -1;
-//    plateau[0][3] = -1;
-//    plateau[2][3] = -1;
-//    plateau[4][3] = -1;
-//    plateau[6][3] = -1;
-//    plateau[8][3] = -1;
-//
-//    plateau[1][6] = 1;
-//    plateau[3][6] = 1;
-//    plateau[5][6] = 1;
-//    plateau[7][6] = 1;
-//    plateau[9][6] = 1;
-//    plateau[0][7] = 1;
-//    plateau[2][7] = 1;
-//    plateau[4][7] = 1;
-//    plateau[6][7] = 1;
-//    plateau[8][7] = 1;
-//    plateau[1][8] = 1;
-//    plateau[3][8] = 1;
-//    plateau[5][8] = 1;
-//    plateau[7][8] = 1;
-//    plateau[9][8] = 1;
-//    plateau[0][9] = 1;
-//    plateau[2][9] = 1;
-//    plateau[4][9] = 1;
-//    plateau[6][9] = 1;
-//    plateau[8][9] = 1;
-
-
-   
+    }   
     
+}
+
+Plateau::Plateau(Plateau *p)
+{
+    plateau=p->getPlateau();
 }
 
 std::vector<std::vector<int>> Plateau::getPlateau()
@@ -569,6 +528,199 @@ void Plateau::enleverPiecesRafle()
             }
         }
     }
+}
+
+
+
+void Plateau::listeCheminsPrise(Pion p, std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max)
+{
+    
+    std::vector<Case> casesDispoP = p.deplacementPrisePossible(plateau);
+    int size = casesDispoP.size();
+
+    for(int i =0 ; i<size ; i++)
+    {
+        Plateau copie(this);
+        std::vector<Case> copieChemin = chemin;
+        copieChemin.push_back(casesDispoP[i]);
+        int prise = copie.modifPlateauDeplacementPrise(p,casesDispoP[i]);
+        if( prise== 1)
+        {
+            Pion pion(casesDispoP[i],p.getBlanc());
+            copie.listeCheminsPrise(pion,copieChemin,listeChemins,max);
+        }
+        if(prise == 0)
+        {
+            listeChemins.push_back(copieChemin);
+            if(copieChemin.size()> max)
+            {
+                max = copieChemin.size();
+            }
+        }
+        
+    }
+
+}
+
+std::vector<Case> Plateau::priseMajoritaire(Pion p,std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max)
+{
+    listeCheminsPrise(p,chemin,listeChemins,max);
+
+    std::vector<Case> ret;
+    int size = listeChemins.size();
+    for(int i =0 ; i<size ; i++)
+    {
+        if(listeChemins[i].size() == max)
+        {
+            ret.push_back(listeChemins[i][0]); 
+        }
+    }
+    
+
+    return ret;
+}
+
+void Plateau::listeCheminsPrise(Dame d, std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max)
+{
+    
+    std::vector<Case> casesDispoP = d.deplacementPrisePossible(plateau);
+    int size = casesDispoP.size();
+
+    for(int i =0 ; i<size ; i++)
+    {
+        Plateau copie(this);
+        std::vector<Case> copieChemin = chemin;
+        copieChemin.push_back(casesDispoP[i]);
+        int prise = copie.modifPlateauDeplacementPrise(d,casesDispoP[i]);
+        if( prise== 1)
+        {
+            Dame dame(casesDispoP[i],d.getBlanc());
+            copie.listeCheminsPrise(dame,copieChemin,listeChemins,max);
+        }
+        if(prise == 0)
+        {
+            listeChemins.push_back(copieChemin);
+            if(copieChemin.size()> max)
+            {
+                max = copieChemin.size();
+            }
+        }
+        
+    }
+}
+
+std::vector<Case> Plateau::priseMajoritaire(Dame d,std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max)
+{
+    listeCheminsPrise(d,chemin,listeChemins,max);
+
+    std::vector<Case> ret;
+    int size = listeChemins.size();
+    for(int i =0 ; i<size ; i++)
+    {
+        if(listeChemins[i].size() == max)
+        {
+            ret.push_back(listeChemins[i][0]); 
+        }
+    }
+    
+
+    return ret;
+}
+
+std::vector<std::vector<Case>> Plateau::PiecesJouable(bool blanc)
+{
+    std::vector<std::vector<Case>> ret;
+
+    int couleurP = -1;
+    if(blanc)
+    {
+        couleurP = 1;
+    }
+
+    int max = 0;
+    for(int i =0 ; i<10; i++)
+    {
+        for(int j =0 ; j<10 ; j++)
+        {
+            if(plateau[i][j] == 1*couleurP)
+            {
+                Pion p = Pion(i,j,blanc);
+            
+                int size = 0;
+                std::vector<Case> chemin;
+                std::vector<std::vector<Case>> listeChemins ;
+
+                std::vector<Case> priseMaj = priseMajoritaire(p,chemin,listeChemins,size);
+                std::vector<Case> listeRet ;
+                listeRet.push_back(p.getCase());
+                listeRet.insert(listeRet.end(),priseMaj.begin(),priseMaj.end());
+                bool test = true; // vrai si il y a des cases dispo pour la pièce et faux sinon
+                
+                if(size == max)
+                {
+                    if(size == 0) // il n'y a pas de prise possible, pour la pièce, on lui donne donc les cases de déplacement normal comme cases dispo
+                    {
+                        std::vector<Case> deplNorm = p.deplacementPossible(plateau);
+                        if(deplNorm.size() == 0)
+                        {
+                            test = false;
+                        }
+                        listeRet.insert(listeRet.end(),deplNorm.begin(),deplNorm.end());
+                    }
+                    if(test)
+                    {
+                        ret.push_back(listeRet);
+                    }
+                }
+                if(size > max) // une pièces à plus de prises possible , il faut annuler tout ce qu'on a mis avant
+                {
+                    max = size;
+                    ret.clear();
+                    ret.push_back(listeRet);
+                }
+            }
+            if(plateau[i][j] == 2*couleurP)
+            {
+                Dame d = Dame(i,j,blanc);
+
+                int size = 0;
+                std::vector<Case> chemin;
+                std::vector<std::vector<Case>> listeChemins ;
+                
+                std::vector<Case> priseMaj = priseMajoritaire(d,chemin,listeChemins,size);
+                std::vector<Case> listeRet ;
+                listeRet.push_back(d.getCase());
+                listeRet.insert(listeRet.end(),priseMaj.begin(),priseMaj.end());
+                bool test = true; // vrai si il y a des cases dispo pour la pièce et faux sinon
+                
+                if(size == max)
+                {
+                    if(size == 0) // il n'y a pas de prise possible, pour la pièce, on lui donne donc les cases de déplacement normal comme cases dispo
+                    {
+                        std::vector<Case> deplNorm = d.deplacementPossible(plateau);
+                        if(deplNorm.size() == 0)
+                        {
+                            test = false;
+                        }
+                        listeRet.insert(listeRet.end(),deplNorm.begin(),deplNorm.end());
+                    }
+                    if(test)
+                    {
+                        ret.push_back(listeRet);
+                    }
+                }
+                if(size > max) // une pièces à plus de prises possible , il faut annuler tout ce qu'on a mis avant
+                {
+                    max = size;
+                    ret.clear();
+                    ret.push_back(listeRet);
+                }
+                
+            }            
+        }
+    }
+
+    return ret;
 }
 
 string Plateau::afficheTerminal()
