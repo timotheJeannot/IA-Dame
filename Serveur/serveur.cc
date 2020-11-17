@@ -82,12 +82,12 @@ int main(int argc, char ** argv)
             //Plateau plateau();
             Plateau plateau;
             
-            // on va compter les pièces restantes pour savoir quand la partie est terminé
-            int nbPieceNoir = 15;
-            int nbPieceBlanche = 15;
+            
+            cout<<plateau.afficheTerminal();
             /****** Boucle de jeu ********/
             while(true)
             {
+                std::cout<<"Attention : nbPieceB = "<<to_string(plateau.getNbPiecesB())<<"  nbPieceN = "<<to_string(plateau.getNbPiecesN())<<"\n";
                 // le joueur 1 est blanc
                 if(req1.coulPion == 1)
                 {
@@ -100,26 +100,27 @@ int main(int argc, char ** argv)
                     std::cout<<"test 1";
 
                     auto coup = packetC1.as<TCoupReq>();
+                    std::cout<<"test 60\n";
 
-                    TCoupRep coupRep = buildRepCoup(plateau, coup, nbPieceNoir, 0);
-
+                    TCoupRep coupRep = buildRepCoup(plateau, coup, 1);
+                    std::cout<<"test 61\n";
                     cout<<plateau.afficheTerminal();
 
                     packetC1.is(coupRep);
-
+                    std::cout<<"test 62\n";
                     if(gf::SocketStatus::Data != client1.sendPacket(packetC1))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
 
                     }
-
+                    std::cout<<"test 63\n";
                     packetC2.is(coup);
 
                     if(gf::SocketStatus::Data != client2.sendPacket(packetC2))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
                     }
-
+                    std::cout<<"test 64\n";
                     packetC2.is(coupRep);
 
                     if(gf::SocketStatus::Data != client2.sendPacket(packetC2))
@@ -127,52 +128,55 @@ int main(int argc, char ** argv)
                         cerr<<"erreur lors de la réception du packet du client 2";
 
                     }
-
+                    std::cout<<"test 65\n";
                     if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
                     {
+                        std::cout<<"le joueur 1("<<req1.nomJoueur<<") a gagné \n";
                         break;                       
                     }
-
+                    std::cout<<"test 66\n";
                     if( gf::SocketStatus::Data != client2.recvPacket(packetC2))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
                         return -1;
                     }
-
+                    std::cout<<"test 67\n";
                     auto coupC2 = packetC2.as<TCoupReq>();
-
-                    coupRep = buildRepCoup(plateau, coupC2, nbPieceBlanche, 1);
+                    std::cout<<"test 68\n";
+                    coupRep = buildRepCoup(plateau, coupC2, -1);
                     cout<<plateau.afficheTerminal();
 
                     packetC2.is(coupRep);
-
+                    std::cout<<"test 69\n";
                     if(gf::SocketStatus::Data != client2.sendPacket(packetC2))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
                     }
-
+                    std::cout<<"test 70\n";
                     packetC1.is(coupC2);
 
                     if(gf::SocketStatus::Data != client1.sendPacket(packetC1))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
                     }
-
+                    std::cout<<"test 71\n";
                     packetC1.is(coupRep);
 
                     if(gf::SocketStatus::Data != client1.sendPacket(packetC1))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
                     }
-
+                    std::cout<<"test 72\n";
                     if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
                     {
+                        std::cout<<"le joueur 2("<<req2.nomJoueur<<") a gagné \n";
                         break;                       
                     }
 
                 }
                 else // le joueur 2 est blanc
                 {
+                    std::cout<<"test 73\n";
                     if( gf::SocketStatus::Data != client2.recvPacket(packetC2))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
@@ -180,25 +184,25 @@ int main(int argc, char ** argv)
                     }
 
                     auto coupC2 = packetC2.as<TCoupReq>();
-
-                    TCoupRep coupRep = buildRepCoup(plateau, coupC2, nbPieceBlanche, 1);
+                    std::cout<<"test 74\n";
+                    TCoupRep coupRep = buildRepCoup(plateau, coupC2, 1);
                     cout<<plateau.afficheTerminal();
 
                     packetC2.is(coupRep);
-
+                    std::cout<<"test 75\n";
                     if(gf::SocketStatus::Data != client2.sendPacket(packetC2))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
 
                     }
-
+                    std::cout<<"test 76\n";
                     packetC1.is(coupC2);
                     if(gf::SocketStatus::Data != client1.sendPacket(packetC1))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
 
                     }
-
+                    std::cout<<"test 77\n";
                     packetC1.is(coupRep);
                     if(gf::SocketStatus::Data != client1.sendPacket(packetC1))
                     {
@@ -207,47 +211,49 @@ int main(int argc, char ** argv)
                     }
                     if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
                     {
+                        std::cout<<"le joueur 2("<<req2.nomJoueur<<") a gagné \n";
                         break;                       
                     }
-
+                    std::cout<<"test 78\n";
                     if( gf::SocketStatus::Data != client1.recvPacket(packetC1))
                     {
                         cerr<<"erreur lors de la réception du packet du client 1";
 
                         return -1;
                     }
-
+                    std::cout<<"test 79\n";
                     auto coupC1 = packetC1.as<TCoupReq>();
+                    std::cout<<"test 80\n";
 
-
-                    coupRep = buildRepCoup(plateau, coupC1, nbPieceNoir, 0);
+                    coupRep = buildRepCoup(plateau, coupC1, -1);
                     cout<<plateau.afficheTerminal();
 
                     packetC1.is(coupRep);
-
+                    std::cout<<"test 81\n";
                     if(gf::SocketStatus::Data != client1.sendPacket(packetC1))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
                     }
 
                     packetC2.is(coupC1);
-
+                    std::cout<<"test 82\n";
                     if(gf::SocketStatus::Data != client2.sendPacket(packetC2))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
                     }
 
                     packetC2.is(coupRep);
-
+                    std::cout<<"test 83\n";
                     if(gf::SocketStatus::Data != client2.sendPacket(packetC2))
                     {
                         cerr<<"erreur lors de la réception du packet du client 2";
                     }
                     if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
                     {
+                        std::cout<<"le joueur 1("<<req1.nomJoueur<<") a gagné \n";
                         break;                       
                     }
-
+                    std::cout<<"test 84\n";
                 }
             }
    

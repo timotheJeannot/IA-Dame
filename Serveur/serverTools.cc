@@ -29,9 +29,10 @@ std::vector<PartieRep> buildRepPartie(TPartieReq pr1, TPartieReq pr2) {
     return partieRep;
 }
 
-TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int& nbPieces, int couleur){
+TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur){
     TCoupRep coupRep ;
     std::vector<TCase> deplacements = cr.deplacements;
+    int size2 = deplacements.size();
     TCase posPionAv= cr.posPionAv;
     int x = posPionAv.c;
     int y = posPionAv.l;
@@ -40,6 +41,36 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int& nbPieces, int couleur)
     bool isDame = false;
     bool usePieceAdv = false;
     bool testErrCoup = false;
+
+    bool blanc =true;
+    if(couleur == -1)
+    {
+        blanc = false;
+    }
+    std::map<Case,std::vector<std::vector<Case>>> cheminsPieces = plateau.cheminsPiecesJouable(blanc);
+    cout<<"(server ) Les pieces jouable sont les suivantes : \n";
+    for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
+    {
+        Case casePiece = it->first;
+        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<")  ";
+    }
+    Case choixPiece(x,y);
+    std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(choixPiece);
+    std::vector<std::vector<Case>> listeChemins = it->second;
+    if(it == cheminsPieces.end())
+    {
+        testErrCoup = true;
+    }
+    else
+    {
+        if(listeChemins[0].size() != size2)
+        {
+            testErrCoup = true;
+        }
+    }
+    
+    
+    /*
     if (couleur == 1) {
         if(plateau.getPlateau()[x][y] >0)
         {
@@ -145,9 +176,119 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int& nbPieces, int couleur)
             nbPieces = nbPieces - size2 +1;
         }
         plateau.enleverPiecesRafle();
+    }*/
+
+    if(!testErrCoup)
+    {
+        if(plateau.getPlateau()[x][y] == couleur)
+        {
+            p = Pion(x,y,blanc);
+        }
+        if(plateau.getPlateau()[x][y] == 2*couleur)
+        {
+            d = Dame(x,y,blanc);
+            isDame = true;
+        }
+
+        int nbDeplacement = 0;
+        if(isDame)
+        {
+            TCase cnext = deplacements[0];
+            int x2 = cnext.c;
+            int y2 = cnext.l;
+            Case cible(x2,y2);
+            if(plateau.verifDeplacement(d,cible,nbDeplacement,cheminsPieces) == false)
+            {
+                testErrCoup = true;
+            }
+            else
+            {
+                int retModifDeplacement = plateau.modifPlateauDeplacementNormal(d,cible);
+                d.setCase(cible);
+                cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
+                cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(d.getCase(),listeChemins));
+                nbDeplacement++;
+                if(retModifDeplacement == 1)
+                {
+
+                    for(int i = 1 ; i <size2; i++)
+                    {
+                        cnext = deplacements[i];
+                        x2 = cnext.c;
+                        y2 = cnext.l;
+                        cible.setColonne(x2);
+                        cible.setLigne(y2);
+                        if(plateau.verifDeplacement(d,cible,nbDeplacement,cheminsPieces) == false)
+                        {
+                            testErrCoup = true;
+                        }
+                        else
+                        {
+                            retModifDeplacement = plateau.modifPlateauDeplacementPrise(d,cible);
+                            d.setCase(cible);
+                            cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
+                            cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(d.getCase(),listeChemins));
+                            nbDeplacement++;
+                        }
+
+                    }
+                }
+                
+            }
+        }
+        else
+        {
+            TCase cnext = deplacements[0];
+            int x2 = cnext.c;
+            int y2 = cnext.l;
+            Case cible(x2,y2);
+            if(plateau.verifDeplacement(p,cible,nbDeplacement,cheminsPieces) == false)
+            {
+                testErrCoup = true;
+                //cout<<"test de merde  \n";
+            }
+            else
+            {
+                int retModifDeplacement = plateau.modifPlateauDeplacementNormal(p,cible);
+                //cout<<"test de merde 2 \n";
+                p.setCase(cible);
+                cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
+                cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins));
+                nbDeplacement++;
+                if(retModifDeplacement == 1)
+                {
+
+                    for(int i = 1 ; i <size2; i++)
+                    {
+                        cnext = deplacements[i];
+                        x2 = cnext.c;
+                        y2 = cnext.l;
+                        cible.setColonne(x2);
+                        cible.setLigne(y2);
+                        if(plateau.verifDeplacement(p,cible,nbDeplacement,cheminsPieces) == false)
+                        {
+                            testErrCoup = true;
+                        }
+                        else
+                        {
+                            retModifDeplacement = plateau.modifPlateauDeplacementPrise(p,cible);
+                            p.setCase(cible);
+                            cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
+                            cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins));
+                            nbDeplacement++;
+                        }
+
+                    }
+                }
+                
+            }
+        }
+        plateau.enleverPiecesRafle();
     }
 
-    if(testErrCoup || usePieceAdv)
+
+    //if(testErrCoup || usePieceAdv)
+    if(testErrCoup)
     {
         coupRep.err = ERR_COUP;
         coupRep.validCoup = TRICHE ; // je fais pas bien la différence entre ces deux infos du protocole
@@ -158,7 +299,11 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int& nbPieces, int couleur)
         coupRep.err =ERR_OK;
         coupRep.validCoup = VALID;
     }
-    if(nbPieces == 0)
+    /*if(nbPieces == 0)
+    {
+        coupRep.propCoup = GAGNE;
+    }*/
+    if((blanc && plateau.getNbPiecesN() == 0) || !blanc && plateau.getNbPiecesB() == 0)
     {
         coupRep.propCoup = GAGNE;
     }

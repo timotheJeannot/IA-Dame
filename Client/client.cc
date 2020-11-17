@@ -77,7 +77,7 @@ int main(int argc, char ** argv)
     while (true)
     {
         //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-        plateau.graph.printStartPiece();
+        //plateau.graph.printStartPiece();
 
 
         if(couleur == 1) // On commence
@@ -102,35 +102,34 @@ int main(int argc, char ** argv)
           }
           std::cout<<"testC1\n";
           //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-            plateau.printMovePiece();
-
+            //plateau.printMovePiece();
+            std::cout<<"test 42\n";
             auto coupRep = packet.as<TCoupRep>();
-
+            std::cout<<"test 43\n";
 
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
               return -1;
           }
-
+            std::cout<<"test 44\n";
           auto coupAdv = packet.as<TCoupReq>();
-
+            std::cout<<"test 45\n";
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
               return -1;
           }
-
+            std::cout<<"test 46\n";
           auto coupAdvRep = packet.as<TCoupRep>();
-
+            std::cout<<"test 47\n";
           if(coupAdvRep.propCoup == CONT)
           {
             if(coupAdvRep.validCoup == VALID)
             {
                 modifCoupAdv(coupAdv, plateau, 1);
                 //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-                plateau.printMovePiece();
-
+                //plateau.printMovePiece();
             }
           }
           else
@@ -142,30 +141,30 @@ int main(int argc, char ** argv)
         }
         else
         {
-
+            std::cout<<"test 48\n";
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
               return -1;
           }
-
+            std::cout<<"test 49\n";
           auto coupAdv = packet.as<TCoupReq>();
-
+            std::cout<<"test 50\n";
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
               return -1;
           }
-
+            std::cout<<"test 51\n";
           auto coupAdvRep = packet.as<TCoupRep>();
-
+            std::cout<<"test 52\n";
           if(coupAdvRep.propCoup == CONT)
           {
             if(coupAdvRep.validCoup == VALID)
             {
                 modifCoupAdv(coupAdv, plateau, -1);
                 //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-                plateau.printMovePiece();
+                //plateau.printMovePiece();
             }
           }
           else
@@ -173,31 +172,34 @@ int main(int argc, char ** argv)
             /* la partie est fini, il faut afficher le résultat */
             break;
           }
-
+            std::cout<<"test 53\n";
           TCoupReq coup = buildCoup(plateau, -1, err);
-
+            std::cout<<"test 54\n";
           if (err == 1) {
               cerr<<"erreur lors de la création du coup";
               return -1;
           }
           packet.is(coup);
+            std::cout<<"test 55\n";
           if(gf::SocketStatus::Data != socket.sendPacket(packet))
           {
               cerr<<"erreur lors de l'envoi de coup";
               return -1;
           }
-
+            std::cout<<"test 56\n";
           if( gf::SocketStatus::Data != socket.recvPacket(packet))
           {
               cerr<<"erreur lors de la réception de confirmation de partie du serveur";
               return -1;
           }
             //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-            plateau.printMovePiece();
-
+            std::cout<<"test 57\n";
+            //plateau.printMovePiece();
+            std::cout<<"test 58\n";
             auto coupRep = packet.as<TCoupRep>();
-          
+            std::cout<<"test 59\n";
         }
+        cout<<plateau.afficheTerminal();
         
     }
 

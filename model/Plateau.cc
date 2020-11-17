@@ -25,31 +25,63 @@ Plateau::Plateau():graph(){
         }
 
     }   
-    
+    nbPiecesB = 20;
+    nbPiecesN = 20;
 }
 
 Plateau::Plateau(Plateau *p)
 {
     plateau=p->getPlateau();
+    nbPiecesN = p->getNbPiecesN();
+    nbPiecesB = p->getNbPiecesB();
 }
+
 
 std::vector<std::vector<int>> Plateau::getPlateau()
 {
     return plateau;
 }
 
+int Plateau::getNbPiecesB()
+{
+    return nbPiecesB;
+}
+
+int Plateau::getNbPiecesN()
+{
+    return nbPiecesN;
+}
+
 int Plateau::modifPlateauDeplacementNormal(Pion pion, Case cible)
 {
-    std::vector<Case> casesDispo = pion.deplacementPossible(this->getPlateau());
-    /*std::cout<<"test : "<<std::to_string(casesDispo.size())<<"\n";
-    std::cout<<"c1 = ("<<std::to_string(casesDispo[0].getColonne())<<", "<<std::to_string(casesDispo[0].getLigne())<<")\n";
-    std::cout<<"c2 = ("<<std::to_string(casesDispo[1].getColonne())<<", "<<std::to_string(casesDispo[1].getLigne())<<")\n";
-    std::cout<<"pion = ("<<std::to_string(pion.getCase().getColonne())<<", "<<std::to_string(pion.getCase().getLigne())<<")\n";*/
+    /*std::vector<Case> casesDispo = pion.deplacementPossible(this->getPlateau());
 
     if (std::find(casesDispo.begin(), casesDispo.end(), cible) == casesDispo.end())
     {
         return -1;
+    }*/
+
+    /*std::vector<std::vector<Case>> casesDispo = PiecesJouable(pion.getBlanc());
+    int i =0;
+    while(casesDispo[i][0] != pion.getCase() && i < casesDispo.size())
+    {
+        i++;
     }
+
+    if(i== casesDispo.size()) // la piece ne peut pas jouer
+    {
+        return -1;
+    }
+    if(pion.getCase() == cible)
+    {
+        return -1;
+    }
+
+    if (std::find(casesDispo[i].begin(), casesDispo[i].end(), cible) == casesDispo[i].end()) // la piece ne peut pas jouer sur la cible indiquer
+    {
+        return -1;
+    }*/
+
 
     //Case casePion = pion.getCase();
     int x = pion.getCase().getColonne();
@@ -65,6 +97,7 @@ int Plateau::modifPlateauDeplacementNormal(Pion pion, Case cible)
         plateau[x2][y2] = 1;
         if(x - x2 == 2 || x - x2 == -2) // il y a eu une prise
         {
+            nbPiecesN --;
             plateau[x +(x2-x)/2][y+(y2-y)/2] = 3;
             if(y2 == 0) // transformation en dame
             {
@@ -88,6 +121,7 @@ int Plateau::modifPlateauDeplacementNormal(Pion pion, Case cible)
         plateau[x2][y2] = -1;
         if(x - x2 == 2 || x - x2 == -2) // il y a eu une prise
         {
+            nbPiecesB --;
             plateau[x +(x2-x)/2][y+(y2-y)/2] = -3;
             if(y2 == 9) // transformation en dame
             {
@@ -113,12 +147,12 @@ int Plateau::modifPlateauDeplacementNormal(Pion pion, Case cible)
 
 int Plateau::modifPlateauDeplacementPrise(Pion pion, Case cible)
 {
-    std::vector<Case> casesDispo = pion.deplacementPrisePossible(this->getPlateau());
+    /*std::vector<Case> casesDispo = pion.deplacementPrisePossible(this->getPlateau());
 
     if (std::find(casesDispo.begin(), casesDispo.end(), cible) == casesDispo.end())
     {
         return -1;
-    }
+    }*/
 
     //Case casePion = pion.getCase();
     int x = pion.getCase().getColonne();
@@ -134,6 +168,7 @@ int Plateau::modifPlateauDeplacementPrise(Pion pion, Case cible)
         plateau[x2][y2] = 1;
         if(x - x2 == 2 || x - x2 == -2) // il y a eu une prise
         {
+            nbPiecesN--;
             plateau[x +(x2-x)/2][y+(y2-y)/2] = 3;
             if(y2 == 0) // transformation en dame
             {
@@ -157,6 +192,7 @@ int Plateau::modifPlateauDeplacementPrise(Pion pion, Case cible)
         plateau[x2][y2] = -1;
         if(x - x2 == 2 || x - x2 == -2) // il y a eu une prise
         {
+            nbPiecesB--;
             plateau[x +(x2-x)/2][y+(y2-y)/2] = -3;
             if(y2 == 9) // transformation en dame
             {
@@ -181,12 +217,33 @@ int Plateau::modifPlateauDeplacementPrise(Pion pion, Case cible)
 
 int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
 {
-    std::vector<Case> casesDispo = dame.deplacementPossible(this->getPlateau());
+    /*std::vector<Case> casesDispo = dame.deplacementPossible(this->getPlateau());
 
     if (std::find(casesDispo.begin(), casesDispo.end(), cible) == casesDispo.end())
     {
         return -1;
+    }*/
+
+    /*std::vector<std::vector<Case>> casesDispo = PiecesJouable(dame.getBlanc());
+    int i =0;
+    while(casesDispo[i][0] != dame.getCase() && i < casesDispo.size())
+    {
+        i++;
     }
+
+    if(i== casesDispo.size()) // la piece ne peut pas jouer
+    {
+        return -1;
+    }
+    if(dame.getCase() == cible)
+    {
+        return -1;
+    }
+
+    if (std::find(casesDispo[i].begin(), casesDispo[i].end(), cible) == casesDispo[i].end()) // la piece ne peut pas jouer sur la cible indiquer
+    {
+        return -1;
+    }*/
 
     int x = dame.getCase().getColonne();
     int y = dame.getCase().getLigne();
@@ -206,6 +263,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
             {
                 if(plateau[x+i][y+i] == -1 || plateau[x+i][y+i] == -2)
                 {
+                    nbPiecesN--;
                     plateau[x+i][y+i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -223,6 +281,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
             {
                 if(plateau[x+i][y-i] == -1 || plateau[x+i][y-i] == -2)
                 {
+                    nbPiecesN--;
                     plateau[x+i][y-i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -240,6 +299,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
             {
                 if(plateau[x-i][y+i] == -1 || plateau[x-i][y+i] == -2)
                 {
+                    nbPiecesN--;
                     plateau[x-i][y+i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -257,6 +317,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
             {
                 if(plateau[x-i][y-i] == -1 || plateau[x-i][y-i] == -2)
                 {
+                    nbPiecesN--;
                     plateau[x-i][y-i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -280,6 +341,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
             {
                 if(plateau[x+i][y+i] == 1 || plateau[x+i][y+i] == 2)
                 {
+                    nbPiecesB--;
                     plateau[x+i][y+i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -297,6 +359,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
             {
                 if(plateau[x+i][y-i] == 1 || plateau[x+i][y-i] == 2)
                 {
+                    nbPiecesB--;
                     plateau[x+i][y-i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -314,6 +377,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
             {
                 if(plateau[x-i][y+i] == 1 || plateau[x-i][y+i] == 2)
                 {
+                    nbPiecesB--;
                     plateau[x-i][y+i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -331,6 +395,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
             {
                 if(plateau[x-i][y-i] == 1 || plateau[x-i][y-i] == 2)
                 {
+                    nbPiecesB--;
                     plateau[x-i][y-i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -349,12 +414,17 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
 
 int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
 {
-    std::vector<Case> casesDispo = dame.deplacementPrisePossible(this->getPlateau());
+    /*std::vector<Case> casesDispo = dame.deplacementPrisePossible(this->getPlateau());
 
     if (std::find(casesDispo.begin(), casesDispo.end(), cible) == casesDispo.end())
     {
         return -1;
     }
+
+    if(std::find(casesDispo.begin(), casesDispo.end(), cible) == casesDispo.end())
+    {
+        return -1;
+    }*/
 
     int x = dame.getCase().getColonne();
     int y = dame.getCase().getLigne();
@@ -375,6 +445,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
             {
                 if(plateau[x+i][y+i] == -1 || plateau[x+i][y+i] == -2)
                 {
+                    nbPiecesN--;
                     plateau[x+i][y+i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -392,6 +463,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
             {
                 if(plateau[x+i][y-i] == -1 || plateau[x+i][y-i] == -2)
                 {
+                    nbPiecesN--;
                     plateau[x+i][y-i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -409,6 +481,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
             {
                 if(plateau[x-i][y+i] == -1 || plateau[x-i][y+i] == -2)
                 {
+                    nbPiecesN--;
                     plateau[x-i][y+i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -426,6 +499,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
             {
                 if(plateau[x-i][y-i] == -1 || plateau[x-i][y-i] == -2)
                 {
+                    nbPiecesN--;
                     plateau[x-i][y-i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -449,6 +523,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
             {
                 if(plateau[x+i][y+i] == 1 || plateau[x+i][y+i] == 2)
                 {
+                    nbPiecesB--;
                     plateau[x+i][y+i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -466,6 +541,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
             {
                 if(plateau[x+i][y-i] == 1 || plateau[x+i][y-i] == 2)
                 {
+                    nbPiecesB--;
                     plateau[x+i][y-i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -483,6 +559,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
             {
                 if(plateau[x-i][y+i] == 1 || plateau[x-i][y+i] == 2)
                 {
+                    nbPiecesB--;
                     plateau[x-i][y+i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -500,6 +577,7 @@ int Plateau::modifPlateauDeplacementPrise(Dame dame, Case cible)
             {
                 if(plateau[x-i][y-i] == 1 || plateau[x-i][y-i] == 2)
                 {
+                    nbPiecesB--;
                     plateau[x-i][y-i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
@@ -532,7 +610,7 @@ void Plateau::enleverPiecesRafle()
 
 
 
-void Plateau::listeCheminsPrise(Pion p, std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max)
+void Plateau::listeCheminsPrise(Pion p, std::vector<Case> chemin,std::vector<std::vector<Case>>& listeChemins, int& max)
 {
     
     std::vector<Case> casesDispoP = p.deplacementPrisePossible(plateau);
@@ -551,10 +629,35 @@ void Plateau::listeCheminsPrise(Pion p, std::vector<Case> chemin,std::vector<std
         }
         if(prise == 0)
         {
-            listeChemins.push_back(copieChemin);
+            
+            if(copieChemin.size() == max)
+            {
+                listeChemins.push_back(copieChemin);
+            }
+
             if(copieChemin.size()> max)
             {
+                std::cout<<" dans listeChemins :  caseDispoP[i] = ("<<to_string(casesDispoP[i].getColonne())<<","<<to_string(casesDispoP[i].getLigne())<<")\n";
+                std::cout<<"copieChemin = ";
+                for(int j=0; j<copieChemin.size();j++)
+                {
+                    std::cout<<" ("<<to_string(copieChemin[j].getColonne())<<","<<to_string(copieChemin[j].getLigne())<<")";
+                }
+                std::cout<<endl;
                 max = copieChemin.size();
+                listeChemins.clear();
+                listeChemins.push_back(copieChemin);
+                std::cout<<"listeChemins = \n\t";
+                for(int j=0; j<listeChemins.size();j++)
+                {
+                    for(int k =0 ; k< listeChemins[j].size(); k++)
+                    {
+                        std::cout<<" ("<<to_string(listeChemins[j][k].getColonne())<<","<<to_string(listeChemins[j][k].getLigne())<<")";
+                    }
+                    std::cout<<"\n\t";
+                    
+                }
+                std::cout<<endl;
             }
         }
         
@@ -562,25 +665,24 @@ void Plateau::listeCheminsPrise(Pion p, std::vector<Case> chemin,std::vector<std
 
 }
 
-std::vector<Case> Plateau::priseMajoritaire(Pion p,std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max)
+/*
+std::vector<Case> Plateau::priseMajoritaire(Pion p,std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins)
 {
+    int max = 0;
     listeCheminsPrise(p,chemin,listeChemins,max);
 
     std::vector<Case> ret;
     int size = listeChemins.size();
     for(int i =0 ; i<size ; i++)
     {
-        if(listeChemins[i].size() == max)
-        {
-            ret.push_back(listeChemins[i][0]); 
-        }
+        ret.push_back(listeChemins[i][0]);    
     }
     
 
     return ret;
-}
+}*/
 
-void Plateau::listeCheminsPrise(Dame d, std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max)
+void Plateau::listeCheminsPrise(Dame d, std::vector<Case> chemin,std::vector<std::vector<Case>>& listeChemins, int& max)
 {
     
     std::vector<Case> casesDispoP = d.deplacementPrisePossible(plateau);
@@ -599,37 +701,42 @@ void Plateau::listeCheminsPrise(Dame d, std::vector<Case> chemin,std::vector<std
         }
         if(prise == 0)
         {
-            listeChemins.push_back(copieChemin);
+            if(copieChemin.size() == max)
+            {
+                listeChemins.push_back(copieChemin);
+            }
             if(copieChemin.size()> max)
             {
                 max = copieChemin.size();
+                listeChemins.clear();
+                listeChemins.push_back(copieChemin);
             }
         }
         
     }
 }
 
-std::vector<Case> Plateau::priseMajoritaire(Dame d,std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins, int& max)
+/*
+std::vector<Case> Plateau::priseMajoritaire(Dame d,std::vector<Case> chemin,std::vector<std::vector<Case>> listeChemins)
 {
+    int max = 0;
     listeCheminsPrise(d,chemin,listeChemins,max);
 
     std::vector<Case> ret;
     int size = listeChemins.size();
     for(int i =0 ; i<size ; i++)
     {
-        if(listeChemins[i].size() == max)
-        {
             ret.push_back(listeChemins[i][0]); 
-        }
     }
     
 
     return ret;
 }
+*/
 
-std::vector<std::vector<Case>> Plateau::PiecesJouable(bool blanc)
-{
-    std::vector<std::vector<Case>> ret;
+std::map<Case,std::vector<std::vector<Case>>> Plateau::cheminsPiecesJouable(bool blanc){
+
+    std::map<Case,std::vector<std::vector<Case>>>  ret;
 
     int couleurP = -1;
     if(blanc)
@@ -645,75 +752,96 @@ std::vector<std::vector<Case>> Plateau::PiecesJouable(bool blanc)
             if(plateau[i][j] == 1*couleurP)
             {
                 Pion p = Pion(i,j,blanc);
-            
-                int size = 0;
+   
                 std::vector<Case> chemin;
                 std::vector<std::vector<Case>> listeChemins ;
 
-                std::vector<Case> priseMaj = priseMajoritaire(p,chemin,listeChemins,size);
-                std::vector<Case> listeRet ;
-                listeRet.push_back(p.getCase());
-                listeRet.insert(listeRet.end(),priseMaj.begin(),priseMaj.end());
+                int size =0;
+                listeCheminsPrise(p,chemin,listeChemins,size);
+
                 bool test = true; // vrai si il y a des cases dispo pour la pièce et faux sinon
                 
                 if(size == max)
                 {
-                    if(size == 0) // il n'y a pas de prise possible, pour la pièce, on lui donne donc les cases de déplacement normal comme cases dispo
+                    if(size == 0) // il n'y a pas de prise possible pour la pièce, on lui donne donc les cases de déplacement normal comme cases dispo
                     {
                         std::vector<Case> deplNorm = p.deplacementPossible(plateau);
                         if(deplNorm.size() == 0)
                         {
                             test = false;
                         }
-                        listeRet.insert(listeRet.end(),deplNorm.begin(),deplNorm.end());
+
+                        for(int i =0 ; i<deplNorm.size() ; i++)
+                        {
+                            std::vector<Case> toAdd ;
+                            toAdd.push_back(deplNorm[i]);
+                            listeChemins.push_back(toAdd);
+                        }
                     }
                     if(test)
                     {
-                        ret.push_back(listeRet);
+                        //ret.push_back(listeRet);
+                        ret.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins)); 
                     }
                 }
                 if(size > max) // une pièces à plus de prises possible , il faut annuler tout ce qu'on a mis avant
                 {
+                    std:cout<<"yolooooooooooooooooooooooooooooooooooo \n";
+                    std::cout<<"listeChemins = \n\t";
+                    for(int j=0; j<listeChemins.size();j++)
+                    {
+                        for(int k =0 ; k< listeChemins[j].size(); k++)
+                        {
+                            std::cout<<" ("<<to_string(listeChemins[j][k].getColonne())<<","<<to_string(listeChemins[j][k].getLigne())<<")";
+                        }
+                        std::cout<<"\n\t";
+                        
+                    }
+                    std::cout<<endl;
                     max = size;
                     ret.clear();
-                    ret.push_back(listeRet);
+                    ret.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins)); 
                 }
             }
             if(plateau[i][j] == 2*couleurP)
             {
                 Dame d = Dame(i,j,blanc);
 
-                int size = 0;
                 std::vector<Case> chemin;
                 std::vector<std::vector<Case>> listeChemins ;
-                
-                std::vector<Case> priseMaj = priseMajoritaire(d,chemin,listeChemins,size);
-                std::vector<Case> listeRet ;
-                listeRet.push_back(d.getCase());
-                listeRet.insert(listeRet.end(),priseMaj.begin(),priseMaj.end());
+
+                int size =0;
+                listeCheminsPrise(d,chemin,listeChemins,size);
                 bool test = true; // vrai si il y a des cases dispo pour la pièce et faux sinon
                 
                 if(size == max)
                 {
-                    if(size == 0) // il n'y a pas de prise possible, pour la pièce, on lui donne donc les cases de déplacement normal comme cases dispo
+                    if(size == 0) // il n'y a pas de prise possible pour la pièce, on lui donne donc les cases de déplacement normal comme cases dispo
                     {
                         std::vector<Case> deplNorm = d.deplacementPossible(plateau);
                         if(deplNorm.size() == 0)
                         {
                             test = false;
                         }
-                        listeRet.insert(listeRet.end(),deplNorm.begin(),deplNorm.end());
+
+                        for(int i =0 ; i<deplNorm.size() ; i++)
+                        {
+                            std::vector<Case> toAdd ;
+                            toAdd.push_back(deplNorm[i]);
+                            listeChemins.push_back(toAdd);
+                        }
                     }
                     if(test)
                     {
-                        ret.push_back(listeRet);
+                        //ret.push_back(listeRet);
+                        ret.insert(std::pair<Case,std::vector<std::vector<Case>>>(d.getCase(),listeChemins)); 
                     }
                 }
                 if(size > max) // une pièces à plus de prises possible , il faut annuler tout ce qu'on a mis avant
                 {
                     max = size;
                     ret.clear();
-                    ret.push_back(listeRet);
+                    ret.insert(std::pair<Case,std::vector<std::vector<Case>>>(d.getCase(),listeChemins)); 
                 }
                 
             }            
@@ -721,6 +849,51 @@ std::vector<std::vector<Case>> Plateau::PiecesJouable(bool blanc)
     }
 
     return ret;
+
+}
+
+bool Plateau::verifDeplacement(Pion pion, Case cible,int nbDepla, std::map<Case,std::vector<std::vector<Case>>> cheminsPieces)
+{
+    std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(pion.getCase());
+    if(it == cheminsPieces.end())
+    {
+        return false;
+    }
+    std::vector<std::vector<Case>> chemins = it->second;
+    std::cout<<"dans la fonction qui bug \n";
+    std::cout<<"case cible = ("<<to_string(cible.getColonne())<<","<<to_string(cible.getLigne())<<") nbDéplacement = "<<to_string(nbDepla)<<"\n";
+    for(int i =0 ; i<chemins.size();i++)
+    {
+        for(int j =0 ; j< chemins[i].size() ; j++)
+        {
+            std::cout<<" i = "<<to_string(i)<<" j = "<<to_string(j)<<" ("<<to_string(chemins[i][j].getColonne())<<","<<to_string(chemins[i][j].getLigne())<<") yolooooooooooo ";
+        }
+        if(chemins[i][nbDepla]== cible)
+        {
+            std::cout<<"message qui ne s'affiche pas ? \n";
+            return true;
+        }
+    }
+    std::cout<<"\n";
+    return false;
+}
+
+bool Plateau::verifDeplacement(Dame dame, Case cible,int nbDepla, std::map<Case,std::vector<std::vector<Case>>> cheminsPieces)
+{
+    std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(dame.getCase());
+    if(it == cheminsPieces.end())
+    {
+        return false;
+    }
+    std::vector<std::vector<Case>> chemins = it->second;
+    for(int i =0 ; i<chemins.size();i++)
+    {
+        if(chemins[i][nbDepla]== cible)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 string Plateau::afficheTerminal()

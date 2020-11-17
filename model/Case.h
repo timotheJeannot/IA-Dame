@@ -23,4 +23,8 @@ public :
 
 bool operator== (Case opL , Case opR);
 
+bool operator!= (Case opL, Case opR);
+
+bool operator< (Case opL, Case opR); // on en a besoin car on utilise map qui a besoin de classé les éléments qu'il contient
+
 #endif

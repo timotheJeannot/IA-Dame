@@ -94,6 +94,11 @@ std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
                         //i++;
                         break;
                     }
+                    else // il n'y pas de cases dispo derrière , donc le reste de la diagonal est bloqué
+                    {
+                        break;
+                    }
+                    
                 }
             }
 
@@ -149,7 +154,12 @@ std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
                         //i++;
                         break;
                     }
+                    else // il n'y pas de cases dispo derrière , donc le reste de la diagonal est bloqué
+                    {
+                        break;
+                    }
                 }
+                
             }
          
         }
@@ -200,6 +210,10 @@ std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
                         diagonalBD.clear();
                         diagonalBD.push_back(Case(c.getColonne()+i+1 ,c.getLigne()+i+1));
                         //i++;
+                        break;
+                    }
+                    else // il n'y pas de cases dispo derrière , donc le reste de la diagonal est bloqué
+                    {
                         break;
                     }
                 }
@@ -253,6 +267,10 @@ std::vector<Case> Dame::deplacementPossible(std::vector<std::vector<int>> p){
                         diagonalBG.clear();
                         diagonalBG.push_back(Case(c.getColonne()-i-1 ,c.getLigne()+i+1));
                         //i++;
+                        break;
+                    }
+                    else // il n'y pas de cases dispo derrière , donc le reste de la diagonal est bloqué
+                    {
                         break;
                     }
                 }
@@ -345,6 +363,10 @@ std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> 
                     //i++;
                     break;
                 }
+                else // il n'y pas de cases dispo derrière , donc le reste de la diagonal est bloqué
+                {
+                    break;
+                }
             }
         }
        
@@ -384,6 +406,10 @@ std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> 
                     diagonalHD.clear();
                     diagonalHD.push_back(Case(c.getColonne()+i+1 ,c.getLigne()-i-1));
                     //i++;
+                    break;
+                }
+                else // il n'y pas de cases dispo derrière , donc le reste de la diagonal est bloqué
+                {
                     break;
                 }
             }
@@ -428,6 +454,10 @@ std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> 
                     //i++;
                     break;
                 }
+                else // il n'y pas de cases dispo derrière , donc le reste de la diagonal est bloqué
+                {
+                    break;
+                }
             }
         }
     }
@@ -465,6 +495,10 @@ std::vector<Case> Dame::deplacementPrisePossible (std::vector<std::vector<int>> 
                     diagonalBG.clear();
                     diagonalBG.push_back(Case(c.getColonne()-i-1 ,c.getLigne()+i+1));
                     //i++;
+                    break;
+                }
+                else // il n'y pas de cases dispo derrière , donc le reste de la diagonal est bloqué
+                {
                     break;
                 }
             }
