@@ -649,27 +649,27 @@ void Plateau::listeCheminsPrise(Pion p, std::vector<Case> chemin,std::vector<std
 
             if(copieChemin.size()> max)
             {
-                std::cout<<" dans listeChemins :  caseDispoP[i] = ("<<to_string(casesDispoP[i].getColonne())<<","<<to_string(casesDispoP[i].getLigne())<<")\n";
-                std::cout<<"copieChemin = ";
+                //std::cout<<" dans listeChemins :  caseDispoP[i] = ("<<to_string(casesDispoP[i].getColonne())<<","<<to_string(casesDispoP[i].getLigne())<<")\n";
+                //std::cout<<"copieChemin = ";
                 for(int j=0; j<copieChemin.size();j++)
                 {
-                    std::cout<<" ("<<to_string(copieChemin[j].getColonne())<<","<<to_string(copieChemin[j].getLigne())<<")";
+                    //std::cout<<" ("<<to_string(copieChemin[j].getColonne())<<","<<to_string(copieChemin[j].getLigne())<<")";
                 }
-                std::cout<<endl;
+                //std::cout<<endl;
                 max = copieChemin.size();
                 listeChemins.clear();
                 listeChemins.push_back(copieChemin);
-                std::cout<<"listeChemins = \n\t";
+                //std::cout<<"listeChemins = \n\t";
                 for(int j=0; j<listeChemins.size();j++)
                 {
                     for(int k =0 ; k< listeChemins[j].size(); k++)
                     {
-                        std::cout<<" ("<<to_string(listeChemins[j][k].getColonne())<<","<<to_string(listeChemins[j][k].getLigne())<<")";
+                        //std::cout<<" ("<<to_string(listeChemins[j][k].getColonne())<<","<<to_string(listeChemins[j][k].getLigne())<<")";
                     }
-                    std::cout<<"\n\t";
+                    //std::cout<<"\n\t";
                     
                 }
-                std::cout<<endl;
+                //std::cout<<endl;
             }
         }
         
@@ -798,18 +798,18 @@ std::map<Case,std::vector<std::vector<Case>>> Plateau::cheminsPiecesJouable(bool
                 }
                 if(size > max) // une pièces à plus de prises possible , il faut annuler tout ce qu'on a mis avant
                 {
-                    std:cout<<"yolooooooooooooooooooooooooooooooooooo \n";
-                    std::cout<<"listeChemins = \n\t";
+                    //std::cout<<"yolooooooooooooooooooooooooooooooooooo \n";
+                    //std::cout<<"listeChemins = \n\t";
                     for(int j=0; j<listeChemins.size();j++)
                     {
                         for(int k =0 ; k< listeChemins[j].size(); k++)
                         {
-                            std::cout<<" ("<<to_string(listeChemins[j][k].getColonne())<<","<<to_string(listeChemins[j][k].getLigne())<<")";
+                            //std::cout<<" ("<<to_string(listeChemins[j][k].getColonne())<<","<<to_string(listeChemins[j][k].getLigne())<<")";
                         }
-                        std::cout<<"\n\t";
+                        //std::cout<<"\n\t";
                         
                     }
-                    std::cout<<endl;
+                    //std::cout<<endl;
                     max = size;
                     ret.clear();
                     ret.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins)); 
@@ -872,21 +872,21 @@ bool Plateau::verifDeplacement(Pion pion, Case cible,int nbDepla, std::map<Case,
         return false;
     }
     std::vector<std::vector<Case>> chemins = it->second;
-    std::cout<<"dans la fonction qui bug \n";
-    std::cout<<"case cible = ("<<to_string(cible.getColonne())<<","<<to_string(cible.getLigne())<<") nbDéplacement = "<<to_string(nbDepla)<<"\n";
+    //std::cout<<"dans la fonction qui bug \n";
+    //std::cout<<"case cible = ("<<to_string(cible.getColonne())<<","<<to_string(cible.getLigne())<<") nbDéplacement = "<<to_string(nbDepla)<<"\n";
     for(int i =0 ; i<chemins.size();i++)
     {
         for(int j =0 ; j< chemins[i].size() ; j++)
         {
-            std::cout<<" i = "<<to_string(i)<<" j = "<<to_string(j)<<" ("<<to_string(chemins[i][j].getColonne())<<","<<to_string(chemins[i][j].getLigne())<<") yolooooooooooo ";
+            //std::cout<<" i = "<<to_string(i)<<" j = "<<to_string(j)<<" ("<<to_string(chemins[i][j].getColonne())<<","<<to_string(chemins[i][j].getLigne())<<") yolooooooooooo ";
         }
         if(chemins[i][nbDepla]== cible)
         {
-            std::cout<<"message qui ne s'affiche pas ? \n";
+            //std::cout<<"message qui ne s'affiche pas ? \n";
             return true;
         }
     }
-    std::cout<<"\n";
+    //std::cout<<"\n";
     return false;
 }
 

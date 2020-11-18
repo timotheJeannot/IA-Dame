@@ -57,12 +57,12 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
         return coupRep;
     }
 
-    cout<<"(server ) Les pieces jouable sont les suivantes : \n";
-    for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
+    //cout<<"(server ) Les pieces jouable sont les suivantes : \n";
+    /*for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
     {
         Case casePiece = it->first;
-        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<")  ";
-    }
+        //cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<")  ";
+    }*/
     Case choixPiece(x,y);
     std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(choixPiece);
     std::vector<std::vector<Case>> listeChemins = it->second;
@@ -174,8 +174,8 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
                     cible.setLigne(y2);
                     retModifDeplacement = plateau.modifPlateauDeplacementPrise(p,cible);
                     p.setCase(cible);
-                    cout<<"test de la mort numero 1 (server) : \\\\\\\\\\\\\\\\\\\\\\\\\\ \n";
-                    cout<<plateau.afficheTerminal();
+                    //cout<<"test de la mort numero 1 (server) : \\\\\\\\\\\\\\\\\\\\\\\\\\ \n";
+                    //cout<<plateau.afficheTerminal();
                     if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
                     {
                         testErrCoup = true;
@@ -284,12 +284,12 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
             if(plateau.verifDeplacement(p,cible,nbDeplacement,cheminsPieces) == false)
             {
                 testErrCoup = true;
-                //cout<<"test de merde  \n";
+                ////cout<<"test de merde  \n";
             }
             else
             {
                 int retModifDeplacement = plateau.modifPlateauDeplacementNormal(p,cible);
-                //cout<<"test de merde 2 \n";
+                ////cout<<"test de merde 2 \n";
                 p.setCase(cible);
                 cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
                 cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins));
