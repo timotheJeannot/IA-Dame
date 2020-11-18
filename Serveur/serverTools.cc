@@ -257,6 +257,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
                         else
                         {
                             retModifDeplacement = plateau.modifPlateauDeplacementPrise(d,cible);
+                            it = cheminsPieces.find(d.getCase());
                             d.setCase(cible);
                             cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
                             cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(d.getCase(),listeChemins));
@@ -304,6 +305,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
                         else
                         {
                             retModifDeplacement = plateau.modifPlateauDeplacementPrise(p,cible);
+                            it = cheminsPieces.find(p.getCase());
                             p.setCase(cible);
                             cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
                             cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins));
