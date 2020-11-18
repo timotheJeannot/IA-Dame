@@ -82,11 +82,25 @@ int main(int argc, char ** argv)
             //Plateau plateau();
             Plateau plateau;
             
+            std::vector<Plateau> configs ; // d'après wikipédia , pour la partie nulle : quand la même position des pièces se produit pour la troisième fois, et que c'est au même joueur de jouer 
+                                           // on va stocker les états du plateau successif lors d'un déplacement d'une dame sans prise
+                                           // pour les autres déplacements on va clear cette liste (impossible de se retrouver dans la config d'avant le déplacement).
             
+            int first =0;                  // cet entier vaudra 1 ou -1 pour indiquer qui est le premier à avoir bouger une dame, pour qu'on puisse s'y retroiver dans la liste du dessus
+            
+            int compteurR2 = 0;            // compteur pour la deuxième règle de nulle (décrit dans serverTools.h)
+            int compteurR3 = 0;            // compteur pour la troisième règle de nulle (décrit dans serverTools.h)
+            int firstR3 = 0 ;              // permet de savoir quel était le premier joueur (blanc ou noir) lors du début du comptage des 16 coups pour chaque joueur
+
             cout<<plateau.afficheTerminal();
             /****** Boucle de jeu ********/
             while(true)
             {
+                if(firstR3 == 1)
+                {
+                    compteurR3 ++;
+                }
+
                 std::cout<<"Attention : nbPieceB = "<<to_string(plateau.getNbPiecesB())<<"  nbPieceN = "<<to_string(plateau.getNbPiecesN())<<"\n";
                 // le joueur 1 est blanc
                 if(req1.coulPion == 1)
@@ -102,7 +116,19 @@ int main(int argc, char ** argv)
                     auto coup = packetC1.as<TCoupReq>();
                     std::cout<<"test 60\n";
 
-                    TCoupRep coupRep = buildRepCoup(plateau, coup, 1);
+                    if(firstR3 == 0)
+                    {
+                        if(r3DetectConfig(plateau))
+                        {
+                            firstR3 = 1;
+                        }
+                    }
+
+                    TCoupRep coupRep = buildRepCoup(plateau, coup, 1,configs,first,compteurR2,compteurR3);
+                    if(firstR3 == -1)
+                    {
+                        compteurR3 ++;
+                    }
                     std::cout<<"test 61\n";
                     cout<<plateau.afficheTerminal();
 
@@ -143,7 +169,14 @@ int main(int argc, char ** argv)
                     std::cout<<"test 67\n";
                     auto coupC2 = packetC2.as<TCoupReq>();
                     std::cout<<"test 68\n";
-                    coupRep = buildRepCoup(plateau, coupC2, -1);
+                    if(firstR3 == 0)
+                    {
+                        if(r3DetectConfig(plateau))
+                        {
+                            firstR3 = -1;
+                        }
+                    }
+                    coupRep = buildRepCoup(plateau, coupC2, -1,configs,first,compteurR2,compteurR3);
                     cout<<plateau.afficheTerminal();
 
                     packetC2.is(coupRep);
@@ -185,7 +218,18 @@ int main(int argc, char ** argv)
 
                     auto coupC2 = packetC2.as<TCoupReq>();
                     std::cout<<"test 74\n";
-                    TCoupRep coupRep = buildRepCoup(plateau, coupC2, 1);
+                    if(firstR3 == 0)
+                    {
+                        if(r3DetectConfig(plateau))
+                        {
+                            firstR3 = 1;
+                        }
+                    }
+                    TCoupRep coupRep = buildRepCoup(plateau, coupC2, 1,configs,first, compteurR2,compteurR3);
+                    if(firstR3 == -1)
+                    {
+                        compteurR3 ++;
+                    }
                     cout<<plateau.afficheTerminal();
 
                     packetC2.is(coupRep);
@@ -225,7 +269,15 @@ int main(int argc, char ** argv)
                     auto coupC1 = packetC1.as<TCoupReq>();
                     std::cout<<"test 80\n";
 
-                    coupRep = buildRepCoup(plateau, coupC1, -1);
+                    if(firstR3 == 0)
+                    {
+                        if(r3DetectConfig(plateau))
+                        {
+                            firstR3 = -1;
+                        }
+                    }
+
+                    coupRep = buildRepCoup(plateau, coupC1, -1,configs,first, compteurR2,compteurR3);
                     cout<<plateau.afficheTerminal();
 
                     packetC1.is(coupRep);

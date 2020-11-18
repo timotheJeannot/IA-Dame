@@ -46,7 +46,8 @@ int main(int argc, char ** argv)
     int err = 0;
     TPartieReq req;
     req.idReq = PARTIE;
-    req.nomJoueur = "joueur 1"; // à modifier
+    //req.nomJoueur = "joueur 1"; // à modifier
+    req.nomJoueur = argv[3];
     req.coulPion = 1;
 
     gf::Packet packet;

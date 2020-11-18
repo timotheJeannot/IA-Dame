@@ -36,6 +36,17 @@ Plateau::Plateau(Plateau *p)
     nbPiecesB = p->getNbPiecesB();
 }
 
+Plateau::Plateau(Plateau const& p)
+{
+    /*plateau=p.getPlateau();
+    nbPiecesN = p.getNbPiecesN();
+    nbPiecesB = p.getNbPiecesB();*/
+    plateau = p.plateau;
+    nbPiecesB = p.nbPiecesB;
+    nbPiecesN = p.nbPiecesN;
+
+}
+
 
 std::vector<std::vector<int>> Plateau::getPlateau()
 {
@@ -956,4 +967,19 @@ void Plateau::printMovePiece() {
             }
         }
         graph.renderer.display();
+}
+
+bool operator== (Plateau opL, Plateau opR)
+{
+    for(int i =0 ; i<10 ; i++)
+    {
+        for(int j =0 ; j<10; j++)
+        {
+            if(opL.getPlateau()[i][j] != opR.getPlateau()[i][j])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
 }

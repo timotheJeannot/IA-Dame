@@ -16,9 +16,9 @@
 using namespace std;
 
 class  Plateau{
-    std::list<Case> cases;
+    /*std::list<Case> cases;
     Joueur joueurBlanc;
-    Joueur joueurNoir;
+    Joueur joueurNoir;*/
     int nbPiecesB;
     int nbPiecesN;
     //int plateau [10] [10];  // repère , la case en haut à gauche à pour pposition (0,0)
@@ -30,6 +30,7 @@ class  Plateau{
     Graph graph;
     Plateau();
     Plateau(Plateau *p);
+    Plateau(Plateau const& p);
     void printMovePiece();
     std::vector<std::vector<int>>  getPlateau();
     int getNbPiecesB();
@@ -70,9 +71,9 @@ class  Plateau{
     bool verifDeplacement(Dame dame, Case cible,int nbDepla, std::map<Case,std::vector<std::vector<Case>>> cheminsPieces);
 
     string afficheTerminal();  
-    
-    
 
 };
+
+    bool operator== (Plateau opL , Plateau opR);
 
 #endif
