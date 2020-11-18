@@ -160,6 +160,17 @@ int main(int argc, char ** argv)
                         std::cout<<"le joueur 1("<<req1.nomJoueur<<") a gagné \n";
                         break;                       
                     }
+                    if(coupRep.propCoup == NUL)
+                    {
+                        std::cout<<"match nul \n";
+                        break;
+                    }
+                    if(coupRep.propCoup ==PERDU)// fin du jeu et de la communication
+                    {
+                        std::cout<<"le joueur 1("<<req1.nomJoueur<<") a perdu \n";
+                        break;                       
+                    }
+
                     std::cout<<"test 66\n";
                     if( gf::SocketStatus::Data != client2.recvPacket(packetC2))
                     {
@@ -203,6 +214,16 @@ int main(int argc, char ** argv)
                     if(coupRep.propCoup ==GAGNE)// fin du jeu et de la communication
                     {
                         std::cout<<"le joueur 2("<<req2.nomJoueur<<") a gagné \n";
+                        break;                       
+                    }
+                    if(coupRep.propCoup == NUL)
+                    {
+                        std::cout<<"match nul \n";
+                        break;
+                    }
+                    if(coupRep.propCoup ==PERDU)// fin du jeu et de la communication
+                    {
+                        std::cout<<"le joueur 1("<<req1.nomJoueur<<") a perdu \n";
                         break;                       
                     }
 
@@ -258,6 +279,11 @@ int main(int argc, char ** argv)
                         std::cout<<"le joueur 2("<<req2.nomJoueur<<") a gagné \n";
                         break;                       
                     }
+                    if(coupRep.propCoup == NUL)
+                    {
+                        std::cout<<"match nul \n";
+                        break;
+                    }
                     std::cout<<"test 78\n";
                     if( gf::SocketStatus::Data != client1.recvPacket(packetC1))
                     {
@@ -304,6 +330,10 @@ int main(int argc, char ** argv)
                     {
                         std::cout<<"le joueur 1("<<req1.nomJoueur<<") a gagné \n";
                         break;                       
+                    }
+                    if(coupRep.propCoup == NUL)
+                    {
+                        std::cout<<"match nul \n";
                     }
                     std::cout<<"test 84\n";
                 }

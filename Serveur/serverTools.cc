@@ -51,6 +51,12 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
     bool testMatchNul = testPartieNulle(plateau,couleur,configs,first,compteurR2,compteurR3);
 
     std::map<Case,std::vector<std::vector<Case>>> cheminsPieces = plateau.cheminsPiecesJouable(blanc);
+    if(cheminsPieces.size() == 0)
+    {
+        coupRep.propCoup = PERDU;
+        return coupRep;
+    }
+
     cout<<"(server ) Les pieces jouable sont les suivantes : \n";
     for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
     {
