@@ -22,6 +22,7 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, int& err) {
     pion.typePion = PION;
     coup.pion = pion;
     coup.propCoup = CONT ;
+    std::vector<TCase> deplacements;
     
     bool blanc =true;
     if(couleur == -1)
@@ -33,6 +34,7 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, int& err) {
     if(cheminsPieces.size() == 0)
     {
         coup.estBloque= true;
+        coup.deplacements = deplacements;
         return coup;
     }
 
@@ -133,7 +135,6 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, int& err) {
     int x2,y2;
 
     //coup.posPionAp = c;
-    std::vector<TCase> deplacements;
     if(isDame)
     {
 
@@ -379,4 +380,207 @@ void modifCoupAdv(TCoupReq coupAdv, Plateau& plateau, int couleur) {
         }
     }
     plateau.enleverPiecesRafle();
+}
+
+
+TCoupReq buildCoupAlea(Plateau& plateau, int couleur) {
+    TCoupReq coup ;
+    coup.idRequest = COUP;
+    coup.estBloque = false;
+    TPion pion ;
+    pion.coulPion = couleur;
+    pion.typePion = PION;
+    coup.pion = pion;
+    coup.propCoup = CONT ;
+    TCase cnext;
+
+    bool blanc =true;
+    if(couleur == -1)
+    {
+        blanc = false;
+    }
+
+
+    std::map<Case,std::vector<std::vector<Case>>> cheminsPieces = plateau.cheminsPiecesJouable(blanc);
+
+    cout<<"Les pieces jouable sont les suivantes : \n";
+    for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
+    {
+        Case casePiece = it->first;
+        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<" ";
+    }
+
+
+
+    std::random_device generator;
+    std::uniform_int_distribution<int> distribution(0,cheminsPieces.size()-1);
+    int r = distribution(generator);
+    std::map<Case,std::vector<std::vector<Case>>>::iterator item = cheminsPieces.begin();
+    std::advance(item, r);
+
+
+    Case c1 = item->first;
+
+    cout<<"Case choisie : "<<to_string(c1.getColonne())<<","<<to_string(c1.getLigne())<<")  \n";
+
+
+    TCase c;
+    c.l = c1.getLigne();
+    c.c = c1.getColonne();
+
+
+    coup.posPionAv = c;
+
+    Pion p;
+    Dame d;
+    bool isDame = false;
+
+
+    Case choixPiece(c.c, c.l);
+    std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(choixPiece);
+
+
+    if(plateau.getPlateau()[c.c][c.l] == couleur)
+    {
+        p = Pion(c.c,c.l,blanc);
+    }
+    if(plateau.getPlateau()[c.c][c.l] == 2*couleur)
+    {
+        d = Dame(c.c,c.l,blanc);
+        isDame = true;
+    }
+
+    cout<<"Les déplacements qui sont possibles sont : \n";
+    std::vector<std::vector<Case>> listeChemins = it->second;
+    for(int i = 0 ; i<listeChemins.size(); i++)
+    {
+        cout<<"("<<to_string(listeChemins[i][0].getColonne())<<","<<to_string(listeChemins[i][0].getLigne())<<")  ";
+    }
+    cout<<"\n";
+    int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
+
+    std::vector<TCase> deplacements;
+
+
+    if(isDame)
+    {
+
+        std::uniform_int_distribution<int> distribution2(0,listeChemins.size()-1);
+        int r2 = distribution2(generator);
+
+
+        Case cible(listeChemins[r2][0].getColonne(),listeChemins[r2][0].getLigne());
+
+        cnext.c = listeChemins[r2][0].getColonne();
+        cnext.l = listeChemins[r2][0].getLigne();
+
+        int retModif = 0;
+
+        retModif= plateau.modifPlateauDeplacementNormal(d, cible);
+        deplacements.push_back(cnext);
+        d.setCase(cible);
+        cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
+        cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(d.getCase(),listeChemins));
+        nbDeplacement++;
+
+        while(retModif == 1)
+        {
+            cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
+            cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+
+            cout<<"Les déplacements qui sont possibles sont : \n";
+            for(int i = 0 ; i<listeChemins.size(); i++)
+            {
+                cout<<"("<<to_string(listeChemins[i][nbDeplacement].getColonne())<<","<<to_string(listeChemins[i][nbDeplacement].getLigne())<<")  ";
+            }
+            cout<<"\n";
+
+            std::uniform_int_distribution<int> distribution2(0,listeChemins.size()-1);
+            int r2 = distribution2(generator);
+
+
+
+            Case cible(listeChemins[r2][nbDeplacement].getColonne(),listeChemins[r2][nbDeplacement].getLigne());
+
+
+
+            retModif= plateau.modifPlateauDeplacementPrise(d, cible);
+            cnext.c = listeChemins[r2][nbDeplacement].getColonne();
+            cnext.l = listeChemins[r2][nbDeplacement].getLigne();
+            deplacements.push_back(cnext);
+            it = cheminsPieces.find(d.getCase());
+            d.setCase(cible);
+            cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
+            cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(d.getCase(),listeChemins));
+            nbDeplacement++;
+
+        }
+
+        plateau.enleverPiecesRafle();
+
+    }
+    else
+    {
+
+        std::uniform_int_distribution<int> distribution2(0,listeChemins.size()-1);
+        int r2 = distribution2(generator);
+
+
+        Case cible(listeChemins[r2][0].getColonne(),listeChemins[r2][0].getLigne());
+
+        cout<<"Case choisie : "<<to_string(listeChemins[r2][0].getColonne())<<","<<to_string(listeChemins[r2][0].getLigne())<<")  \n";
+
+
+        int retModif = plateau.modifPlateauDeplacementNormal(p, cible);
+        cnext.c = listeChemins[r2][0].getColonne();
+        cnext.l = listeChemins[r2][0].getLigne();
+        deplacements.push_back(cnext);
+        p.setCase(cible);
+        cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
+        cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins));
+        nbDeplacement++;
+
+        while(retModif == 1)
+        {
+            cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
+            cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+
+            cout<<"Les déplacements qui sont possibles sont : \n";
+            for(int i = 0 ; i<listeChemins.size(); i++)
+            {
+                cout<<"("<<to_string(listeChemins[i][nbDeplacement].getColonne())<<","<<to_string(listeChemins[i][nbDeplacement].getLigne())<<")  ";
+            }
+
+            r2 = distribution2(generator);
+
+
+            Case cible(listeChemins[r2][nbDeplacement].getColonne(),listeChemins[r2][nbDeplacement].getLigne());
+
+
+            retModif= plateau.modifPlateauDeplacementPrise(p, cible);
+            cnext.c = listeChemins[r2][nbDeplacement].getColonne();
+            cnext.l = listeChemins[r2][nbDeplacement].getLigne();
+            deplacements.push_back(cnext);
+            it = cheminsPieces.find(p.getCase());
+            p.setCase(cible);
+            cheminsPieces.erase(it); // on est obligé de mettre à jour la map, parce que la position dans la clé n'est plus la même et verifDeplacement s'appuie dessus
+            cheminsPieces.insert(std::pair<Case,std::vector<std::vector<Case>>>(p.getCase(),listeChemins));
+            nbDeplacement++;
+
+        }
+
+
+        plateau.enleverPiecesRafle();
+
+
+    }
+    coup.deplacements = deplacements;
+    cout<<"deplacements : ";
+    for(int i =0; i < coup.deplacements.size(); i++)
+    {
+        cout<<to_string(coup.deplacements[i].c)<<" "<<to_string(coup.deplacements[i].l)<<" | |";
+    }
+    cout<<"\n";
+    return coup;
+
 }

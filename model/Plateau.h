@@ -27,11 +27,11 @@ class  Plateau{
 
 
     public:
-    Graph graph;
+    //Graph graph;
     Plateau();
     Plateau(Plateau *p);
     Plateau(Plateau const& p);
-    void printMovePiece();
+    //void printMovePiece();
     std::vector<std::vector<int>>  getPlateau();
     int getNbPiecesB();
     int getNbPiecesN();

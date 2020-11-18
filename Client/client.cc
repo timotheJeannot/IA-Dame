@@ -23,10 +23,21 @@ using namespace std;
 int main(int argc, char ** argv)
 {
     /* verification des arguments */
-    if (argc != 4) {
+    if (argc < 4) {
         //printf("usage : %s nom/IPServ port nomJoueur \n", argv[0]);
         cout<<"usage "<<argv[0]<<"% nom/IPServ port nomJoueur \n";
         return -1;
+    }
+
+    string ia;
+    bool b;
+
+    if (argc == 5) {
+        ia = argv[4];
+        if (ia == "-IA") {
+            b = true;
+        }
+
     }
 
     /************ Initialisation de la communication **********/
@@ -83,10 +94,16 @@ int main(int argc, char ** argv)
 
         if(couleur == 1) // On commence
         {
-            TCoupReq coup = buildCoup(plateau, 1, err);
-            if (err == 1) {
-                cerr<<"erreur lors de la création du coup";
-                return -1;
+            TCoupReq coup;
+            if (b) {
+                coup = buildCoupAlea(plateau, 1);
+            }
+            else {
+                coup = buildCoup(plateau, 1, err);
+                if (err == 1) {
+                    cerr << "erreur lors de la création du coup";
+                    return -1;
+                }
             }
 
           packet.is(coup);
@@ -215,12 +232,19 @@ int main(int argc, char ** argv)
             break;
           }
             std::cout<<"test 53\n";
-          TCoupReq coup = buildCoup(plateau, -1, err);
+          TCoupReq coup;
+            if (b) {
+                coup = buildCoupAlea(plateau, -1);
+            }
+            else {
+                coup = buildCoup(plateau, -1, err);
+                if (err == 1) {
+                    cerr<<"erreur lors de la création du coup";
+                    return -1;
+                }
+            }
             std::cout<<"test 54\n";
-          if (err == 1) {
-              cerr<<"erreur lors de la création du coup";
-              return -1;
-          }
+          
           packet.is(coup);
             std::cout<<"test 55\n";
           if(gf::SocketStatus::Data != socket.sendPacket(packet))

@@ -2,7 +2,8 @@
 
 // repère , la case en gaut à gauche à pour position (0,0)
 // 0 pas de pièce , 1 pion blanc , 2 dame blanc , -1 pion noir , -2 dame noir
-Plateau::Plateau():graph(){
+//Plateau::Plateau():graph(){
+Plateau::Plateau(){
     
     for(int i =0 ; i< 10 ; i++)
     {
@@ -942,7 +943,7 @@ string Plateau::afficheTerminal()
     return ret;
 }
 
-void Plateau::printMovePiece() {
+/*void Plateau::printMovePiece() {
         graph.renderer.clear();
         graph.printBoard();
         for(int j=0;j<10;j++) {
@@ -968,7 +969,7 @@ void Plateau::printMovePiece() {
         }
         graph.renderer.display();
 }
-
+*/
 bool operator== (Plateau opL, Plateau opR)
 {
     for(int i =0 ; i<10 ; i++)
