@@ -393,21 +393,26 @@ TCoupReq buildCoupAlea(Plateau& plateau, int couleur) {
     coup.pion = pion;
     coup.propCoup = CONT ;
     TCase cnext;
-
+    std::vector<TCase> deplacements;
     bool blanc =true;
     if(couleur == -1)
     {
         blanc = false;
     }
 
-
     std::map<Case,std::vector<std::vector<Case>>> cheminsPieces = plateau.cheminsPiecesJouable(blanc);
+    if(cheminsPieces.size() == 0)
+    {
+        coup.estBloque= true;
+        coup.deplacements = deplacements;
+        return coup;
+    }
 
     cout<<"Les pieces jouable sont les suivantes : \n";
     for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
     {
         Case casePiece = it->first;
-        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<" ";
+        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<") ";
     }
 
 
@@ -458,8 +463,6 @@ TCoupReq buildCoupAlea(Plateau& plateau, int couleur) {
     }
     cout<<"\n";
     int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
-
-    std::vector<TCase> deplacements;
 
 
     if(isDame)
