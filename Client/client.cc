@@ -34,7 +34,7 @@ int main(int argc, char ** argv)
     }
 
     string ia;
-    bool b;
+    bool b = false;
 
     if (argc == 5) {
         ia = argv[4];
@@ -331,7 +331,7 @@ int main(int argc, char ** argv)
             if (coupAdvRep.propCoup == CONT) {
                 if (coupAdvRep.validCoup == VALID) {
                     if(b){
-                        modifCoupAdv(coupAdv, board.board, -1);
+                        modifCoupAdv(coupAdv, board.board, couleur);
                     }else{
                         board.printMovePiece(coupAdv);
                     }

@@ -49,7 +49,7 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, gf::Vector4i vector4I, int& er
     cout<<"Les pieces jouable sont les suivantes : \n";
     for(auto it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
     {
-           err=1;
+        err=1;
     }
     int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
     std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(c1);
@@ -64,26 +64,26 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, gf::Vector4i vector4I, int& er
     }
     int retmodif=0;
     //coup.posPionAp = c;
-            switch (plateau.getPlateau()[c.c][c.l]) {
-                case 1 :{
-                    Pion p(c1, true);
-                    retmodif = plateau.modifPlateauDeplacementNormal(p, aCase);}
-                    break;
-                case 2 :{
-                    Dame d(c1, true);
-                    retmodif = plateau.modifPlateauDeplacementNormal(d, aCase);}
-                    break;
-                case -1 :{
-                    Pion p(c1, false);
-                    retmodif = plateau.modifPlateauDeplacementNormal(p, aCase);}
-                    break;
-                case -2 :{
-                    Dame d(c1, false);
-                    retmodif = plateau.modifPlateauDeplacementNormal(d, aCase);}
-                    break;
-                default:
-                    break;
-            }
+    switch (plateau.getPlateau()[c.c][c.l]) {
+        case 1 :{
+            Pion p(c1, true);
+            retmodif = plateau.modifPlateauDeplacementNormal(p, aCase);}
+            break;
+        case 2 :{
+            Dame d(c1, true);
+            retmodif = plateau.modifPlateauDeplacementNormal(d, aCase);}
+            break;
+        case -1 :{
+            Pion p(c1, false);
+            retmodif = plateau.modifPlateauDeplacementNormal(p, aCase);}
+            break;
+        case -2 :{
+            Dame d(c1, false);
+            retmodif = plateau.modifPlateauDeplacementNormal(d, aCase);}
+            break;
+        default:
+            break;
+    }
     for(int i=0;i<listeChemins[ic].size();i++) {
         switch (plateau.getPlateau()[aCase.getColonne()][aCase.getLigne()]) {
             case 1 : {
@@ -198,21 +198,26 @@ TCoupReq buildCoupAlea(Plateau& plateau, int couleur) {
     coup.pion = pion;
     coup.propCoup = CONT ;
     TCase cnext;
-
+    std::vector<TCase> deplacements;
     bool blanc =true;
     if(couleur == -1)
     {
         blanc = false;
     }
 
-
     std::map<Case,std::vector<std::vector<Case>>> cheminsPieces = plateau.cheminsPiecesJouable(blanc);
-
+    if(cheminsPieces.size() == 0)
+    {
+        coup.estBloque= true;
+        coup.deplacements = deplacements;
+        return coup;
+    }
+    cout<<plateau.afficheTerminal();
     cout<<"Les pieces jouable sont les suivantes : \n";
     for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
     {
         Case casePiece = it->first;
-        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<" ";
+        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<") ";
     }
 
 
@@ -263,8 +268,6 @@ TCoupReq buildCoupAlea(Plateau& plateau, int couleur) {
     }
     cout<<"\n";
     int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
-
-    std::vector<TCase> deplacements;
 
 
     if(isDame)

@@ -56,6 +56,8 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
         coupRep.propCoup = PERDU;
         return coupRep;
     }
+    cout<<"zertyu\n";
+    cout<<plateau.afficheTerminal();
     cout<<"Les pieces jouable sont les suivantes pour le couleur "<<couleur<<": \n";
     for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
     {
