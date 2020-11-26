@@ -56,6 +56,12 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
         coupRep.propCoup = PERDU;
         return coupRep;
     }
+    cout<<"Les pieces jouable sont les suivantes pour le couleur "<<couleur<<": \n";
+    for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
+    {
+        Case casePiece = it->first;
+        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<" ";
+    }
     cout<<"test  3\n";
     //cout<<"(server ) Les pieces jouable sont les suivantes : \n";
     /*for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)

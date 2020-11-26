@@ -9,7 +9,6 @@
 
 #include "Case.h"
 #include "Piece.h"
-#include "Joueur.h"
 #include "Pion.h"
 #include "Dame.h"
 

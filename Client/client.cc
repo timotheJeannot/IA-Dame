@@ -152,7 +152,7 @@ int main(int argc, char ** argv)
             TCoupReq coup;
             if (b) {
                 cout<<"test1"<<endl;
-                coup = buildCoupAlea(board.board, 1);
+                coup = buildCoupAlea(board.board, couleur);
             }else if (isMoved) {
                 isMoved = false;
                 coup = buildCoup(board.board, couleur, movePiece, err, depl);
