@@ -85,7 +85,16 @@ int main(int argc, char ** argv)
 
     /************** Début de partie ********************/
     Plateau plateau;
-    
+
+    // --------------------------------------------------------------------------------------
+    //configuration de plateau afin de tester les cas de match nul
+    // les cas de match nul sont décris dans serverTools.h et viennent de wikiédia
+
+
+    std::vector<std::vector <int>> test {{-1,0,0,0,0,0,0,0,0,1},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,-2,-2,-2,2,2,2,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
+    plateau.setPlateau(test);
+    // --------------------------------------------------------------------------------------
+
     while (true)
     {
         //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();

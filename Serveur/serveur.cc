@@ -78,9 +78,18 @@ int main(int argc, char ** argv)
                 cerr<<"erreur lors de la réception du packet du client 2";
             }
             
-            //Plateau plateau = Plateau();
-            //Plateau plateau();
             Plateau plateau;
+
+            // --------------------------------------------------------------------------------------
+            //configuration de plateau afin de tester les cas de match nul
+            // les cas de match nul sont décris dans serverTools.h et viennent de wikiédia
+
+
+            std::vector<std::vector <int>> test {{-1,0,0,0,0,0,0,0,0,1},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,-2,-2,-2,2,2,2,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
+            plateau.setPlateau(test);
+            // --------------------------------------------------------------------------------------
+            cout<<plateau.afficheTerminal();
+
             
             std::vector<Plateau> configs ; // d'après wikipédia , pour la partie nulle : quand la même position des pièces se produit pour la troisième fois, et que c'est au même joueur de jouer 
                                            // on va stocker les états du plateau successif lors d'un déplacement d'une dame sans prise

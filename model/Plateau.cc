@@ -984,3 +984,14 @@ bool operator== (Plateau opL, Plateau opR)
     }
     return true;
 }
+
+void Plateau::setPlateau(std::vector<std::vector<int>> pl)
+{
+    for(int i=0 ; i<10 ; i++)
+    {
+        for(int j=0 ; j<10; j++)
+        {
+            plateau[i][j] = pl[i][j];
+        }
+    }
+}
