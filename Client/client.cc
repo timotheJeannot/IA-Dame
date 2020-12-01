@@ -150,10 +150,7 @@ int main(int argc, char ** argv)
 
             }
             TCoupReq coup;
-            if (b) {
-                cout<<"test1"<<endl;
-                coup = buildCoupAlea(board.board, couleur);
-            }else if (isMoved) {
+            if (isMoved) {
                 isMoved = false;
                 coup = buildCoup(board.board, couleur, movePiece, err, depl);
 
@@ -162,37 +159,35 @@ int main(int argc, char ** argv)
                     return -1;
                 }
 
-            }
+
                 packet.is(coup);
                 if (gf::SocketStatus::Data != socket.sendPacket(packet)) {
                     cerr << "erreur lors de l'envoi de coup";
                     return -1;
                 }
-            std::cout<<"test 41\n";
-            if (gf::SocketStatus::Data != socket.recvPacket(packet)) {
-                cerr << "erreur lors de la réception de confirmation de partie du serveur";
-                return -1;
-            }
 
-            std::cout<<"test 42\n";
-            auto coupRep = packet.as<TCoupRep>();
-            if(coupRep.propCoup == GAGNE)
-            {
-                cout<<"victoire\n";
-                break;
-            }
-            if(coupRep.propCoup == NUL)
-            {
-                cout<<"match nul\n";
-                break;
-            }
-            if(coupRep.propCoup == PERDU)
-            {
-                cout<<"défaite\n";
-                break;
-            }
-            myTurn = false;
+                std::cout << "test 41\n";
+                if (gf::SocketStatus::Data != socket.recvPacket(packet)) {
+                    cerr << "erreur lors de la réception de confirmation de partie du serveur";
+                    return -1;
+                }
 
+                std::cout << "test 42\n";
+                auto coupRep = packet.as<TCoupRep>();
+                if (coupRep.propCoup == GAGNE) {
+                    cout << "victoire\n";
+                    break;
+                }
+                if (coupRep.propCoup == NUL) {
+                    cout << "match nul\n";
+                    break;
+                }
+                if (coupRep.propCoup == PERDU) {
+                    cout << "défaite\n";
+                    break;
+                }
+                myTurn = false;
+            }
 
             /*
             std::cout<<"test 43\n";
