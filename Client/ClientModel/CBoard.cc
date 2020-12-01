@@ -38,6 +38,15 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             board.modifPlateauDeplacementNormal(dAdv,cibleAdv); // ce n'est pas grave si on ne différencie pas les deux types de déplacements, car le serveur à valider le coup
             dAdv.setCase(cibleAdv);
 
+            cout<<xAdv<<"   "<<yAdv<<endl;
+            gf::Vector2i oldCase = cCase.at(gf::Vector2i(xAdv,yAdv)).getMPosition();
+            cout<<oldCase.x<<"    "<<oldCase.y<<endl;
+            gf::Vector2i newCase = cCase.at(gf::Vector2i(x2Adv,y2Adv)).getMPosition();
+            cout<<newCase.x<<"    "<<newCase.y<<endl;
+            cout<<pieceSelect(oldCase)<<endl;
+            int indexP = pieceSelect(oldCase);
+            UpdatePiece(oldCase,newCase,indexP);
+
         }
     }
     else
@@ -51,6 +60,17 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             Case cibleAdv(x2Adv,y2Adv);
             board.modifPlateauDeplacementNormal(pAdv,cibleAdv); // ce n'est pas grave si on ne différencies pas les deux types de déplacements, car le serveur à valider le coup
             pAdv.setCase(cibleAdv);
+
+
+            cout<<xAdv<<"   "<<yAdv<<endl;
+            gf::Vector2i oldCase = cCase.at(gf::Vector2i(xAdv,yAdv)).getMPosition();
+            cout<<oldCase.x<<"    "<<oldCase.y<<endl;
+            gf::Vector2i newCase = cCase.at(gf::Vector2i(x2Adv,y2Adv)).getMPosition();
+            cout<<newCase.x<<"    "<<newCase.y<<endl;
+            cout<<pieceSelect(oldCase)<<endl;
+            int indexP = pieceSelect(oldCase);
+            UpdatePiece(oldCase,newCase,indexP);
+
         }
     }
 

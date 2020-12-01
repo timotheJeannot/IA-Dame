@@ -47,10 +47,6 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, gf::Vector4i vector4I, int& er
 
 
     cout<<"Les pieces jouable sont les suivantes : \n";
-    for(auto it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
-    {
-        err=1;
-    }
     int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
     std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(c1);
     std::vector<std::vector<Case>> listeChemins = it->second;
