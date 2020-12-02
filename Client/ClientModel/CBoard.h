@@ -111,6 +111,10 @@ public:
     void UpdateMultiPiece(gf::Vector2f vector, int &index);
 
     void printMovePiece(const TCoupReq &req);
+
+    void UpdatePieceADV(gf::Vector2i vector, gf::Vector2i vector2, int index);
+
+    int pieceSelectADV(gf::Vector2i vector);
 };
 
 
