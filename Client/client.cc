@@ -147,8 +147,8 @@ int main(int argc, char ** argv)
                 movePiece = board.doProcessEvent(event, pieceSelected,indexP, isSelected, isMoved);
 
                 cout<<"boolean selection :"<<isSelected<<endl;
-                cout<<"PieceSelection :"<<board.cPieceWhite.at(indexP).getMPosition().x<<"   "<<board.cPieceWhite.at(indexP).getMPosition().y<<endl;
-                cout<<"PieceSelection :"<<pieceSelected.getMPosition().x<<"   "<<pieceSelected.getMPosition().y<<endl;
+                //cout<<"PieceSelection :"<<board.cPieceWhite.at(indexP).getMPosition().x<<"   "<<board.cPieceWhite.at(indexP).getMPosition().y<<endl;
+                //cout<<"PieceSelection :"<<pieceSelected.getMPosition().x<<"   "<<pieceSelected.getMPosition().y<<endl;
                 //CasePossible = plateau.modifPlateauDeplacementNormal(pieceSelected, )
 
             }

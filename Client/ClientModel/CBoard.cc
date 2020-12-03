@@ -353,19 +353,19 @@ gf::Vector4i CBoard::doProcessEvent(gf::Event event, CPiece &vector1, int &index
                 }
             } else {
                 cout<<"Test11"<<endl;
-                int pieceS = pieceSelect(mouseCoords);
-                if(!emptySelection && pieceS>=0){
+                if(!emptySelection){
                     cout<<"Test12"<<endl;
                     index = pieceSelect(mouseCoords);
                     //gf::Vector2i old((int)vector1.getMPosition().x,(int)vector1.getMPosition().y);
-                    gf::Vector2i pair = caseSelect(mouseCoords);
-                    cCase.at(pair).selected();
-                    cout<<"Test13 "<<pair.x<<"   "<<pair.y<<endl;
-                    cout<<"Test14"<<endl;
-                    b=true;
-                    highlightCase(pair);
+                    if(index>=0) {
+                        gf::Vector2i pair = caseSelect(mouseCoords);
+                        cCase.at(pair).selected();
+                        cout << "Test13 " << pair.x << "   " << pair.y << endl;
+                        cout << "Test14" << endl;
+                        b = true;
+                        highlightCase(pair);
+                    }
                     //cout <<"col : "<<caseSelect(vector1.getMPosition()).first.x<<"   "<<caseSelect(vector1.getMPosition()).first.y<<endl;
-                    //TODO faire une animation pour une piece selectionné
                 }
             }
         }
@@ -401,7 +401,11 @@ void CBoard::setMyColor(int myColor) {
 bool CBoard::isInBoard(gf::Vector2i vector) {
 
     int limitBoard = (int)sizeSquare * 10;
-
+    cout<<"limite board"<<limitBoard<<endl;
+    cout<<"limite board x "<<beginBoard.x + limitBoard<<endl;
+    cout<<"limite board y "<<beginBoard.y + limitBoard<<endl;
+    cout<<"mousecoord x "<<vector.x<<endl;
+    cout<<"mousecoord y "<<vector.y<<endl;
     return(beginBoard.x < vector.x && vector.x < (beginBoard.x + limitBoard) && beginBoard.y < vector.y && vector.y < (beginBoard.y + limitBoard));
 
 }
