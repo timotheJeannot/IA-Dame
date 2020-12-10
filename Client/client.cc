@@ -163,7 +163,7 @@ int main(int argc, char ** argv)
 
                 network.send(coup);
                 //packet.is(coup);
-                network.queue.wait(packet);
+                network.queue.poll(packet);
                 /*if (gf::SocketStatus::Data != socket.sendPacket(packet)) {
                     cerr << "erreur lors de l'envoi de coup";
                     return -1;
@@ -195,7 +195,7 @@ int main(int argc, char ** argv)
             }
         }else {
             std::cout << "test 48\n";
-            network.queue.wait(packet);
+            network.queue.poll(packet);
             /*if( gf::SocketStatus::Data != socket.recvPacket(packet))
             {
                 cerr<<"erreur lors de la réception de confirmation de partie du serveur1";
@@ -204,7 +204,7 @@ int main(int argc, char ** argv)
             std::cout << "test 49\n";
             auto coupAdv = packet.as<TCoupReq>();
             std::cout << "test 50\n";
-            network.queue.wait(packet);
+            network.queue.poll(packet);
             /*if (gf::SocketStatus::Data != socket.recvPacket(packet)) {
                 cerr << "erreur lors de la réception de confirmation de partie du serveur2";
                 return -1;

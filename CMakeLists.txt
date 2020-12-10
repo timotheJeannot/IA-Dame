@@ -52,16 +52,19 @@ add_executable(serveur
 #)
 
 target_link_libraries(client
-	gf0
-	gfnet0
-	gfcore0
+	#gf0
+	#gfnet0
+	#gfcore0
+		gf::graphics
+		gf::net
 
 )
 
 target_link_libraries(serveur
-	gf0
-	gfnet0
-	gfcore0
+	#gf0
+	#gfnet0
+	#gfcore0
+		gf::net
 )
 
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
