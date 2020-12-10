@@ -41,11 +41,11 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             cout<<xAdv<<"   "<<yAdv<<endl;
             gf::Vector2i oldCase = cCase.at(gf::Vector2i(xAdv,yAdv)).getMPosition();
             cout<<oldCase.x<<"    "<<oldCase.y<<endl;
-            gf::Vector2i newCase = cCase.at(gf::Vector2i(x2Adv,y2Adv)).getMPosition();
+            gf::Vector2i newCase = gf::Vector2i(x2Adv,y2Adv);
             cout<<newCase.x<<"    "<<newCase.y<<endl;
             cout<<pieceSelectADV(oldCase)<<endl;
             int indexP = pieceSelectADV(oldCase);
-            UpdatePieceADV(newCase,oldCase,indexP);
+            UpdatePieceADV(newCase,gf::Vector2i(xAdv,yAdv),indexP);
 
         }
     }
@@ -65,11 +65,11 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             cout<<xAdv<<"   "<<yAdv<<endl;
             gf::Vector2i oldCase = cCase.at(gf::Vector2i(xAdv,yAdv)).getMPosition();
             cout<<oldCase.x<<"    "<<oldCase.y<<endl;
-            gf::Vector2i newCase = cCase.at(gf::Vector2i(x2Adv,y2Adv)).getMPosition();
+            gf::Vector2i newCase = gf::Vector2i(x2Adv,y2Adv);
             cout<<newCase.x<<"    "<<newCase.y<<endl;
             cout<<pieceSelectADV(oldCase)<<endl;
             int indexP = pieceSelectADV(oldCase);
-            UpdatePieceADV(newCase,oldCase,indexP);
+            UpdatePieceADV(newCase,gf::Vector2i(xAdv,yAdv),indexP);
 
         }
     }
@@ -96,27 +96,29 @@ void CBoard::initBoard(){
     gf::Color4f saddlebrown = gf::Color::fromRgba32(139,69,19);
     for(int j=0;j<10;j++) {
         for (int i = 0; i < 10; i++) {
+            CPiece *pPiece= nullptr;
             switch (board.getPlateau()[j][i]) {
                 case -1 : {
                     CPiece piece(gf::Vector2f(beginBoard.height + ((j) * sizeSquare), beginBoard.col + (i * sizeSquare)), sizeCircle,
-                                 gf::Color::Black);
+                                 gf::Color::Black, gf::Vector2i(i,j));
                     cPieceBlack.push_back( piece);
+                    pPiece=&piece;
                 }break;
                 case 1 : {
-                    CPiece piece(gf::Vector2f(beginBoard.height + ((j) * sizeSquare), beginBoard.col + (i * sizeSquare)), sizeCircle, gf::Color::White);
+                    CPiece piece(gf::Vector2f(beginBoard.height + ((j) * sizeSquare), beginBoard.col + (i * sizeSquare)), sizeCircle, gf::Color::White, gf::Vector2i(i,j));
                     cPieceWhite.push_back( piece);
-
+                    pPiece=&piece;
                 }break;
-
             }
+
             if(j%2==0) {
                 if(i%2==0){
                     CCase c(gf::Vector2f(beginBoard.height + (j * sizeSquare), beginBoard.col + (i * sizeSquare)),
-                            sizeSquare, peru);
+                            sizeSquare, peru,pPiece);
                     cCase.insert(std::pair<gf::Vector2i, CCase>(gf::Vector2i(j, i), c));
 
                 }else{
-                    CCase c(gf::Vector2f(beginBoard.height + ((j) * sizeSquare), beginBoard.col + (i * sizeSquare)), sizeSquare, saddlebrown);
+                    CCase c(gf::Vector2f(beginBoard.height + ((j) * sizeSquare), beginBoard.col + (i * sizeSquare)), sizeSquare, saddlebrown,pPiece);
                     cCase.insert(std::pair<gf::Vector2i, CCase>(gf::Vector2i(j, i), c));
 
                 }
@@ -125,10 +127,10 @@ void CBoard::initBoard(){
                 if(i%2==0) {
                     CCase c(
                             gf::Vector2f(beginBoard.height + ((j) * sizeSquare), beginBoard.col + (i * sizeSquare)),
-                            sizeSquare, saddlebrown);
+                            sizeSquare, saddlebrown,pPiece);
                     cCase.insert(std::pair<gf::Vector2i, CCase>(gf::Vector2i(j, i), c));
                 }else{
-                    CCase c(gf::Vector2f(beginBoard.height + (j * sizeSquare), beginBoard.col + ((i) * sizeSquare)), sizeSquare, peru);
+                    CCase c(gf::Vector2f(beginBoard.height + (j * sizeSquare), beginBoard.col + ((i) * sizeSquare)), sizeSquare, peru,pPiece);
                     cCase.insert(std::pair<gf::Vector2i, CCase>(gf::Vector2i(j, i), c));
                 }
 
@@ -160,18 +162,27 @@ CBoard::CBoard(gf::Vector2u SSize, const string& gName): window(gName, SSize),
 void CBoard::printBoard() {
     for(auto & it : cCase){
         it.second.render(renderer);
-        if(board.getPlateau()[it.first.x][it.first.y] == 3 ){
-            cPieceWhite.at(pieceSelect(it.second.getMPosition())).kill();
-            board.setNbPiecesB(board.getNbPiecesB()-1);
-        }
-        if(board.getPlateau()[it.first.x][it.first.y] == -3 ){
-            cPieceBlack.at(pieceSelect(it.second.getMPosition())).kill();
-            board.setNbPiecesN(board.getNbPiecesN()-1);
-        }
+        switch (board.getPlateau()[it.first.x][it.first.y]) {
+            case -3 : {
+                for (std::vector<CPiece>::iterator it2 = cPieceWhite.begin(); it2 != cPieceWhite.end(); ++it2) {
+                    if(it2->getMCase()==it.first) {
+                        cPieceWhite.erase(it2);
+                    }
+                }
+            }
+                break;
+            case 3 : {
+                for (std::vector<CPiece>::iterator it2 = cPieceBlack.begin(); it2 != cPieceBlack.end(); ++it2) {
+                    if(it2->getMCase()==it.first) {
+                        cPieceBlack.erase(it2);
+                    }
+                }
 
+            }
+                break;
+        }
     }
     board.enleverPiecesRafle();
-
 }
 
 void CBoard::print() {
@@ -240,44 +251,55 @@ int CBoard::pieceSelectADV(gf::Vector2i vector) {
 void CBoard::UpdatePiece(gf::Vector2i vector,  gf::Vector2i vector2, int index) {
 
 
-    bool caseSelVide = CaseVide(vector);
+    //bool caseSelVide = CaseVide(vector);
     int retmodif=0;
-    if(caseSelVide){
+    //if(caseSelVide){
         Case caseUpdate(vector.x,vector.y);
         Case caseOrigin(vector2.x,vector2.y);
         switch(myColor){
             case -1 :
-
-                cPieceBlack.at(index).setMPosition(vector);break;
+                /*cCase.at(vector).m_piece=&cPieceBlack.at(index);
+                cCase.at(vector2).m_piece=nullptr;*/
+                cPieceBlack.at(index).setMCase(vector);
+                cPieceBlack.at(index).setMPosition(cCase.at(vector).getMPosition());break;
             case 1 :
-
-                cPieceWhite.at(index).setMPosition(vector);break;
+                /*cCase.at(vector).m_piece=&cPieceWhite.at(index);
+                cCase.at(vector2).m_piece=nullptr;*/
+                cPieceWhite.at(index).setMCase(vector);
+                cPieceWhite.at(index).setMPosition(cCase.at(vector).getMPosition());break;
 
         }
-    }
+    //}
 
 }
 void CBoard::UpdatePieceADV(gf::Vector2i vector,  gf::Vector2i vector2, int index) {
 
 
-    bool caseSelVide = CaseVide(vector);
+    //bool caseSelVide = CaseVide(vector);
     int retmodif=0;
-    if(caseSelVide){
+    //if(caseSelVide){
         Case caseUpdate(vector.x,vector.y);
         Case caseOrigin(vector2.x,vector2.y);
         switch(myColor){
             case -1 :
-                cPieceWhite.at(index).setMPosition(vector);break;
+               /* cCase.at(vector).m_piece=&cPieceWhite.at(index);
+                cCase.at(vector2).m_piece=nullptr;*/
+                cPieceWhite.at(index).setMCase(vector);
+                cPieceWhite.at(index).setMPosition( cCase.at(vector).getMPosition());break;
             case 1 :
-                cPieceBlack.at(index).setMPosition(vector);break;
+                /*cCase.at(vector).m_piece=&cPieceBlack.at(index);
+                cCase.at(vector2).m_piece=nullptr;*/
+                cPieceBlack.at(index).setMCase(vector);
+                cPieceBlack.at(index).setMPosition(cCase.at(vector).getMPosition());break;
 
         }
-    }
+   // }
 
 }
 bool CBoard::CaseVide(gf::Vector2i vector) {
 
-    gf::Vector2f caseSel = cCase.at(caseSelect(vector)).getMPosition();
+    gf::Vector2i index=caseSelect(vector);
+    gf::Vector2f caseSel = cCase.at(index).getMPosition();
     for(const auto& it : cPieceWhite){
         if(caseSel == it.getMPosition()){
             return false;
@@ -336,13 +358,13 @@ gf::Vector4i CBoard::doProcessEvent(gf::Event event, CPiece &vector1, int &index
                         gf::Vector2i pair2 = caseSelect(searchPiece(index).getMPosition());
                         if(isPLayable(pair2)) {
                             gf::Vector2i pair = caseSelect(mouseCoords);
-                            gf::Vector2f newPos = cCase.at(pair).getMPosition();
+                            //gf::Vector2f newPos = cCase.at(pair).getMPosition();
                             cout << "Test9" << endl;
                             cCase.at(pair2).deSelected();
                             cout << "Test9.1" << endl;
                             deHighlightCase(pair2);
                             cout << "Test9.2" << endl;
-                            UpdatePiece(newPos, pair2, index);
+                            UpdatePiece(pair, pair2, index);
                             cout << "Test9.3" << endl;
                             //UpdateMultiPiece(newPos, index);
                             b = false;

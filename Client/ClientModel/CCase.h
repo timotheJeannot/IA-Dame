@@ -10,11 +10,13 @@
 #include <gf/Vector.h>
 #include <gf/Shapes.h>
 #include <gf/RenderTarget.h>
+#include "CPiece.h"
 
 
-class CCase : public gf::Entity {
+class CCase {
 public:
-    CCase(gf::Vector2f position, float size, gf::Color4f color);
+    CPiece *m_piece;
+    CCase(gf::Vector2f position, float size, gf::Color4f color, CPiece *piece);
     void render(gf::RenderTarget& target);
     const gf::Vector2f &getMPosition() const;
     bool isCaseSelect(gf::Vector2i vector2I) const;
@@ -26,6 +28,7 @@ private:
     float m_size;
     gf::Color4f m_color;
     gf::Color4f m_selected;
+
 };
 
 

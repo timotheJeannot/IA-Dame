@@ -118,7 +118,7 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, gf::Vector4i vector4I, int& er
         cout<<to_string(coup.deplacements[i].c)<<" "<<to_string(coup.deplacements[i].l)<<" | |";
     }
     cout<<"\n";
-    cont=nbDeplacement;
+    cont=retmodif;
     return coup;
 }
 

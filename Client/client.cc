@@ -107,14 +107,13 @@ int main(int argc, char ** argv)
     bool isSelected=false;
     bool isMoved=false;
     gf::Clock clock;
-    int indexP, depl;
+    int indexP, depl=0;
     cout<<"boolean selection :"<<isSelected<<endl;
 
     gf::ActionContainer actions;
 
     gf::Action closeWindowAction("Close window");
     closeWindowAction.addCloseControl();
-    closeWindowAction.addKeycodeKeyControl(gf::Keycode::Escape);
     actions.addAction(closeWindowAction);
 
     gf::Action SelectAction("Select");
@@ -190,7 +189,9 @@ int main(int argc, char ** argv)
                     cout << "défaite\n";
                     break;
                 }
-                myTurn = false;
+                if(depl==0) {
+                    myTurn = false;
+                }
             }
         }else {
             std::cout << "test 48\n";

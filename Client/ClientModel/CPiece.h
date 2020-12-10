@@ -15,10 +15,9 @@
 
 enum CtypePiece {CPION, CDAME};
 
-class CPiece : public gf::Entity{
+class CPiece : public gf::Entity {
 public :
 
-    CPiece(gf::Vector2f position, float size, gf::Color4f color);
 
     CPiece();
 
@@ -46,6 +45,13 @@ private:
     float m_size;
     gf::Color4f m_color;
     CtypePiece type;
+    gf::Vector2i m_case;
+
+public:
+    const gf::Vector2i &getMCase() const;
+    CPiece(const gf::Vector2f &mPosition, float mSize, const gf::Color4f &mColor,
+           const gf::Vector2i &mCase);
+    void setMCase(const gf::Vector2i &mCase);
     //gf::Texture m_texture;
 
 };

@@ -4,14 +4,7 @@
 
 #include "CPiece.h"
 
-CPiece::CPiece(gf::Vector2f position, float size, gf::Color4f color)
-        :m_position(position)
-        ,m_size(size)
-        ,m_color(color)
-/*,m_texture(gf::Image())*/{
-    type=CPION;
 
-}
 
 void CPiece::render(gf::RenderTarget &target) {
     gf::CircleShape shape;
@@ -50,6 +43,20 @@ CtypePiece CPiece::getType() const {
 
 void CPiece::setType(CtypePiece type) {
     CPiece::type = type;
+}
+
+const gf::Vector2i &CPiece::getMCase() const {
+    return m_case;
+}
+
+void CPiece::setMCase(const gf::Vector2i &mCase) {
+    m_case = mCase;
+}
+
+CPiece::CPiece(const gf::Vector2f &mPosition, float mSize, const gf::Color4f &mColor,
+               const gf::Vector2i &mCase) : m_position(mPosition), m_size(mSize), m_color(mColor),
+                                            m_case(mCase) {
+    type=CPION;
 }
 
 
