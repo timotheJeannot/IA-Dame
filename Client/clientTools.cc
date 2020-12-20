@@ -608,23 +608,27 @@ TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
 
     cout<<"test min max avant \n";
     cout<<plateau.afficheTerminal();
-    minMax(node,3,true,couleur);
-    cout<<plateau.afficheTerminal();
+    minMax(node,3,false,couleur);
     cout<<"test min max après \n";
+    cout<<plateau.afficheTerminal();
+    cout<<"node.p =\n";
     cout<<node.p.afficheTerminal();
     cout<<"node.childs.size() = "<<node.childs.size()<<endl;
     std::vector<Case> listeCoups;
     for(int i =0 ; i<node.childs.size(); i++)
     {
-        cout<<"wtf ? \n";
         if(node.value == node.childs[i].value)
         {
             choice = i;
             listeCoups = node.childs[i].listeCoups;
+            for(int j = 0 ; j<listeCoups.size();j++)
+            {
+                cout<<"("<<to_string(listeCoups[j].getColonne())<<","<<to_string(listeCoups[j].getLigne())<<")  \n";
+            }
         }
-        cout<<"i = "<<i<<endl;
+        /*cout<<"i = "<<i<<endl;
         cout<<"node.childs[i].value = "<<node.childs[i].value<<endl;
-        cout<<"node.value = "<<node.value<<endl;
+        cout<<"node.value = "<<node.value<<endl;*/
     }
     Case cible = listeCoups[0];
     cout<<"Case choisie : ("<<to_string(cible.getColonne())<<","<<to_string(cible.getLigne())<<")  \n";

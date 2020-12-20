@@ -77,7 +77,10 @@ int main(int argc, char ** argv)
     tree* node = new tree;
     node->p = plateau;
     node->value = -2147483648;
-
+    if(couleur == -1)
+    {
+        node->childs = childs(plateau,1); // on a besoin d'instancier les childs quand on joue en second au premier tours
+    }
     while (true)
     {
         //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
@@ -85,18 +88,10 @@ int main(int argc, char ** argv)
 
         if(couleur == 1) // On commence
         {
-            //TCoupReq coup = buildCoupAlea(plateau, 1);
             int choice;
             TCoupReq coup = buildCoupHeur1(plateau, 1,*node , choice);
             cout<<"alors est on passé ici ? \n";
-            cout<<"choice = "<<choice<<" node.child.size() = "<<node->childs.size()<<endl;
             node = &(node->childs[choice]);
-
-            /*node.p = node.childs[choice].p;
-            node.value = node.childs[choice].value;
-            node.listeCoups = node.childs[choice].listeCoups;
-            node.childs = node.childs[choice].childs;*/
-            cout<<"et maintenant ?\n";
 
             packet.is(coup);
             if(gf::SocketStatus::Data != socket.sendPacket(packet))
@@ -207,14 +202,19 @@ int main(int argc, char ** argv)
                 {
                     modifCoupAdv(coupAdv, plateau, -1);
                     //on va regarder quel est le le noeud qu'a choisi l'adversaire
+                    cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
                     for(int i =0 ; i<node->childs.size() ; i++)
                     {
+                        cout<<node->childs[i].p.afficheTerminal();
                         if(node->childs[i].p == plateau)
                         {
+                            cout<<"////////////////////////////////////////////////////////////////////////////////////////////\n";
+                            cout<<"test modif du node pour prendre en compte le coup adverse\n";
                             node = &(node->childs[i]);
                             break;
                         }
                     }
+                    cout<<" ?????????????????????????????????????????????????????????????????????????????????????????????\n";
 
                     //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
                     //plateau.printMovePiece();

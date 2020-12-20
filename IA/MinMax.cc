@@ -36,23 +36,23 @@ std::vector<tree> childs (Plateau p , int couleur) {
                 if(childP.getPlateau()[Piece.getColonne()][Piece.getLigne()] == 2*couleur)
                 {
                     Dame dame(Piece.getColonne(),Piece.getLigne(),c);
-                    childP.modifPlateauDeplacementPrise(dame,chemins[j][0]);
+                    childP.modifPlateauDeplacementPrise(dame,chemins[j][k]);
                 }
                 if(childP.getPlateau()[Piece.getColonne()][Piece.getLigne()] == couleur)
                 {
                     Pion pion(Piece.getColonne(),Piece.getLigne(),c);
-                    childP.modifPlateauDeplacementPrise(pion,chemins[j][0]);
+                    childP.modifPlateauDeplacementPrise(pion,chemins[j][k]);
                 }
 
             }
+            childP.enleverPiecesRafle();
             tree child;
             child.p = childP;
             child.listeCoups = chemins[j];
-            child.listeCoups.insert(child.listeCoups.begin(), Piece);
+            child.listeCoups.insert(child.listeCoups.begin(), it->first);
             ret.push_back(child);        
         }
     }
-    cout<<"ret.size() = "<<ret.size()<<endl;
     return ret;
 }
 
@@ -68,9 +68,9 @@ void minMax (tree& node,int depth, bool maximizingPlayer, int couleur)
         node.value = -2147483648;
         if(node.childs.size() == 0)
         {
-            cout<<"test childs 0 \n";
+            //cout<<"test childs 0 \n";
             node.childs = childs(node.p,couleur);
-            cout<<"test childs 1 \n";
+            //cout<<"test childs 1 \n";
         }
         for( int i =0 ; i<node.childs.size(); i++)
         {
@@ -79,10 +79,6 @@ void minMax (tree& node,int depth, bool maximizingPlayer, int couleur)
             {
                 node.value  = node.childs[i].value;
             }
-        }
-        if(depth == 3)
-        {
-            cout<<"test avec depth = 3 , node.childs.size() = "<<node.childs.size()<<endl;
         }
         return;
     }
