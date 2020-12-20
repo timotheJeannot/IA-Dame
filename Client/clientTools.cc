@@ -587,3 +587,143 @@ TCoupReq buildCoupAlea(Plateau& plateau, int couleur) {
     return coup;
 
 }
+
+TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
+{
+    TCoupReq coup ;
+    coup.idRequest = COUP;
+    coup.estBloque = false;
+    TPion pion ;
+    pion.coulPion = couleur;
+    pion.typePion = PION;
+    coup.pion = pion;
+    coup.propCoup = CONT ;
+    TCase cnext;
+    std::vector<TCase> deplacements;
+    bool blanc =true;
+    if(couleur == -1)
+    {
+        blanc = false;
+    }
+
+    cout<<"test min max avant \n";
+    cout<<plateau.afficheTerminal();
+    minMax(node,3,true,couleur);
+    cout<<plateau.afficheTerminal();
+    cout<<"test min max après \n";
+    cout<<node.p.afficheTerminal();
+    cout<<"node.childs.size() = "<<node.childs.size()<<endl;
+    std::vector<Case> listeCoups;
+    for(int i =0 ; i<node.childs.size(); i++)
+    {
+        cout<<"wtf ? \n";
+        if(node.value == node.childs[i].value)
+        {
+            choice = i;
+            listeCoups = node.childs[i].listeCoups;
+        }
+        cout<<"i = "<<i<<endl;
+        cout<<"node.childs[i].value = "<<node.childs[i].value<<endl;
+        cout<<"node.value = "<<node.value<<endl;
+    }
+    Case cible = listeCoups[0];
+    cout<<"Case choisie : ("<<to_string(cible.getColonne())<<","<<to_string(cible.getLigne())<<")  \n";
+
+
+    TCase c;
+    c.l = cible.getLigne();
+    c.c = cible.getColonne();
+
+    coup.posPionAv = c;
+
+    Pion p;
+    Dame d;
+    bool isDame = false;
+
+    if(plateau.getPlateau()[c.c][c.l] == couleur)
+    {
+        p = Pion(c.c,c.l,blanc);
+    }
+    if(plateau.getPlateau()[c.c][c.l] == 2*couleur)
+    {
+        d = Dame(c.c,c.l,blanc);
+        isDame = true;
+    }
+
+    int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
+    cout<<"test clientTools 1\n";
+
+    if(isDame)
+    {
+
+        cible = listeCoups[1];
+        cnext.c = cible.getColonne();
+        cnext.l = cible.getLigne();
+
+        int retModif = 0;
+
+        retModif= plateau.modifPlateauDeplacementNormal(d, cible);
+        deplacements.push_back(cnext);
+        d.setCase(cible);
+        nbDeplacement++;
+
+        while(retModif == 1)
+        {
+            cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
+            cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+
+            cible = listeCoups[nbDeplacement+1];
+            
+            retModif= plateau.modifPlateauDeplacementPrise(d, cible);
+            cnext.c = cible.getColonne();
+            cnext.l = cible.getLigne();
+            deplacements.push_back(cnext);
+            d.setCase(cible);
+            nbDeplacement++;
+        }
+
+        plateau.enleverPiecesRafle();
+    }
+    else
+    {
+        cible = listeCoups[1];
+
+        cnext.c = cible.getColonne();
+        cnext.l = cible.getLigne();
+
+        int retModif = 0;
+        cout<<"test clientTools 1,5\n";
+        cout<<plateau.afficheTerminal();
+
+        retModif= plateau.modifPlateauDeplacementNormal(p, cible);
+        deplacements.push_back(cnext);
+        p.setCase(cible);
+        nbDeplacement++;
+        cout<<"test clientTools 2\n";
+        while(retModif == 1)
+        {
+            cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
+            cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+
+            cible = listeCoups[nbDeplacement+1];
+            
+            retModif= plateau.modifPlateauDeplacementPrise(p, cible);
+            cnext.c = cible.getColonne();
+            cnext.l = cible.getLigne();
+            deplacements.push_back(cnext);
+            p.setCase(cible);
+            nbDeplacement++;
+        }
+
+        plateau.enleverPiecesRafle();
+        cout<<"test clientTools 3\n";
+    }
+    coup.deplacements = deplacements;
+    cout<<"deplacements : ";
+    for(int i =0; i < coup.deplacements.size(); i++)
+    {
+        cout<<to_string(coup.deplacements[i].c)<<" "<<to_string(coup.deplacements[i].l)<<" | |";
+    }
+    cout<<"\n";
+    return coup;
+}

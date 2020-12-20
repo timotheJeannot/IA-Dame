@@ -23,8 +23,35 @@ add_executable(client
 		model/Pion.cc
 		model/Dame.cc
 		model/Plateau.cc
+		IA/heuristique.cc
+		IA/MinMax.cc
 		Client/client.cc
 		Client/clientTools.cc Client/clientTools.h model/Graph.cc)
+
+add_executable(clientIA
+		model/Case.cc
+		model/Piece.cc
+		model/Pion.cc
+		model/Dame.cc
+		model/Plateau.cc
+		IA/heuristique.cc
+		IA/MinMax.cc
+		Client/clientIA.cc
+		Client/clientTools.cc Client/clientTools.h)
+		
+add_executable(clientIA_V1
+		model/Case.cc
+		model/Piece.cc
+		model/Pion.cc
+		model/Dame.cc
+		model/Plateau.cc
+		IA/heuristique.cc
+		IA/MinMax.cc
+		Client/clientIA_V1.cc
+		Client/clientTools.cc Client/clientTools.h)
+		
+
+
 
 add_executable(serveur
 		model/Graph.cc
@@ -51,6 +78,20 @@ target_link_libraries(client
 	gfnet0
 	gfcore0
 )
+
+target_link_libraries(clientIA
+	gf0
+	gfnet0
+	gfcore0
+)
+
+target_link_libraries(clientIA_V1
+	gf0
+	gfnet0
+	gfcore0
+)
+
+
 
 target_link_libraries(serveur
 	gf0

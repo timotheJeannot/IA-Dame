@@ -85,10 +85,10 @@ int main(int argc, char ** argv)
             // les cas de match nul sont décris dans serverTools.h et viennent de wikiédia
 
 
-            std::vector<std::vector <int>> test {{-1,0,0,0,0,0,0,0,0,1},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,-2,-2,-2,2,2,2,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
-            plateau.setPlateau(test);
+            //std::vector<std::vector <int>> test {{-1,0,0,0,0,0,0,0,0,1},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,-2,-2,-2,2,2,2,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
+            //plateau.setPlateau(test);
             // --------------------------------------------------------------------------------------
-            cout<<plateau.afficheTerminal();
+            //cout<<plateau.afficheTerminal();
 
             
             std::vector<Plateau> configs ; // d'après wikipédia , pour la partie nulle : quand la même position des pièces se produit pour la troisième fois, et que c'est au même joueur de jouer 
@@ -105,6 +105,7 @@ int main(int argc, char ** argv)
             /****** Boucle de jeu ********/
             while(true)
             {
+                cout<<plateau.afficheTerminal();
                 if(firstR3 == 1)
                 {
                     compteurR3 ++;
