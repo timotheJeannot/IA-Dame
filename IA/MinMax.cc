@@ -13,11 +13,12 @@ std::vector<tree> childs (Plateau p , int couleur) {
 
     for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = piecesJouable.begin() ; it != piecesJouable.end() ; it++)
     {
-        Case Piece = it->first;
+        //Case Piece = it->first;
         std::vector<std::vector<Case>> chemins= it->second;
 
         for(int j =0 ; j<chemins.size();j++)
         {
+            Case Piece = it->first;
             Plateau childP (p);
             if(plateau[Piece.getColonne()][Piece.getLigne()] == 2*couleur)
             {
@@ -56,14 +57,14 @@ std::vector<tree> childs (Plateau p , int couleur) {
     return ret;
 }
 
-void minMax (tree& node,int depth, bool maximizingPlayer, int couleur)
+void minMax (tree& node,int depth, int couleur)
 {
-    if(depth == 0 || node.p.getNbPiecesB() == 0 || node.p.getNbPiecesN() == 0)
+    if(depth == 0 || node.p.getNbPiecesB() == 0 || node.p.getNbPiecesN() == 0) // prise en compte du match nul ?
     {
-         node.value =heuristique1(node.p,couleur);
+         node.value =heuristique1(node.p);
          return;
     }
-    if(maximizingPlayer)
+    if(couleur == 1)
     {
         node.value = -2147483648;
         if(node.childs.size() == 0)
@@ -74,7 +75,7 @@ void minMax (tree& node,int depth, bool maximizingPlayer, int couleur)
         }
         for( int i =0 ; i<node.childs.size(); i++)
         {
-            minMax(node.childs[i], depth -1 , false,couleur*(-1));
+            minMax(node.childs[i], depth -1 ,couleur*(-1));
             if(node.value < node.childs[i].value)
             {
                 node.value  = node.childs[i].value;
@@ -91,14 +92,79 @@ void minMax (tree& node,int depth, bool maximizingPlayer, int couleur)
         }
         for( int i =0 ; i<node.childs.size(); i++)
         {
-            minMax(node.childs[i], depth -1 , true,couleur*(-1));
+            minMax(node.childs[i], depth -1 ,couleur*(-1));
             if(node.value > node.childs[i].value)
             {
                 node.value  = node.childs[i].value;
             }
         }
+    }    
+}
+
+void alphaBeta (tree& node, int depth, int couleur , int& alpha, int &beta)
+{
+    if(depth == 0 || node.p.getNbPiecesB() == 0 || node.p.getNbPiecesN() == 0) // prise en compte du match nul ?
+    {
+         node.value =heuristique1(node.p);
+         return;
+    }
+
+    if(couleur == 1)
+    {
+        node.value = -2147483648;
+        if(node.childs.size() == 0)
+        {
+            node.childs = childs(node.p,couleur);
+        }
+        for( int i =0 ; i<node.childs.size(); i++)
+        {
+            alphaBeta(node.childs[i], depth -1 ,couleur*(-1),alpha,beta);
+            if(node.value < node.childs[i].value)
+            {
+                node.value  = node.childs[i].value;
+            }
+            if(node.value >= beta)
+            {
+                return;
+            }
+            if(node.value > alpha)
+            {
+                alpha = node.value;
+            }
+        }
+    }
+    else
+    {
+        node.value = 2147483647;
+        if(node.childs.size() == 0)
+        {
+            node.childs = childs(node.p,couleur);
+        }
+        for( int i =0 ; i<node.childs.size(); i++)
+        {
+            alphaBeta(node.childs[i], depth -1 ,couleur*(-1),alpha,beta);
+            if(node.value > node.childs[i].value)
+            {
+                node.value  = node.childs[i].value;
+            }
+            if(node.value <= alpha)
+            {
+                return;
+            }
+            if(node.value < beta)
+            {
+                beta = node.value;
+            }
+        }
     }
     
+
 }
+
+
+
+
+
+
 
 

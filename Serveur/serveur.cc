@@ -105,7 +105,7 @@ int main(int argc, char ** argv)
             /****** Boucle de jeu ********/
             while(true)
             {
-                cout<<plateau.afficheTerminal();
+                //cout<<plateau.afficheTerminal();
                 if(firstR3 == 1)
                 {
                     compteurR3 ++;

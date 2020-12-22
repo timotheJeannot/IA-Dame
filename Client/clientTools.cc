@@ -606,14 +606,10 @@ TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
         blanc = false;
     }
 
-    cout<<"test min max avant \n";
-    cout<<plateau.afficheTerminal();
-    minMax(node,3,false,couleur);
-    cout<<"test min max après \n";
-    cout<<plateau.afficheTerminal();
-    cout<<"node.p =\n";
-    cout<<node.p.afficheTerminal();
-    cout<<"node.childs.size() = "<<node.childs.size()<<endl;
+    //minMax(node,3,couleur);
+    int alpha = 2147483648;
+    int beta = 2147483647;
+    alphaBeta(node,3,couleur,alpha,beta);
     std::vector<Case> listeCoups;
     for(int i =0 ; i<node.childs.size(); i++)
     {
@@ -621,17 +617,13 @@ TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
         {
             choice = i;
             listeCoups = node.childs[i].listeCoups;
-            for(int j = 0 ; j<listeCoups.size();j++)
-            {
-                cout<<"("<<to_string(listeCoups[j].getColonne())<<","<<to_string(listeCoups[j].getLigne())<<")  \n";
-            }
         }
         /*cout<<"i = "<<i<<endl;
         cout<<"node.childs[i].value = "<<node.childs[i].value<<endl;
         cout<<"node.value = "<<node.value<<endl;*/
     }
     Case cible = listeCoups[0];
-    cout<<"Case choisie : ("<<to_string(cible.getColonne())<<","<<to_string(cible.getLigne())<<")  \n";
+    //cout<<"Case choisie : ("<<to_string(cible.getColonne())<<","<<to_string(cible.getLigne())<<")  \n";
 
 
     TCase c;
@@ -655,7 +647,6 @@ TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
     }
 
     int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
-    cout<<"test clientTools 1\n";
 
     if(isDame)
     {
@@ -673,8 +664,8 @@ TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
 
         while(retModif == 1)
         {
-            cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
-            cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+            //cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
+            //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
 
             cible = listeCoups[nbDeplacement+1];
             
@@ -696,18 +687,15 @@ TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
         cnext.l = cible.getLigne();
 
         int retModif = 0;
-        cout<<"test clientTools 1,5\n";
-        cout<<plateau.afficheTerminal();
 
         retModif= plateau.modifPlateauDeplacementNormal(p, cible);
         deplacements.push_back(cnext);
         p.setCase(cible);
         nbDeplacement++;
-        cout<<"test clientTools 2\n";
         while(retModif == 1)
         {
-            cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
-            cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+            //cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
+            //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
 
             cible = listeCoups[nbDeplacement+1];
             
@@ -720,14 +708,13 @@ TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
         }
 
         plateau.enleverPiecesRafle();
-        cout<<"test clientTools 3\n";
     }
     coup.deplacements = deplacements;
-    cout<<"deplacements : ";
+    /*cout<<"deplacements : ";
     for(int i =0; i < coup.deplacements.size(); i++)
     {
         cout<<to_string(coup.deplacements[i].c)<<" "<<to_string(coup.deplacements[i].l)<<" | |";
     }
-    cout<<"\n";
+    cout<<"\n";*/
     return coup;
 }

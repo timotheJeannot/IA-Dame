@@ -23,11 +23,21 @@ using namespace std;
 int main(int argc, char ** argv)
 {
     /* verification des arguments */
-    if (argc < 4) {
+    if (argc != 4 && argc != 6) {
         //printf("usage : %s nom/IPServ port nomJoueur \n", argv[0]);
-        cout<<"usage "<<argv[0]<<"% nom/IPServ port nomJoueur \n";
+        cout<<"usage "<<argv[0]<<"% nom/IPServ port nomJoueur \nou "<<argv[0]<<"% nom/IPServ port nomJoueur coefPoidsPiece  coefPositionsPiece\n";
+        cout<<"attention il faut utiliser le . et pas la , pour les nombres à virgules\n";
         return -1;
     }
+
+    double vNbPieceScore = 200;
+    double vPosPieceScore = 1;
+    if(argc == 6)
+    {
+        vNbPieceScore = stod(argv[4]);
+        vPosPieceScore = stod(argv[5]);
+    }
+    
 
     /************ Initialisation de la communication **********/
     char * serv = argv[1];
@@ -70,7 +80,7 @@ int main(int argc, char ** argv)
 
     int couleur = initColor(repPartie.validCoulPion, req.coulPion);
 
-    cout<<"Vous jouez la couleur : "<<couleur<<" \n";
+    //cout<<"Vous jouez la couleur : "<<couleur<<" \n";
 
     /************** Début de partie ********************/
     Plateau plateau;
@@ -90,7 +100,6 @@ int main(int argc, char ** argv)
         {
             int choice;
             TCoupReq coup = buildCoupHeur1(plateau, 1,*node , choice);
-            cout<<"alors est on passé ici ? \n";
             node = &(node->childs[choice]);
 
             packet.is(coup);
@@ -145,19 +154,14 @@ int main(int argc, char ** argv)
                 {
                     modifCoupAdv(coupAdv, plateau, 1);
                     //on va regarder quel est le le noeud qu'a choisi l'adversaire
-                    cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
                     for(int i =0 ; i<node->childs.size() ; i++)
                     {
-                        cout<<node->childs[i].p.afficheTerminal();
                         if(node->childs[i].p == plateau)
                         {
-                            cout<<"////////////////////////////////////////////////////////////////////////////////////////////\n";
-                            cout<<"test modif du node pour prendre en compte le coup adverse\n";
                             node = &(node->childs[i]);
                             break;
                         }
                     }
-                    cout<<" ?????????????????????????????????????????????????????????????????????????????????????????????\n";
 
                     //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
                     //plateau.printMovePiece();
@@ -202,19 +206,14 @@ int main(int argc, char ** argv)
                 {
                     modifCoupAdv(coupAdv, plateau, -1);
                     //on va regarder quel est le le noeud qu'a choisi l'adversaire
-                    cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
                     for(int i =0 ; i<node->childs.size() ; i++)
                     {
-                        cout<<node->childs[i].p.afficheTerminal();
                         if(node->childs[i].p == plateau)
                         {
-                            cout<<"////////////////////////////////////////////////////////////////////////////////////////////\n";
-                            cout<<"test modif du node pour prendre en compte le coup adverse\n";
                             node = &(node->childs[i]);
                             break;
                         }
                     }
-                    cout<<" ?????????????????????????????????????????????????????????????????????????????????????????????\n";
 
                     //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
                     //plateau.printMovePiece();
@@ -239,9 +238,7 @@ int main(int argc, char ** argv)
             }
             int choice;
             TCoupReq coup = buildCoupHeur1(plateau,-1,*node , choice);
-            cout<<"alors est on passé ici ? \n";
             node = &(node->childs[choice]);
-            cout<<"et maintenant ?\n";
 
             packet.is(coup);
             if(gf::SocketStatus::Data != socket.sendPacket(packet))
@@ -274,11 +271,11 @@ int main(int argc, char ** argv)
             }
 
         }
-        cout<<plateau.afficheTerminal();
+        //cout<<plateau.afficheTerminal();
 
     }
 
     // fin de communication
-    cout<<"fin de la communication avec le serveur "<<serv<< "sur le port "<<port<<"\n";
+    //cout<<"fin de la communication avec le serveur "<<serv<< "sur le port "<<port<<"\n";
     return 0;
 }

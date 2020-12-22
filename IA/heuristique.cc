@@ -1,37 +1,37 @@
 #include "heuristique.h"
 
-int heuristique1(Plateau p,int couleur){
-    int valuePieces = 0;
-    int valuesPositions = 0;
-    int valuePiecesA = 0;
-    int valuesPositionsA = 0;
+int heuristique1(Plateau p){
+    int valuePiecesB = 0;
+    int valuesPositionsB = 0;
+    int valuePiecesN = 0;
+    int valuesPositionsN = 0;
     std::vector<std::vector<int>> plateau = p.getPlateau();
 
     for(int i =0 ; i<10 ; i++)
     {
         for(int j =0 ; j<10; j++)
         {
-            if(plateau[i][j] == couleur)
+            if(plateau[i][j] == 1)
             {
-                valuePieces += 1;
-                valuesPositions += plateauPositions[i][j];
+                valuePiecesB += 1;
+                valuesPositionsB += plateauPositions[i][j];
             }
-            if(plateau[i][j] == couleur*2)
+            if(plateau[i][j] == 2)
             {
-                valuePieces =+ 3;
-                valuesPositions += plateauPositions[i][j];
+                valuePiecesB =+ 3;
+                valuesPositionsB += plateauPositions[i][j];
             }
-            if(plateau[i][j] == couleur*-1)
+            if(plateau[i][j] == -1)
             {
-                valuePiecesA += 1;
-                valuesPositionsA += plateauPositions[i][j];
+                valuePiecesN += 1;
+                valuesPositionsN += plateauPositions[i][j];
             }
-            if(plateau[i][j] == couleur*-2)
+            if(plateau[i][j] == -2)
             {
-                valuePiecesA =+ 3;
-                valuesPositionsA += plateauPositions[i][j];
+                valuePiecesN =+ 3;
+                valuesPositionsN += plateauPositions[i][j];
             }
         }
     }
-    return valuePieces *200 - valuePiecesA *200 + valuesPositions - valuesPositionsA;
+    return valuePiecesB *200 - valuePiecesN *200 + valuesPositionsB - valuesPositionsN;
 }

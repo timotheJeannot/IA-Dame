@@ -13,4 +13,4 @@ const int plateauPositions[10][10] =    {{0,50,0,25,0,25,0,40,0,75},
                                         {0,70,0,25,0,25,0,25,0,80},
                                         {75,0,40,0,25,0,25,0,50,0}};
 
-int heuristique1(Plateau p, int couleur);
+int heuristique1(Plateau p); // valeur positive pour les pions blancs et négative pour les pions noirs
