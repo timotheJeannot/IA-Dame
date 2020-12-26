@@ -588,7 +588,7 @@ TCoupReq buildCoupAlea(Plateau& plateau, int couleur) {
 
 }
 
-TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
+TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice, double vNbPieceScore, double vPosPieceScore)
 {
     TCoupReq coup ;
     coup.idRequest = COUP;
@@ -607,9 +607,12 @@ TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice)
     }
 
     //minMax(node,3,couleur);
-    int alpha = 2147483648;
-    int beta = 2147483647;
-    alphaBeta(node,3,couleur,alpha,beta);
+    /*int alpha = 2147483648;
+    int beta = 2147483647;*/
+    double alpha = -2147483648;
+    double beta = 2147483647;
+    alphaBeta(node,3,couleur,alpha,beta,vNbPieceScore,vPosPieceScore);
+    //cout<<"node.p = "<<node.p.afficheTerminal()<<endl;
     std::vector<Case> listeCoups;
     for(int i =0 ; i<node.childs.size(); i++)
     {

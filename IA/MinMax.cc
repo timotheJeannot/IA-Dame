@@ -57,11 +57,11 @@ std::vector<tree> childs (Plateau p , int couleur) {
     return ret;
 }
 
-void minMax (tree& node,int depth, int couleur)
+void minMax (tree& node,int depth, int couleur,double vNbPieceScore, double vPosPieceScore)
 {
     if(depth == 0 || node.p.getNbPiecesB() == 0 || node.p.getNbPiecesN() == 0) // prise en compte du match nul ?
     {
-         node.value =heuristique1(node.p);
+         node.value =heuristique1(node.p,vNbPieceScore,vPosPieceScore);
          return;
     }
     if(couleur == 1)
@@ -75,7 +75,7 @@ void minMax (tree& node,int depth, int couleur)
         }
         for( int i =0 ; i<node.childs.size(); i++)
         {
-            minMax(node.childs[i], depth -1 ,couleur*(-1));
+            minMax(node.childs[i], depth -1 ,couleur*(-1),vNbPieceScore,vPosPieceScore);
             if(node.value < node.childs[i].value)
             {
                 node.value  = node.childs[i].value;
@@ -92,7 +92,7 @@ void minMax (tree& node,int depth, int couleur)
         }
         for( int i =0 ; i<node.childs.size(); i++)
         {
-            minMax(node.childs[i], depth -1 ,couleur*(-1));
+            minMax(node.childs[i], depth -1 ,couleur*(-1),vNbPieceScore,vPosPieceScore);
             if(node.value > node.childs[i].value)
             {
                 node.value  = node.childs[i].value;
@@ -101,11 +101,11 @@ void minMax (tree& node,int depth, int couleur)
     }    
 }
 
-void alphaBeta (tree& node, int depth, int couleur , int& alpha, int &beta)
+void alphaBeta (tree& node, int depth, int couleur , double& alpha, double& beta, double vNbPieceScore, double vPosPieceScore)
 {
     if(depth == 0 || node.p.getNbPiecesB() == 0 || node.p.getNbPiecesN() == 0) // prise en compte du match nul ?
     {
-         node.value =heuristique1(node.p);
+         node.value =heuristique1(node.p,vNbPieceScore,vPosPieceScore);
          return;
     }
 
@@ -118,7 +118,7 @@ void alphaBeta (tree& node, int depth, int couleur , int& alpha, int &beta)
         }
         for( int i =0 ; i<node.childs.size(); i++)
         {
-            alphaBeta(node.childs[i], depth -1 ,couleur*(-1),alpha,beta);
+            alphaBeta(node.childs[i], depth -1 ,couleur*(-1),alpha,beta,vNbPieceScore,vPosPieceScore);
             if(node.value < node.childs[i].value)
             {
                 node.value  = node.childs[i].value;
@@ -142,7 +142,7 @@ void alphaBeta (tree& node, int depth, int couleur , int& alpha, int &beta)
         }
         for( int i =0 ; i<node.childs.size(); i++)
         {
-            alphaBeta(node.childs[i], depth -1 ,couleur*(-1),alpha,beta);
+            alphaBeta(node.childs[i], depth -1 ,couleur*(-1),alpha,beta,vNbPieceScore,vPosPieceScore);
             if(node.value > node.childs[i].value)
             {
                 node.value  = node.childs[i].value;

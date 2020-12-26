@@ -34,9 +34,14 @@ int main(int argc, char ** argv)
     double vPosPieceScore = 1;
     if(argc == 6)
     {
-        vNbPieceScore = stod(argv[4]);
-        vPosPieceScore = stod(argv[5]);
+        /*vNbPieceScore = stod(argv[4]);
+        vPosPieceScore = stod(argv[5]);*/
+        vNbPieceScore = atof(argv[4]);
+        vPosPieceScore = atof(argv[5]);
     }
+
+    cout<<"vNbPieceScore ="<<vNbPieceScore<<endl;
+    cout<<"vPosPieceScore = "<<vPosPieceScore<<endl;
     
 
     /************ Initialisation de la communication **********/
@@ -56,7 +61,6 @@ int main(int argc, char ** argv)
     int err = 0;
     TPartieReq req;
     req.idReq = PARTIE;
-    //req.nomJoueur = "joueur 1"; // à modifier
     req.nomJoueur = argv[3];
     req.coulPion = 1;
 
@@ -99,7 +103,7 @@ int main(int argc, char ** argv)
         if(couleur == 1) // On commence
         {
             int choice;
-            TCoupReq coup = buildCoupHeur1(plateau, 1,*node , choice);
+            TCoupReq coup = buildCoupHeur1(plateau, 1,*node,choice,vNbPieceScore,vPosPieceScore);
             node = &(node->childs[choice]);
 
             packet.is(coup);
@@ -131,7 +135,7 @@ int main(int argc, char ** argv)
                 cout<<"défaite\n";
                 break;
             }
-
+            //cout<<"Etat du plateau après notre coup :\n"<<plateau.afficheTerminal();
 
 
             if( gf::SocketStatus::Data != socket.recvPacket(packet))
@@ -237,7 +241,7 @@ int main(int argc, char ** argv)
                 break;
             }
             int choice;
-            TCoupReq coup = buildCoupHeur1(plateau,-1,*node , choice);
+            TCoupReq coup = buildCoupHeur1(plateau,-1,*node,choice,vNbPieceScore,vPosPieceScore);
             node = &(node->childs[choice]);
 
             packet.is(coup);
