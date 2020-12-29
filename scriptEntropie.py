@@ -62,7 +62,7 @@ for i in range(0,nbIter) :
             po = po+1
             port = str(po)
             serveur = subprocess.Popen(["./serveur", port], stdout=subprocess.PIPE,stderr = subprocess.PIPE )
-            time.sleep(1)
+            time.sleep(0.1)
             client1 = subprocess.Popen(["./clientIA_V1", "127.0.0.1", port,  "reference" ,str(v1), str(v2)], stdout=subprocess.DEVNULL) # il faut peut être mieux changé la référence au fur et à mesure des itérations de l'entropie croisé
             #client2 = subprocess.Popen(["./clientIA_V1", "127.0.0.1", port, "IA_E",strVj], stdout=subprocess.DEVNULL)
             client2 = subprocess.Popen(["./clientIA_V1", "127.0.0.1", port, "IA_E",str(vj[0]),str(vj[1])], stdout=subprocess.DEVNULL)
@@ -137,14 +137,15 @@ for i in range(0,size) :
     f.write(" ||| ".join(str(resultat[i]))+"\n")
 f.close()
 
-#problèmes : -comment savoir quand l'optimum est atteint ? est ce que on est sur qu'on converge actuellement ?
+#problèmes : 
+             #1 -comment savoir quand l'optimum est atteint ? On ne converge pas forcément
              # -améliorer le choix du port
-             # -parallélisation
-             # -on peut enlever le sleep? ou le réduire ?
+             #2 -parallélisation
+             # -on peut enlever le sleep?
              # -rendre les variables dépendantes : voir les vecteurs gaussiens, matrices de covariance
-             # gérer l'ordre des joueurs
-             # faire un deuxième serveur qui renvoie juste le joueur gagant (le premier affichant les états des plateaux)
-             # tous les matchs d'un même vecteur vont être pareil face à l'ia de référence. solutions potentiels:
+             #3 -gérer l'ordre des joueurs
+             #4 -faire un deuxième serveur qui renvoie juste le joueur gagnant (le premier affichant les états des plateaux)
+             # -tous les matchs d'un même vecteur vont être pareil face à l'ia de référence. solutions potentiels:
                 # on choisi l'ia de référence en suivant une loi normal avec une moyenne =  meilleur coef de la série précédentes . On prend une variance faible genre 1 ou 2
                 # on choisi un premier coup aléatoirement
                 # on ne fait que 1 match pour chaque vecteur
