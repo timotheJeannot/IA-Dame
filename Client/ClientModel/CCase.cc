@@ -10,9 +10,7 @@ void CCase::render(gf::RenderTarget &target) {
     shape.setColor(m_color);
     shape.setAnchor(gf::Anchor::Center);
     target.draw(shape);
-    /*if(m_piece != nullptr) {
-        m_piece->render(target);
-    }*/
+
 }
 
 bool CCase::isCaseSelect(gf::Vector2i vector2I) const {

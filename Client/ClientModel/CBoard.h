@@ -58,11 +58,12 @@ public:
     std::map<gf::Vector2i, CCase, cmpByVector2i> cCase;
 
     //action
+    gf::LockedView mainView;
+    gf::ScreenView screenView;
     gf::ViewContainer views;
 
-
     // method
-    CBoard(gf::Vector2u SSize, const string& gName);
+    CBoard(gf::Vector2u SSize, const string& gName, int mycolor);
     CBoard(gf::Vector2u SSize, const string& gName, gf::Vector2f begin, int sizeC, float sizeS);
 
 
@@ -115,6 +116,8 @@ public:
     void UpdatePieceADV(gf::Vector2i vector, gf::Vector2i vector2, int index);
 
     int pieceSelectADV(gf::Vector2i vector);
+
+    bool isPLayable(gf::Vector2i pos, gf::Vector2i posToGo);
 };
 
 
