@@ -3,12 +3,6 @@
 //
 
 #include "CBoard.h"
-#include "CCase.h"
-#include "CPiece.h"
-
-
-#include <utility>
-#include <iostream>
 
 void CBoard::printMovePiece(const TCoupReq& req) {
     std::vector<TCase> deplacementsAdv = req.deplacements;
@@ -46,6 +40,9 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             cout<<pieceSelectADV(oldCase)<<endl;
             int indexP = pieceSelectADV(oldCase);
             UpdatePieceADV(newCase,gf::Vector2i(xAdv,yAdv),indexP);
+            gf::sleep(gf::seconds(2));
+            xAdv=x2Adv;
+            yAdv=y2Adv;
 
         }
     }
@@ -70,6 +67,9 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             cout<<pieceSelectADV(oldCase)<<endl;
             int indexP = pieceSelectADV(oldCase);
             UpdatePieceADV(newCase,gf::Vector2i(xAdv,yAdv),indexP);
+            gf::sleep(gf::seconds(2));
+            xAdv=x2Adv;
+            yAdv=y2Adv;
 
         }
     }
@@ -146,7 +146,7 @@ void CBoard::initBoard(){
     }
 
     if(myColor == -1){
-        mainView.setRotation(90.0f);
+        mainView.setRotation(gf::Pi);
     }
 
 }
@@ -176,7 +176,7 @@ void CBoard::printBoard() {
         switch (board.getPlateau()[it.first.x][it.first.y]) {
             case -3 : {
                 for (std::vector<CPiece>::iterator it2 = cPieceWhite.begin(); it2 != cPieceWhite.end(); ++it2) {
-                    if(it2->getMCase()==it.first) {
+                    if(it2->getMCase().x==it.first.x && it2->getMCase().y==it.first.y) {
                         cPieceWhite.erase(it2);
                         break;
                     }
@@ -185,7 +185,7 @@ void CBoard::printBoard() {
                 break;
             case 3 : {
                 for (std::vector<CPiece>::iterator it2 = cPieceBlack.begin(); it2 != cPieceBlack.end(); ++it2) {
-                    if(it2->getMCase()==it.first) {
+                    if(it2->getMCase().x==it.first.x && it2->getMCase().y==it.first.y) {
                         cPieceBlack.erase(it2);
                         break;
                     }

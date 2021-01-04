@@ -105,6 +105,7 @@ int main(int argc, char ** argv)
     CPiece pieceSelected = CPiece();
     bool isSelected=false;
     bool isMoved=false;
+    int cpt = 0;
     gf::Clock clock;
     int indexP, depl=0;
     cout<<"boolean selection :"<<isSelected<<endl;
@@ -135,7 +136,10 @@ int main(int argc, char ** argv)
 
         if(myTurn) // On commence
         {
+
             if (event.type == gf::EventType::MouseButtonPressed) {
+                cpt++;
+                cout<<"compteur 1 : "<<cpt<<endl;
                 movePiece = board.doProcessEvent(event, pieceSelected,indexP, isSelected, isMoved);
 
                 cout<<"boolean selection :"<<isSelected<<endl;

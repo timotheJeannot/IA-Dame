@@ -11,6 +11,7 @@
 #include <gf/Entity.h>
 #include <gf/Action.h>
 #include <gf/Views.h>
+#include <gf/Sleep.h>
 #include <gf/ViewContainer.h>
 #include <gf/RenderWindow.h>
 #include <gf/EntityContainer.h>
@@ -21,6 +22,9 @@
 #include "CPiece.h"
 #include "CCase.h"
 #include "../../model/Plateau.h"
+#include <utility>
+#include <iostream>
+
 
 using namespace std;
 

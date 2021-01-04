@@ -19,7 +19,7 @@ bool CCase::isCaseSelect(gf::Vector2i vector2I) const {
     int ymin = (int)m_position.y - m_size/2;
     int ymax = (int)m_position.y + m_size/2;
 
-    return(xmin < vector2I.x && vector2I.x < xmax && ymin < vector2I.y && vector2I.y < ymax);
+    return(xmin <= vector2I.x && vector2I.x <= xmax && ymin <= vector2I.y && vector2I.y <= ymax);
 }
 
 const gf::Vector2f &CCase::getMPosition() const {
