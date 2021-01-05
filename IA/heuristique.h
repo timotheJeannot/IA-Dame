@@ -14,3 +14,5 @@ const double plateauPositions[10][10] =    {{0,50,0,25,0,25,0,40,0,75},
                                         {75,0,40,0,25,0,25,0,50,0}};
 
 double heuristique1(Plateau p, double vNbPieceScore, double vPosPieceScore); // valeur positive pour les pions blancs et négative pour les pions noirs
+
+double heuristique2(Plateau p, double vNbPieceScore, double vPosPieceScore, double vCouvertureDef, double vCouvertureAtt);

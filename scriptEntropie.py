@@ -27,6 +27,7 @@ moy = 10#200
 var = 4#49 # rappel : variance = écart-type au carré
 
 #valeurs initial pour les coefficents de l'heuristique de l'ia de reference
+iaR = []
 v1 = 200
 v2 = 1
 
@@ -35,6 +36,7 @@ variance = []
 for i in range(0,TV):
     moyenne.append(moy)
     variance.append(var)
+    iaR.append(10) 
 
 #debut de l'entropie croisé
 resultat = []
@@ -42,18 +44,24 @@ for i in range(0,nbIter) :
     vecteurs = []
     print("-------------------------------------------------------")
     print("i = "+str(i))
-    print("v1 = "+str(v1)) # faire une liste si possible plutot
-    print("v2 = "+str(v2))
+    #print("v1 = "+str(v1)) # faire une liste si possible plutot
+    #print("v2 = "+str(v2))
+    for j in range(0,TV):
+        print("iaR["+str(j)+"] = "+str(iaR[j]))
 
     for j in range(0,nbV):
         # génération d'un vecteur
         print("j = "+str(j))
         vj = [] 
-        strVj = ""
+        #strVj = ""
+        strIAR = ["./clientIA_V1","127.0.0.1","dummy value(port)","reference"]
+        strIAE = ["./clientIA_V1","127.0.0.1","dummy value(port)","IA_E"]
         for k in range(0,TV):
             x = np.random.normal(moyenne[k],variance[k],1)
             vj.append(x[0])
-            strVj += str(x[0])+" "
+            #strVj += str(x[0])+" "
+            strIAR.append(str(iaR[k]))
+            strIAE.append(str(x[0]))
         print("vj = ")
         print(vj)
         #strVj = " ".join(str(vj))
@@ -61,12 +69,18 @@ for i in range(0,nbIter) :
         for k in range (0,n) :
             po = po+1
             port = str(po)
+            strIAR[2] = port
+            strIAE[2] = port
+            #for l in range(0,TV):
+                #x = np.random.normal(iaR[l],3,1) #pour modifier l'ia de réréfence et que les matchs ne soient pas tous les mêmes
+
+
             serveur = subprocess.Popen(["./serveur", port], stdout=subprocess.PIPE,stderr = subprocess.PIPE )
             time.sleep(0.1)
-            client1 = subprocess.Popen(["./clientIA_V1", "127.0.0.1", port,  "reference" ,str(v1), str(v2)], stdout=subprocess.DEVNULL) # il faut peut être mieux changé la référence au fur et à mesure des itérations de l'entropie croisé
-            #client2 = subprocess.Popen(["./clientIA_V1", "127.0.0.1", port, "IA_E",strVj], stdout=subprocess.DEVNULL)
-            client2 = subprocess.Popen(["./clientIA_V1", "127.0.0.1", port, "IA_E",str(vj[0]),str(vj[1])], stdout=subprocess.DEVNULL)
             
+            client1 = subprocess.Popen(strIAR,stdout=subprocess.DEVNULL)
+            client2 = subprocess.Popen(strIAE,stdout=subprocess.DEVNULL)
+
             sortie = serveur.communicate()[0]
             readSortie = str(sortie)
             if "IA_E" in readSortie :  # on suppose que le serveur ne renvoie qu'une ligne indiquant qui a gagné
@@ -105,12 +119,15 @@ for i in range(0,nbIter) :
         #attention ici je suppose que TV =2 , normalement il faut faire une liste pour stocker les vi
         v1 = vecteurs[0][0]
         v2 = vecteurs[0][1]
+
         # calcul des nouvelles moyennes 
         moyenne = [0 for j in range(0,TV)]
         for j in range(0,TV):
             for k in range(0,size):
                 moyenne[j] += vecteursKept[k][j]
             moyenne[j] = moyenne[j]/size
+            #on met à jour l'ia de référence
+            iaR[j] = vecteurs[0][j]
 
         #calcul des nouvelles variances
 
@@ -138,7 +155,7 @@ for i in range(0,size) :
 f.close()
 
 #problèmes : 
-             #1 -comment savoir quand l'optimum est atteint ? On ne converge pas forcément
+             #1 -comment savoir quand l'optimum est atteint ? On ne converge pas 
              # -améliorer le choix du port
              #2 -parallélisation
              # -on peut enlever le sleep?
