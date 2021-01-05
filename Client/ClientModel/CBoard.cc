@@ -40,7 +40,10 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             cout<<pieceSelectADV(oldCase)<<endl;
             int indexP = pieceSelectADV(oldCase);
             UpdatePieceADV(newCase,gf::Vector2i(xAdv,yAdv),indexP);
+            renderer.clear();
+            print();
             gf::sleep(gf::seconds(2));
+
             xAdv=x2Adv;
             yAdv=y2Adv;
 
@@ -67,6 +70,8 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             cout<<pieceSelectADV(oldCase)<<endl;
             int indexP = pieceSelectADV(oldCase);
             UpdatePieceADV(newCase,gf::Vector2i(xAdv,yAdv),indexP);
+            renderer.clear();
+            print();
             gf::sleep(gf::seconds(2));
             xAdv=x2Adv;
             yAdv=y2Adv;
@@ -196,7 +201,7 @@ void CBoard::printBoard() {
         }
     }
     board.enleverPiecesRafle();
-    board.afficheTerminal();
+
 }
 
 void CBoard::print() {
@@ -274,6 +279,7 @@ void CBoard::UpdatePiece(gf::Vector2i vector,  gf::Vector2i vector2, int index) 
         Case caseOrigin(vector2.x,vector2.y);
         switch(myColor){
             case -1 : {
+
                     CPiece &thePiece = cPieceBlack.at(index);
                     thePiece.setMCase(vector);
                     thePiece.setMPosition(cCase.at(vector).getMPosition());
@@ -398,13 +404,20 @@ gf::Vector4i CBoard::doProcessEvent(gf::Event event, CPiece &vector1, int &index
                             cout << "Test9.1" << endl;
                             deHighlightCase(pair2);
                             cout << "Test9.2" << endl;
-                            UpdatePiece(pair, pair2, index);
+                            vector<Case>lMP = listMovePiece(pair2, pair);
+                            gf::Vector2i n2pair = pair2;
+                            for( auto it : lMP){
+                                gf::Vector2i npair(it.getColonne(),it.getLigne());
+                                UpdatePiece(npair, pair2, index);
+                                pair2=npair;
+                            }
                             cout << "Test9.3" << endl;
                             //UpdateMultiPiece(newPos, index);
                             b = false;
                             b1 = true;
                             cout << "Test10" << endl;
-                            return gf::Vector4i(pair.x, pair.y, pair2.x, pair2.y);
+                            cout << lMP.front().getColonne() << "   " << lMP.front().getLigne() <<endl;
+                            return gf::Vector4i(lMP.front().getColonne(), lMP.front().getLigne(), n2pair.x, n2pair.y);
                         }
                 }
             } else {
@@ -545,6 +558,24 @@ bool CBoard::isPLayable(gf::Vector2i pos, gf::Vector2i posToGo){
         }
     }
     return false;
+}
+vector<Case> CBoard::listMovePiece(gf::Vector2i pos, gf::Vector2i posToGo){
+    map<Case, vector<vector<Case>>> highlight;
+    if(myColor==1){
+        highlight = board.cheminsPiecesJouable(true);
+    }else{
+        highlight = board.cheminsPiecesJouable(false);
+    }
+    Case case1(pos.x,pos.y);
+    auto it = highlight.find(case1);
+    if(it != highlight.end()){
+        for(auto &&iterator : it->second){
+            if(posToGo.x == iterator.back().getColonne() && posToGo.y == iterator.back().getLigne()){
+                return iterator;
+            }
+        }
+    }
+    return vector<Case>();
 }
 
 

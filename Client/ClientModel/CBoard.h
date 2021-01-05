@@ -122,6 +122,8 @@ public:
     int pieceSelectADV(gf::Vector2i vector);
 
     bool isPLayable(gf::Vector2i pos, gf::Vector2i posToGo);
+
+    vector<Case> listMovePiece(gf::Vector2i pos, gf::Vector2i posToGo);
 };
 
 
