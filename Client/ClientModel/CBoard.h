@@ -81,8 +81,6 @@ public:
 
     void print();
 
-    gf::Vector4i doProcessEvent(gf::Event event, CPiece &vector1, int &index, bool &b, bool &b1);
-
     gf::Vector2i caseSelect(gf::Vector2i vector);
 
     void UpdatePiece(gf::Vector2i vector, gf::Vector2i vector2, int index);
@@ -111,10 +109,6 @@ public:
 
     void deHighlightCase(gf::Vector2i pos);
 
-    bool isPLayable(gf::Vector2i pos);
-
-    void UpdateMultiPiece(gf::Vector2f vector, int &index);
-
     void printMovePiece(const TCoupReq &req);
 
     void UpdatePieceADV(gf::Vector2i vector, gf::Vector2i vector2, int index);
@@ -124,6 +118,8 @@ public:
     bool isPLayable(gf::Vector2i pos, gf::Vector2i posToGo);
 
     vector<Case> listMovePiece(gf::Vector2i pos, gf::Vector2i posToGo);
+
+    bool doProcessEvent(gf::Event event, CPiece &vector1, int &index, bool &isSelectedPiece, gf::Vector4i &MovePiece);
 };
 
 

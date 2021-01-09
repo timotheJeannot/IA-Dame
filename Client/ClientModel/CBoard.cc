@@ -351,96 +351,95 @@ bool CBoard::CaseVide(gf::Vector2i vector) {
     return true;
 
 }
-gf::Vector4i CBoard::doProcessEvent(gf::Event event, CPiece &vector1, int &index, bool &b, bool &b1) {
+bool CBoard::doProcessEvent(gf::Event event, CPiece &vector1, int &index, bool &isSelectedPiece, gf::Vector4i &MovePiece) {
 
-    //if (actions.getAction("Select").isActive()) {
+    if(event.type == gf::EventType::MouseButtonPressed) {
         gf::Vector2i mouseCoords = renderer.mapPixelToCoords(event.mouseButton.coords, mainView);
-        cout<<"Test1"<<endl;
-        if(isInBoard(mouseCoords)) {
-            cout<<"Test2"<<endl;
+        cout << "Test1" << endl;
+        if (isInBoard(mouseCoords)) {
+            cout << "Test2" << endl;
             bool emptySelection = CaseVide(mouseCoords);
-            cout<<"Test3"<<endl;
+            cout << "Test3" << endl;
             //s'il a selectionner une piece
-            if (b) {
-                cout<<"Test4"<<endl;
-                if(!emptySelection) {
-                    cout<<"Test5"<<endl;
+            if (isSelectedPiece) {
+                cout << "Test4" << endl;
+                if (!emptySelection) {
+                    cout << "Test5" << endl;
                     int iPieceSel = pieceSelect(mouseCoords);
-                    cout<<"Test6"<<endl;
+                    cout << "Test6" << endl;
                     CPiece pieceSel = searchPiece(iPieceSel);
                     CPiece oldPiece = searchPiece(index);
                     //verifie s'il deselectionne la piece
-                    if(pieceSel.isNotNull()) {
+                    if (pieceSel.isNotNull()) {
                         if (pieceSel == oldPiece) {
                             cout << "Test7" << endl;
-                            b = false;
+                            isSelectedPiece = false;
                             cCase.at(caseSelect(mouseCoords)).deSelected();
                             deHighlightCase(caseSelect(mouseCoords));
                             //TODO faire une animation pour une piece selectionné
-                        }else{
-                            cout<<"Test12"<<endl;
-                            gf::Vector2i old((int)oldPiece.getMPosition().x,(int)oldPiece.getMPosition().y);
+                        } else {
+                            cout << "Test12" << endl;
+                            gf::Vector2i old((int) oldPiece.getMPosition().x, (int) oldPiece.getMPosition().y);
                             auto oldc = caseSelect(old);
                             cCase.at(oldc).deSelected();
                             deHighlightCase(oldc);
                             gf::Vector2i pair = caseSelect(mouseCoords);
                             cCase.at(pair).selected();
                             highlightCase(pair);
-                            cout<<"Test13 "<<old.x<<"   "<<old.y<<endl;
-                            cout<<"Test14"<<endl;
+                            cout << "Test13 " << old.x << "   " << old.y << endl;
+                            cout << "Test14" << endl;
                             index = pieceSelect(mouseCoords);
-                            b=true;
+                            isSelectedPiece = true;
                         }
                     }
-                }else{
-                    cout<<"Test8"<<endl;
+                } else {
+                    cout << "Test8" << endl;
 
-                        gf::Vector2i pair2 = caseSelect(searchPiece(index).getMPosition());
-                        gf::Vector2i pair = caseSelect(mouseCoords);
-                        if(isPLayable(pair2, pair)) {
-                            //gf::Vector2f newPos = cCase.at(pair).getMPosition();
-                            cout << "Test9" << endl;
-                            cCase.at(pair2).deSelected();
-                            cout << "Test9.1" << endl;
-                            deHighlightCase(pair2);
-                            cout << "Test9.2" << endl;
-                            vector<Case>lMP = listMovePiece(pair2, pair);
-                            gf::Vector2i n2pair = pair2;
-                            for( auto it : lMP){
-                                gf::Vector2i npair(it.getColonne(),it.getLigne());
-                                UpdatePiece(npair, pair2, index);
-                                pair2=npair;
-                            }
-                            cout << "Test9.3" << endl;
-                            //UpdateMultiPiece(newPos, index);
-                            b = false;
-                            b1 = true;
-                            cout << "Test10" << endl;
-                            cout << lMP.front().getColonne() << "   " << lMP.front().getLigne() <<endl;
-                            return gf::Vector4i(lMP.front().getColonne(), lMP.front().getLigne(), n2pair.x, n2pair.y);
+                    gf::Vector2i pair2 = caseSelect(searchPiece(index).getMPosition());
+                    gf::Vector2i pair = caseSelect(mouseCoords);
+                    if (isPLayable(pair2, pair)) {
+                        //gf::Vector2f newPos = cCase.at(pair).getMPosition();
+                        cout << "Test9" << endl;
+                        cCase.at(pair2).deSelected();
+                        cout << "Test9.1" << endl;
+                        deHighlightCase(pair2);
+                        cout << "Test9.2" << endl;
+                        vector<Case> lMP = listMovePiece(pair2, pair);
+                        gf::Vector2i n2pair = pair2;
+                        for (auto it : lMP) {
+                            gf::Vector2i npair(it.getColonne(), it.getLigne());
+                            UpdatePiece(npair, pair2, index);
+                            pair2 = npair;
                         }
+                        cout << "Test9.3" << endl;
+                        //UpdateMultiPiece(newPos, index);
+                        isSelectedPiece = false;
+                        cout << "Test10" << endl;
+                        cout << lMP.front().getColonne() << "   " << lMP.front().getLigne() << endl;
+                        MovePiece = gf::Vector4i(lMP.front().getColonne(), lMP.front().getLigne(), n2pair.x, n2pair.y);
+                        return true;
+                    }
                 }
             } else {
-                cout<<"Test11"<<endl;
-                if(!emptySelection){
-                    cout<<"Test12"<<endl;
+                cout << "Test11" << endl;
+                if (!emptySelection) {
+                    cout << "Test12" << endl;
                     index = pieceSelect(mouseCoords);
                     //gf::Vector2i old((int)vector1.getMPosition().x,(int)vector1.getMPosition().y);
-                    if(index>=0) {
+                    if (index >= 0) {
                         gf::Vector2i pair = caseSelect(mouseCoords);
                         cCase.at(pair).selected();
                         cout << "Test13 " << pair.x << "   " << pair.y << endl;
                         cout << "Test14" << endl;
-                        b = true;
+                        isSelectedPiece = true;
                         highlightCase(pair);
                     }
                     //cout <<"col : "<<caseSelect(vector1.getMPosition()).first.x<<"   "<<caseSelect(vector1.getMPosition()).first.y<<endl;
                 }
             }
         }
-        return gf::Vector4i(gf::Zero);
-   // }
-
+    }
+        return false;
 }
 
 int CBoard::getSizeCircle() const {
