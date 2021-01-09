@@ -10,9 +10,13 @@ print("Combien de vecteur faut il générer ?")
 lectnbV = input()
 nbV = int(lectnbV)
 
+'''
 print("Choisissez combien de matchs un vecteur joue")
 entree = input()
 n = int(entree)
+maintenant chaque vecteur joue contre tous les autres vecteurs deux fois
+avec un système d'elo
+'''
 
 print("Choisissez combien il y a d'itérations pour l'algorithime")
 nbIterR = input()
@@ -54,41 +58,99 @@ for i in range(0,nbIter) :
         print("j = "+str(j))
         vj = [] 
         #strVj = ""
-        strIAR = ["./clientIA_V1","127.0.0.1","dummy value(port)","reference"]
-        strIAE = ["./clientIA_V1","127.0.0.1","dummy value(port)","IA_E"]
+        #strIAR = ["./clientIA_V1","127.0.0.1","dummy value(port)","reference"]
+        strIAE = ["./clientIA_V1","127.0.0.1","dummy value(port)","IA_"+str(j)]
         for k in range(0,TV):
             x = np.random.normal(moyenne[k],variance[k],1)
             vj.append(x[0])
             #strVj += str(x[0])+" "
-            strIAR.append(str(iaR[k]))
+            #strIAR.append(str(iaR[k]))
             strIAE.append(str(x[0]))
+        vj.append(1000) #elo initial du vecteur (https://www.chess-and-strategy.com/2014/09/le-classement-elo-aux-echecs.html)
+                        # on considère que le vecteur est débutant
+        vj.append(40) # coefficient k (https://fr.wikipedia.org/wiki/Classement_Elo#Mode_de_calcul)
+                      # cette valeur est surement à modifier, un vecteur ne fera pas beaucoup de matchs si il n'y a pas beaucoups
+                      #de vecteurs générés. Un joueur d'échec lui va faire un grand nombre de matchs. 
+                      # Pour simplifier on a quand même pris le même mode de calcul que décrit dans la page wikipédia
+        vj.append(0) # nombre de matchs pour modifier le coefficient k si besoin
         print("vj = ")
         print(vj)
-        #strVj = " ".join(str(vj))
-        nbVictoires = 0
-        for k in range (0,n) :
-            po = po+1
-            port = str(po)
-            strIAR[2] = port
-            strIAE[2] = port
-            #for l in range(0,TV):
-                #x = np.random.normal(iaR[l],3,1) #pour modifier l'ia de réréfence et que les matchs ne soient pas tous les mêmes
-
-
-            serveur = subprocess.Popen(["./serveur", port], stdout=subprocess.PIPE,stderr = subprocess.PIPE )
-            time.sleep(0.1)
-            
-            client1 = subprocess.Popen(strIAR,stdout=subprocess.DEVNULL)
-            client2 = subprocess.Popen(strIAE,stdout=subprocess.DEVNULL)
-
-            sortie = serveur.communicate()[0]
-            readSortie = str(sortie)
-            if "IA_E" in readSortie :  # on suppose que le serveur ne renvoie qu'une ligne indiquant qui a gagné
-                nbVictoires += 1
-            print("fin d'un match")
-
-        vj.append(nbVictoires)
+        vj.append(strIAE)
         vecteurs.append(vj)
+    
+    for j in range (0,nbV) :
+        for k in range (0,nbV) :
+            if j != k : # on ne fait pas s'affronter le vecteur contre lui même
+
+                po = po+1
+                port = str(po)
+                #strIAR[2] = port
+                #strIAE[2] = port
+                vecteurs[j][TV+3][2] = port
+                vecteurs[k][TV+3][2] = port
+
+                serveur = subprocess.Popen(["./serveur", port], stdout=subprocess.PIPE,stderr = subprocess.PIPE )
+                time.sleep(0.1)
+                client1 = subprocess.Popen(vecteurs[j][TV+3],stdout=subprocess.DEVNULL)
+                time.sleep(0.1) # (suffisant ?) pour s'assurer que le client 1 se connecte en premier au serveur
+                                # comme cela chaque vecteur joue contre tous les autres vecteurs, en jouant une fois noir et une fois blanc
+                client2 = subprocess.Popen(vecteurs[k][TV+3],stdout=subprocess.DEVNULL)
+
+                sortie = serveur.communicate()[0]
+                readSortie = str(sortie)
+                #cas du match nul : 
+                resultatJ = 0.5
+                resultatK = 0.5
+                # on suppose que le serveur ne renvoie qu'une ligne indiquant qui a gagné
+                if "IA_"+str(j) in readSortie :  #victoire de j
+                    #nbVictoires += 1
+                    resultatJ = 1
+                    resultatK = 0
+               
+                if "IA_"+str(k) in readSortie : # pas opti (on parcours deux fois readSortie pour voir qui a gagné)
+                    #blabla
+                    resultatJ = 0
+                    resultatK = 1
+                
+
+                print("fin d'un match j = "+str(j)+"  k = "+str(k))
+                D = vecteurs[j][TV] - vecteurs[k][TV]
+                #modification du elo de j :
+                pD = 1/(1+10**(-D/400))
+                vecteurs[j][TV] = vecteurs[j][TV] + vecteurs[j][TV+1]*(resultatJ-pD)
+
+                #modification du elo de k :
+                D = -D
+                pD = 1/(1+10**(-D/400))
+                vecteurs[k][TV] = vecteurs[k][TV] + vecteurs[k][TV+1]*(resultatK-pD)
+
+
+                #incrémentation du nombre de match
+                vecteurs[j][TV+2] += 1
+                vecteurs[k][TV+2] += 1
+
+                #modification du coefficiement de développement k du systéme d'elo si besoin
+                #ici il faut le  changer , on s'est inspiré des joueurs d'échecs,
+                #mais un vecteur va probablement ne pas faire beaucoup de matchs
+                # si il y a n vecteurs, il y a (n-1)**2 matchs dans une itération (une ia ne s'affronte pas contre elle même)
+                #un vecteur joue alors 2n-2 matchs. Voir quel valeur mettre pour le 30 
+
+                if vecteurs[j][TV] < 2400 :
+                    vecteurs[j][TV+1] = 20
+                else :
+                    vecteurs[j][TV+1] = 10
+                if vecteurs[j][TV+2] < 30 :
+                    vecteurs[j][TV+1] = 40
+
+                if vecteurs[k][TV] < 2400 :
+                    vecteurs[k][TV+1] = 20
+                else :
+                    vecteurs[k][TV+1] = 10
+                if vecteurs[k][TV+2] < 30 :
+                    vecteurs[k][TV+1] = 40
+
+
+
 
     vecteurs.sort(key = lambda x:x[TV], reverse=True)
     print(vecteurs)
@@ -97,6 +159,7 @@ for i in range(0,nbIter) :
     nbToKeep = int(nbV/3)+1
     vecteursKept = vecteurs[0:nbToKeep]
 
+    '''
     size = len(vecteursKept)
     print("size = "+str(size))
     j2 = 0  # il faudrai faire une boucle while ici (plus propre) quand j'ai fais j = j -1 cela n'a pas fonctionné avec le for
@@ -107,7 +170,7 @@ for i in range(0,nbIter) :
             size = size-1
             j2 = j2-1
         j2 = j2 +1
-
+    '''
     print("vecteurs kept = ")
     print(vecteursKept)
 
@@ -165,7 +228,9 @@ f.close()
              # -tous les matchs d'un même vecteur vont être pareil face à l'ia de référence. solutions potentiels:
                 # on choisi l'ia de référence en suivant une loi normal avec une moyenne =  meilleur coef de la série précédentes . On prend une variance faible genre 1 ou 2
                 # on choisi un premier coup aléatoirement
-                # on ne fait que 1 match pour chaque vecteur
+                # on ne fait que 1 match pour chaque vecteu
+
+    
              
              
 
