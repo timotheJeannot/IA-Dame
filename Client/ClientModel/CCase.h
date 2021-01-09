@@ -23,6 +23,8 @@ public:
     void deSelected();
     void selected();
 
+    void selectedGray();
+
 private:
     gf::Vector2f m_position; // center of the square
     float m_size;

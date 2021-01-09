@@ -44,3 +44,10 @@ CCase::CCase(gf::Vector2f position, float size, gf::Color4f color, CPiece *piece
         , m_piece(piece)
 {
 }
+
+void CCase::selectedGray() {
+
+    m_selected = m_color;
+    m_color = gf::Color::Gray();
+
+}

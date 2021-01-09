@@ -513,7 +513,11 @@ void CBoard::highlightCase(gf::Vector2i pos) {
         for(auto &&iterator : it->second){
             for(auto &&iter : iterator){
                 gf::Vector2i highlightCases(iter.getColonne(), iter.getLigne());
-                cCase.at(highlightCases).selected();
+                if(iter == iterator.back()) {
+                    cCase.at(highlightCases).selected();
+                }else{
+                    cCase.at(highlightCases).selectedGray();
+                }
             }
         }
     }
