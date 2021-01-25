@@ -386,10 +386,12 @@ bool testPartieNulle(Plateau p , int couleur , std::vector<Plateau> configs, int
 {
     if(compteurR2 == 25 || compteurR3 == 16)
     {
+        std::cout<<"-------------------------------------------------\n détection qu'un des compteurs a atteint la valeur indiquant un match nul \n-------------------------------------------------\ncompteurR2 = "<<compteurR2<<endl<<"compteurR3 = "<<compteurR3<<endl;
         return true;
     }
     if(testNulle3Repeat(p ,couleur ,configs, first))
     {
+        std::cout<<"-------------------------------------------------\n détection de la première règle de match nul \n-------------------------------------------------\n";
         return true;
     }
     return testDameVsDame(p);

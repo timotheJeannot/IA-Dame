@@ -95,10 +95,12 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, gf::Vector4i vector4I, int& er
                 Pion p(aCase, false);
                 retmodif = plateau.modifPlateauDeplacementPrise(p, listeChemins[ic].at(i));
             }
+
                 break;
             case -2 : {
                 Dame d(aCase, false);
                 retmodif = plateau.modifPlateauDeplacementPrise(d, listeChemins[ic].at(i));
+
             }
                 break;
             default:

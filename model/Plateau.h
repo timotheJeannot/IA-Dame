@@ -69,12 +69,12 @@ class  Plateau{
 
     string afficheTerminal();
 
+
     void setNbPiecesB(int nbPiecesB);
 
     void setNbPiecesN(int nbPiecesN);
 
 
-};
 
     bool operator== (Plateau opL , Plateau opR);
 
