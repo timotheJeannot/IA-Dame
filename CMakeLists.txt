@@ -5,8 +5,8 @@ project(TEST_GF
 find_package(gf REQUIRED)
 #find_package(gfnet0 REQUIRED)
 #add_executable(test_gf
-#		model/Graph.cc
-#		model/Case.cc
+#		model/CBoard.cc
+#		model/Vector2i.cc
 #		model/Piece.cc
 #		model/Pion.cc
 #		model/Dame.cc
@@ -17,21 +17,26 @@ find_package(gf REQUIRED)
 
 
 add_executable(client
-		model/Graph.cc
-		model/Case.cc
+		Client/ClientModel/CBoard.cc
+		Client/client.cc
+		Client/ClientModel/CBoard.cc
+		Client/ClientModel/CCase.cc
+		Client/ClientModel/CCase.h
+		Client/ClientModel/CPiece.cc
+		Client/ClientModel/CPiece.h
 		model/Piece.cc
+		model/Case.cc
 		model/Pion.cc
 		model/Dame.cc
 		model/Plateau.cc
-		Client/client.cc
-		Client/clientTools.cc Client/clientTools.h model/Graph.cc)
+		Client/clientTools.cc Client/clientTools.h
+		Client/ClientNetwork.cc Client/ClientNetwork.h)
 
 add_executable(serveur
-		model/Graph.cc
-		model/Case.cc
 		model/Piece.cc
 		model/Pion.cc
 		model/Dame.cc
+		model/Case.cc
 		model/Plateau.cc
 		Serveur/serveur.cc
 		Serveur/serverTools.h Serveur/serverTools.cc)
@@ -47,17 +52,26 @@ add_executable(serveur
 #)
 
 target_link_libraries(client
-	gf0
-	gfnet0
-	gfcore0
+	#gf0
+	#gfnet0
+	#gfcore0
+		gf::graphics
+		gf::net
+
 )
 
 target_link_libraries(serveur
-	gf0
-	gfnet0
-	gfcore0
+	#gf0
+	#gfnet0
+	#gfcore0
+		gf::net
 )
 
-
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+set(CMAKE_USE_WIN32_THREADS_INIT 0)
+set(CMAKE_USE_PTHREADS_INIT 1)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 

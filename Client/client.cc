@@ -10,6 +10,9 @@
 #include <gf/Id.h>
 #include <gf/SerializationOps.h>
 #include <gf/Widget.h>
+#include <gf/Sleep.h>
+#include "ClientModel/CBoard.h"
+#include "ClientNetwork.h"
 
 
 #include "clientTools.h"
@@ -22,6 +25,8 @@ using namespace std;
 
 int main(int argc, char ** argv)
 {
+    bool myTurn;
+
     /* verification des arguments */
     if (argc < 4) {
         //printf("usage : %s nom/IPServ port nomJoueur \n", argv[0]);
@@ -29,28 +34,22 @@ int main(int argc, char ** argv)
         return -1;
     }
 
-    string ia;
-    bool b;
-
-    if (argc == 5) {
-        ia = argv[4];
-        if (ia == "-IA") {
-            b = true;
-        }
-
-    }
 
     /************ Initialisation de la communication **********/
     char * serv = argv[1];
     int port = atoi(argv[2]);
- 
+
     // création de la socket tcp au server avec le bon port
-    gf::TcpSocket socket(serv,to_string(port));
-    if (!socket) {
+    //gf::TcpSocket socket(serv,to_string(port));
+    ClientNetwork network;
+    network.connect(serv,to_string(port));
+    gf::sleep(gf::milliseconds(500));
+    assert(network.isConnected());
+    /*if (!socket) {
         // Handle error
         cerr<<"erreur lors de la création de la socket pour "<<serv<<" avec le port "<<port<<"\n";
         return -1;
-    }
+    }*/
 
     //demande de la couleur au client
 
@@ -61,8 +60,12 @@ int main(int argc, char ** argv)
     req.nomJoueur = argv[3];
     req.coulPion = 1;
 
+    network.send(req);
     gf::Packet packet;
-    packet.is(req);
+    network.queue.wait(packet);
+    assert(packet.getType() == PartieRep::type);
+
+    /*packet.is(req);
     if(gf::SocketStatus::Data != socket.sendPacket(packet))
     {
         cerr<<"erreur lors de l'envoi de demande partie au serveur";
@@ -74,224 +77,158 @@ int main(int argc, char ** argv)
     {
         cerr<<"erreur lors de la réception de confirmation de partie du serveur";
         return -1;
-    }
+    }*/
 
     auto repPartie = packet.as<PartieRep>();
 
 
     int couleur = initColor(repPartie.validCoulPion, req.coulPion);
 
+    if(couleur == 1){
+        myTurn=true;
+    }else{
+        myTurn=false;
+    }
+
     cout<<"Vous jouez la couleur : "<<couleur<<" \n";
 
     /************** Début de partie ********************/
+    cout<<"test0";
     Plateau plateau;
+    cout<<"test1";
+    std::string title = "Jeu de dame";
+    title += argv[3];
+    CBoard board(gf::Vector2i(gf::Zero), title,couleur);
+    gf::Event event;
+    gf::Vector4i movePiece = gf::Vector4i(gf::Zero);
+    vector<gf::Vector2i> CasePossible;
+    CPiece pieceSelected = CPiece();
+    bool isSelected=false;
+    bool isMoved=false;
+    int cpt = 0;
+    gf::Clock clock;
+    int indexP, depl=0;
+    cout<<"boolean selection :"<<isSelected<<endl;
 
-    // --------------------------------------------------------------------------------------
-    //configuration de plateau afin de tester les cas de match nul
-    // les cas de match nul sont décris dans serverTools.h et viennent de wikiédia
+    gf::ActionContainer actions;
 
+    gf::Action closeWindowAction("Close window");
+    closeWindowAction.addCloseControl();
+    actions.addAction(closeWindowAction);
 
-    std::vector<std::vector <int>> test {{-1,0,0,0,0,0,0,0,0,1},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,-2,-2,-2,2,2,2,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
-    plateau.setPlateau(test);
-    // --------------------------------------------------------------------------------------
+    gf::Action clickAction("select");
+    clickAction.addMouseButtonControl(gf::MouseButton::Left);
+    clickAction.setInstantaneous();
+    actions.addAction(clickAction);
 
-    while (true)
+    while (board.window.isOpen())
     {
-        //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-        //plateau.graph.printStartPiece();
+        gf::Time time = clock.restart();
+        //board.Update(time);
 
+        board.print();
 
-        if(couleur == 1) // On commence
+        actions.reset();
+
+        while(board.window.pollEvent(event)){
+            actions.processEvent(event);
+            board.views.processEvent(event);
+        }
+
+        if(closeWindowAction.isActive()){
+            board.window.close();
+            break;
+        }
+
+        if(myTurn) // On commence
         {
-            TCoupReq coup;
-            if (b) {
-                coup = buildCoupAlea(plateau, 1);
-            }
-            else {
-                coup = buildCoup(plateau, 1, err);
-                if (err == 1) {
-                    cerr << "erreur lors de la création du coup";
-                    return -1;
+            if(clickAction.isActive()) {
+                TCoupReq coup;
+                if (board.doProcessEvent(event, pieceSelected, indexP, isSelected, movePiece)) {
+                    isMoved = false;
+                    coup = buildCoup(board.board, couleur, movePiece, err, depl);
+
+                    if (err == 1) {
+                        cerr << "erreur lors de la création du coup";
+                        return -1;
+                    }
+
+                    network.send(coup);
+                    //packet.is(coup);
+                    network.queue.wait(packet);
+                    /*if (gf::SocketStatus::Data != socket.sendPacket(packet)) {
+                        cerr << "erreur lors de l'envoi de coup";
+                        return -1;
+                    }*/
+
+                    std::cout << "test 41\n";
+                    /*if (gf::SocketStatus::Data != socket.recvPacket(packet)) {
+                        cerr << "erreur lors de la réception de confirmation de partie du serveur";
+                        return -1;
+                    }*/
+
+                    std::cout << "test 42\n";
+                    auto coupRep = packet.as<TCoupRep>();
+                    if (coupRep.propCoup == GAGNE) {
+                        cout << "victoire\n";
+                        break;
+                    }
+                    if (coupRep.propCoup == NUL) {
+                        cout << "match nul\n";
+                        break;
+                    }
+                    if (coupRep.propCoup == PERDU) {
+                        cout << "défaite\n";
+                        break;
+                    }
+
+                    myTurn = false;
                 }
             }
+        }else {
 
-          packet.is(coup);
-          if(gf::SocketStatus::Data != socket.sendPacket(packet))
-          {
-              cerr<<"erreur lors de l'envoi de coup";
-              return -1;
-          }
-          std::cout<<"testC0\n";
-          if( gf::SocketStatus::Data != socket.recvPacket(packet))
-          {
-              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              return -1;
-          }
-          std::cout<<"testC1\n";
-          //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-            //plateau.printMovePiece();
-            std::cout<<"test 42\n";
-            auto coupRep = packet.as<TCoupRep>();
-            if(coupRep.propCoup == GAGNE)
-            {
-              cout<<"victoire\n";
-              break;
-            }
-            if(coupRep.propCoup == NUL)
-            {
-              cout<<"match nul\n";
-              break;
-            }
-            if(coupRep.propCoup == PERDU)
-            {
-              cout<<"défaite\n";
-              break;
-            }
-            
+            if(network.queue.poll(packet)) {
+                std::cout << "test 48\n";
 
-            std::cout<<"test 43\n";
-
-          if( gf::SocketStatus::Data != socket.recvPacket(packet))
-          {
-              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              return -1;
-          }
-            std::cout<<"test 44\n";
-          auto coupAdv = packet.as<TCoupReq>();
-            std::cout<<"test 45\n";
-          if( gf::SocketStatus::Data != socket.recvPacket(packet))
-          {
-              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              return -1;
-          }
-            std::cout<<"test 46\n";
-          auto coupAdvRep = packet.as<TCoupRep>();
-            std::cout<<"test 47\n";
-          if(coupAdvRep.propCoup == CONT)
-          {
-            if(coupAdvRep.validCoup == VALID)
-            {
-                modifCoupAdv(coupAdv, plateau, 1);
-                //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-                //plateau.printMovePiece();
-            }
-          }
-          else
-          {
-            /* la partie est fini, il faut afficher le résultat */
-            if(coupAdvRep.propCoup == GAGNE)
-            {
-              cout<<"défaite\n";
-            }
-            if(coupAdvRep.propCoup == NUL)
-            {
-              cout<<"match nul\n";
-            }
-            if(coupAdvRep.propCoup == PERDU)
-            {
-              cout<<"victoire\n";
-            }
-            break;
-          }
-
-        }
-        else
-        {
-            std::cout<<"test 48\n";
-          if( gf::SocketStatus::Data != socket.recvPacket(packet))
-          {
-              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              return -1;
-          }
-            std::cout<<"test 49\n";
-          auto coupAdv = packet.as<TCoupReq>();
-            std::cout<<"test 50\n";
-          if( gf::SocketStatus::Data != socket.recvPacket(packet))
-          {
-              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              return -1;
-          }
-            std::cout<<"test 51\n";
-          auto coupAdvRep = packet.as<TCoupRep>();
-            std::cout<<"test 52\n";
-          if(coupAdvRep.propCoup == CONT)
-          {
-            if(coupAdvRep.validCoup == VALID)
-            {
-                modifCoupAdv(coupAdv, plateau, -1);
-                //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-                //plateau.printMovePiece();
-            }
-          }
-          else
-          {
-            /* la partie est fini, il faut afficher le résultat */
-            if(coupAdvRep.propCoup == GAGNE)
-            {
-              cout<<"défaite\n";
-            }
-            if(coupAdvRep.propCoup == NUL)
-            {
-              cout<<"match nul\n";
-            }
-            if(coupAdvRep.propCoup == PERDU)
-            {
-              cout<<"victoire\n";
-            }
-            break;
-          }
-            std::cout<<"test 53\n";
-          TCoupReq coup;
-            if (b) {
-                coup = buildCoupAlea(plateau, -1);
-            }
-            else {
-                coup = buildCoup(plateau, -1, err);
-                if (err == 1) {
-                    cerr<<"erreur lors de la création du coup";
+                /*if( gf::SocketStatus::Data != socket.recvPacket(packet))
+                {
+                    cerr<<"erreur lors de la réception de confirmation de partie du serveur1";
                     return -1;
+                }*/
+                std::cout << "test 49\n";
+                auto coupAdv = packet.as<TCoupReq>();
+                std::cout << "test 50\n";
+                network.queue.wait(packet);
+                /*if (gf::SocketStatus::Data != socket.recvPacket(packet)) {
+                    cerr << "erreur lors de la réception de confirmation de partie du serveur2";
+                    return -1;
+                }*/
+                std::cout << "test 51\n";
+                auto coupAdvRep = packet.as<TCoupRep>();
+                std::cout << "test 52\n";
+                if (coupAdvRep.propCoup == CONT) {
+                    if (coupAdvRep.validCoup == VALID) {
+                        board.printMovePiece(coupAdv);
+                        //cout << "Etat du plateau :\n" << board.board.afficheTerminal();
+                        //board.printMovePiece(coupAdv);
+                        myTurn = true;
+                    }
+                } else {
+                    if (coupAdvRep.propCoup == GAGNE) {
+                        cout << "défaite\n";
+                    }
+                    if (coupAdvRep.propCoup == NUL) {
+                        cout << "match nul\n";
+                    }
+                    if (coupAdvRep.propCoup == PERDU) {
+                        cout << "victoire\n";
+                    }
+                    break;
                 }
+                std::cout << "test 53\n" << "my_Turn = " << myTurn << endl;
             }
-            std::cout<<"test 54\n";
-          
-          packet.is(coup);
-            std::cout<<"test 55\n";
-          if(gf::SocketStatus::Data != socket.sendPacket(packet))
-          {
-              cerr<<"erreur lors de l'envoi de coup";
-              return -1;
-          }
-            std::cout<<"test 56\n";
-          if( gf::SocketStatus::Data != socket.recvPacket(packet))
-          {
-              cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-              return -1;
-          }
-            //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
-            std::cout<<"test 57\n";
-            //plateau.printMovePiece();
-            std::cout<<"test 58\n";
-            auto coupRep = packet.as<TCoupRep>();
-            if(coupRep.propCoup == GAGNE)
-            {
-              cout<<"victoire\n";
-              break;
-            }
-            if(coupRep.propCoup == NUL)
-            {
-              cout<<"match nul\n";
-              break;
-            }
-            if(coupRep.propCoup == PERDU)
-            {
-              cout<<"défaite\n";
-              break;
-            }
-            
-            std::cout<<"test 59\n";
         }
-        cout<<plateau.afficheTerminal();
-        
+
     }
 
     // fin de communication

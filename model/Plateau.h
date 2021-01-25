@@ -5,13 +5,12 @@
 #include <vector> 
 #include <algorithm>
 #include <iostream>
+#include <map>
 
 #include "Case.h"
 #include "Piece.h"
-#include "Joueur.h"
 #include "Pion.h"
 #include "Dame.h"
-#include "Graph.h"
 
 using namespace std;
 
@@ -27,11 +26,9 @@ class  Plateau{
 
 
     public:
-    //Graph graph;
     Plateau();
     Plateau(Plateau *p);
     Plateau(Plateau const& p);
-    //void printMovePiece();
     std::vector<std::vector<int>>  getPlateau();
     int getNbPiecesB();
     int getNbPiecesN();
@@ -71,8 +68,13 @@ class  Plateau{
     bool verifDeplacement(Dame dame, Case cible,int nbDepla, std::map<Case,std::vector<std::vector<Case>>> cheminsPieces);
 
     string afficheTerminal();
-    void setPlateau(std::vector<std::vector<int>>pl);
-};
+
+
+    void setNbPiecesB(int nbPiecesB);
+
+    void setNbPiecesN(int nbPiecesN);
+
+
 
     bool operator== (Plateau opL , Plateau opR);
 

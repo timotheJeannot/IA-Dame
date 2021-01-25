@@ -47,25 +47,37 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
     {
         blanc = false;
     }
-
+    cout<<"test  1\n";
     bool testMatchNul = testPartieNulle(plateau,couleur,configs,first,compteurR2,compteurR3);
-
+    cout<<"test  2\n";
     std::map<Case,std::vector<std::vector<Case>>> cheminsPieces = plateau.cheminsPiecesJouable(blanc);
     if(cheminsPieces.size() == 0)
     {
         coupRep.propCoup = PERDU;
         return coupRep;
     }
-
+    cout<<"zertyu\n";
+    cout<<plateau.afficheTerminal();
+    cout<<"Les pieces jouable sont les suivantes pour le couleur "<<couleur<<": \n";
+    for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
+    {
+        Case casePiece = it->first;
+        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<" ";
+    }
+    cout<<"test  3\n";
     //cout<<"(server ) Les pieces jouable sont les suivantes : \n";
     /*for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
     {
         Case casePiece = it->first;
         //cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<")  ";
     }*/
+    cout<<"test  4\n";
     Case choixPiece(x,y);
-    std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(choixPiece);
+    cout<<"test  5\n";
+    auto it = cheminsPieces.find(choixPiece);
+    cout<<"test  6\n";
     std::vector<std::vector<Case>> listeChemins = it->second;
+    cout<<"test  7\n";
     if(it == cheminsPieces.end())
     {
         testErrCoup = true;
@@ -77,7 +89,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
             testErrCoup = true;
         }
     }
-    
+    cout<<"test  2\n";
     
     /*
     if (couleur == 1) {
@@ -189,8 +201,10 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
 
     if(!testErrCoup && !testMatchNul)
     {
+        cout<<"test  2\n";
         if(plateau.getPlateau()[x][y] == couleur)
         {
+            cout<<"test  2\n";
             p = Pion(x,y,blanc);
             configs.clear(); // on va bouger un pion , on ne retrouvera jamais la configuration du plateau actuel
             first = 0; // cette ligne est pas trop utile , j'aime pas que first contienne 1 ou -1 si configs est vide.
@@ -198,10 +212,11 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
         }
         if(plateau.getPlateau()[x][y] == 2*couleur)
         {
+            cout<<"test  2\n";
             d = Dame(x,y,blanc);
             isDame = true;
         }
-
+        cout<<"test  2\n";
         int nbDeplacement = 0;
         if(isDame)
         {
@@ -215,6 +230,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
             }
             else
             {
+                cout<<"test  2\n";
                 Plateau copiePlateau(&plateau);
                 int copieNbPieceAdv = 0;
                 if(blanc)
