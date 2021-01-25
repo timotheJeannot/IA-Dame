@@ -37,11 +37,10 @@ void CCase::deSelected(){
     m_color = m_selected;
 }
 
-CCase::CCase(gf::Vector2f position, float size, gf::Color4f color, CPiece *piece)
+CCase::CCase(gf::Vector2f position, float size, gf::Color4f color)
         : m_position(position)
         , m_size(size)
         , m_color(color)
-        , m_piece(piece)
 {
 }
 
@@ -49,5 +48,9 @@ void CCase::selectedGray() {
 
     m_selected = m_color;
     m_color = gf::Color::Gray();
+
+}
+
+void CCase::subrillance() {
 
 }

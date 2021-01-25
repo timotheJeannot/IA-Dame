@@ -51,7 +51,6 @@ public:
     const gf::Vector2i &getMCase() const;
     CPiece(const gf::Vector2f &mPosition, float mSize, const gf::Color4f &mColor,
            const gf::Vector2i &mCase);
-    void setMCase(const gf::Vector2i &mCase);
     //gf::Texture m_texture;
 
 };

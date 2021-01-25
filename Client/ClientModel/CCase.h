@@ -16,7 +16,7 @@
 class CCase {
 public:
     CPiece *m_piece;
-    CCase(gf::Vector2f position, float size, gf::Color4f color, CPiece *piece);
+    CCase(gf::Vector2f position, float size, gf::Color4f color);
     void render(gf::RenderTarget& target);
     const gf::Vector2f &getMPosition() const;
     bool isCaseSelect(gf::Vector2i vector2I) const;
@@ -24,6 +24,8 @@ public:
     void selected();
 
     void selectedGray();
+
+    void subrillance();
 
 private:
     gf::Vector2f m_position; // center of the square

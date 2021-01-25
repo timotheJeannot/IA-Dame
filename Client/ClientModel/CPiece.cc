@@ -63,10 +63,6 @@ const gf::Vector2i &CPiece::getMCase() const {
     return m_case;
 }
 
-void CPiece::setMCase(const gf::Vector2i &mCase) {
-    m_case = mCase;
-}
-
 CPiece::CPiece(const gf::Vector2f &mPosition, float mSize, const gf::Color4f &mColor,
                const gf::Vector2i &mCase) : m_position(mPosition), m_size(mSize), m_color(mColor),
                                             m_case(mCase) {

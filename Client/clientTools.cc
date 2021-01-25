@@ -46,7 +46,6 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, gf::Vector4i vector4I, int& er
     }
 
 
-    cout<<"Les pieces jouable sont les suivantes : \n";
     int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
     std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.find(c1);
     std::vector<std::vector<Case>> listeChemins = it->second;
@@ -108,16 +107,11 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, gf::Vector4i vector4I, int& er
         TCase tCase;
         tCase.c = listeChemins[ic].at(i).getColonne();
         tCase.l = listeChemins[ic].at(i).getLigne();
+        aCase=listeChemins[ic].at(i);
         deplacements.push_back(tCase);
         nbDeplacement++;
     }
     coup.deplacements = deplacements;
-    cout<<"deplacements : ";
-    for(int i =0; i < coup.deplacements.size(); i++)
-    {
-        cout<<to_string(coup.deplacements[i].c)<<" "<<to_string(coup.deplacements[i].l)<<" | |";
-    }
-    cout<<"\n";
     cont=retmodif;
     return coup;
 }

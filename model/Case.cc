@@ -21,13 +21,11 @@ Case::Case()
 {
 }
 
-int Case::getColonne()
-{
+int Case::getColonne() const {
     return colonne;
 }
 
-int Case::getLigne()
-{
+int Case::getLigne() const {
     return ligne;
 }
 

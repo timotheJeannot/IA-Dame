@@ -22,6 +22,7 @@
 #include "CPiece.h"
 #include "CCase.h"
 #include "../../model/Plateau.h"
+#include "Singleton.h"
 #include <utility>
 #include <iostream>
 
@@ -65,6 +66,8 @@ public:
     gf::LockedView mainView;
     gf::ScreenView screenView;
     gf::ViewContainer views;
+
+
 
     // method
     CBoard(gf::Vector2u SSize, const string& gName, int mycolor);
@@ -120,6 +123,8 @@ public:
     vector<Case> listMovePiece(gf::Vector2i pos, gf::Vector2i posToGo);
 
     bool doProcessEvent(gf::Event event, CPiece &vector1, int &index, bool &isSelectedPiece, gf::Vector4i &MovePiece);
+
+    void gloryCase(gf::Vector2i pos);
 };
 
 

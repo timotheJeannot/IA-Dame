@@ -65,20 +65,6 @@ int main(int argc, char ** argv)
     network.queue.wait(packet);
     assert(packet.getType() == PartieRep::type);
 
-    /*packet.is(req);
-    if(gf::SocketStatus::Data != socket.sendPacket(packet))
-    {
-        cerr<<"erreur lors de l'envoi de demande partie au serveur";
-        return -1;
-    }
-
-
-    if( gf::SocketStatus::Data != socket.recvPacket(packet))
-    {
-        cerr<<"erreur lors de la réception de confirmation de partie du serveur";
-        return -1;
-    }*/
-
     auto repPartie = packet.as<PartieRep>();
 
 
@@ -93,9 +79,7 @@ int main(int argc, char ** argv)
     cout<<"Vous jouez la couleur : "<<couleur<<" \n";
 
     /************** Début de partie ********************/
-    cout<<"test0";
     Plateau plateau;
-    cout<<"test1";
     std::string title = "Jeu de dame";
     title += argv[3];
     CBoard board(gf::Vector2i(gf::Zero), title,couleur);
@@ -108,7 +92,6 @@ int main(int argc, char ** argv)
     int cpt = 0;
     gf::Clock clock;
     int indexP, depl=0;
-    cout<<"boolean selection :"<<isSelected<<endl;
 
     gf::ActionContainer actions;
 
@@ -154,20 +137,9 @@ int main(int argc, char ** argv)
                     }
 
                     network.send(coup);
-                    //packet.is(coup);
+
                     network.queue.wait(packet);
-                    /*if (gf::SocketStatus::Data != socket.sendPacket(packet)) {
-                        cerr << "erreur lors de l'envoi de coup";
-                        return -1;
-                    }*/
 
-                    std::cout << "test 41\n";
-                    /*if (gf::SocketStatus::Data != socket.recvPacket(packet)) {
-                        cerr << "erreur lors de la réception de confirmation de partie du serveur";
-                        return -1;
-                    }*/
-
-                    std::cout << "test 42\n";
                     auto coupRep = packet.as<TCoupRep>();
                     if (coupRep.propCoup == GAGNE) {
                         cout << "victoire\n";
@@ -188,29 +160,12 @@ int main(int argc, char ** argv)
         }else {
 
             if(network.queue.poll(packet)) {
-                std::cout << "test 48\n";
-
-                /*if( gf::SocketStatus::Data != socket.recvPacket(packet))
-                {
-                    cerr<<"erreur lors de la réception de confirmation de partie du serveur1";
-                    return -1;
-                }*/
-                std::cout << "test 49\n";
                 auto coupAdv = packet.as<TCoupReq>();
-                std::cout << "test 50\n";
                 network.queue.wait(packet);
-                /*if (gf::SocketStatus::Data != socket.recvPacket(packet)) {
-                    cerr << "erreur lors de la réception de confirmation de partie du serveur2";
-                    return -1;
-                }*/
-                std::cout << "test 51\n";
                 auto coupAdvRep = packet.as<TCoupRep>();
-                std::cout << "test 52\n";
                 if (coupAdvRep.propCoup == CONT) {
                     if (coupAdvRep.validCoup == VALID) {
                         board.printMovePiece(coupAdv);
-                        //cout << "Etat du plateau :\n" << board.board.afficheTerminal();
-                        //board.printMovePiece(coupAdv);
                         myTurn = true;
                     }
                 } else {
@@ -225,7 +180,6 @@ int main(int argc, char ** argv)
                     }
                     break;
                 }
-                std::cout << "test 53\n" << "my_Turn = " << myTurn << endl;
             }
         }
 
