@@ -47,37 +47,30 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
     {
         blanc = false;
     }
-    cout<<"test  1\n";
+
     bool testMatchNul = testPartieNulle(plateau,couleur,configs,first,compteurR2,compteurR3);
-    cout<<"test  2\n";
+
     std::map<Case,std::vector<std::vector<Case>>> cheminsPieces = plateau.cheminsPiecesJouable(blanc);
     if(cheminsPieces.size() == 0)
     {
         coupRep.propCoup = PERDU;
         return coupRep;
     }
-    cout<<"zertyu\n";
-    cout<<plateau.afficheTerminal();
-    cout<<"Les pieces jouable sont les suivantes pour le couleur "<<couleur<<": \n";
+
+
+
     for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
     {
         Case casePiece = it->first;
-        cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<" ";
+
     }
-    cout<<"test  3\n";
-    //cout<<"(server ) Les pieces jouable sont les suivantes : \n";
-    /*for(std::map<Case,std::vector<std::vector<Case>>>::iterator it = cheminsPieces.begin() ; it != cheminsPieces.end() ; it++)
-    {
-        Case casePiece = it->first;
-        //cout<<"("<<to_string(casePiece.getColonne())<<","<<to_string(casePiece.getLigne())<<")  ";
-    }*/
-    cout<<"test  4\n";
+
     Case choixPiece(x,y);
-    cout<<"test  5\n";
+
     auto it = cheminsPieces.find(choixPiece);
-    cout<<"test  6\n";
+
     std::vector<std::vector<Case>> listeChemins = it->second;
-    cout<<"test  7\n";
+
     if(it == cheminsPieces.end())
     {
         testErrCoup = true;
@@ -89,122 +82,14 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
             testErrCoup = true;
         }
     }
-    cout<<"test  2\n";
-    
-    /*
-    if (couleur == 1) {
-        if(plateau.getPlateau()[x][y] >0)
-        {
-            usePieceAdv = true;
-        }
-    }
-    else {
-        if (plateau.getPlateau()[x][y] <0)
-        {
-            usePieceAdv = true;
-        }
-    }
 
-    if (!usePieceAdv)
-    {
-        if(plateau.getPlateau()[x][y] == -1)
-        {
-            p = Pion(x,y,false);
-        }
-        else if(plateau.getPlateau()[x][y] == 1)
-        {
-            p = Pion(x,y,true);
-        }
-        else if(plateau.getPlateau()[x][y] == 2)
-        {
-            d = Dame(x,y,true);
-            isDame = true;
-        }
-        else if(plateau.getPlateau()[x][y] == -2)
-        {
-            d = Dame(x,y,false);
-            isDame = true;
-        }
-
-        int size2 = deplacements.size();
-        if(isDame)
-        {
-            TCase cnext = deplacements[0];
-            int x2 = cnext.c;
-            int y2 = cnext.l;
-            Case cible(x2,y2);
-            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(d,cible);
-            d.setCase(cible);
-            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size2 != 1))
-            {
-                testErrCoup = true;
-            }
-            if(retModifDeplacement == 1)
-            {
-                nbPieces --;
-
-                for(int i = 1 ; i <size2; i++)
-                {
-                    cnext = deplacements[i];
-                    x2 = cnext.c;
-                    y2 = cnext.l;
-                    cible.setColonne(x2);
-                    cible.setLigne(y2);
-                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(d,cible);
-                    d.setCase(cible);
-                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
-                    {
-                        testErrCoup = true;
-                    }
-
-                }
-            }
-            nbPieces = nbPieces - size2 +1;
-        }
-        else
-        {
-            TCase cnext = deplacements[0];
-            int x2 = cnext.c;
-            int y2 =  cnext.l;
-            Case cible(x2,y2);
-            int retModifDeplacement = plateau.modifPlateauDeplacementNormal(p,cible);
-            p.setCase(cible);
-            if(retModifDeplacement == -1 || (retModifDeplacement == 0 && size2 != 1))
-            {
-                testErrCoup = true;
-            }
-            if(retModifDeplacement == 1)
-            {
-                nbPieces --;
-
-                for(int i = 1 ; i <size2; i++)
-                {
-                    cnext = deplacements[i];
-                    x2 = cnext.c;
-                    y2 = cnext.l;
-                    cible.setColonne(x2);
-                    cible.setLigne(y2);
-                    retModifDeplacement = plateau.modifPlateauDeplacementPrise(p,cible);
-                    p.setCase(cible);
-                    //cout<<"test de la mort numero 1 (server) : \\\\\\\\\\\\\\\\\\\\\\\\\\ \n";
-                    //cout<<plateau.afficheTerminal();
-                    if(retModifDeplacement == -1 || (retModifDeplacement == 0 && i < size2-1))
-                    {
-                        testErrCoup = true;
-                    }
-                }
-            }
-            nbPieces = nbPieces - size2 +1;
-        }
-        plateau.enleverPiecesRafle();
-    }*/
 
     if(!testErrCoup && !testMatchNul)
     {
-        cout<<"test  2\n";
+
         if(plateau.getPlateau()[x][y] == couleur)
         {
-            cout<<"test  2\n";
+
             p = Pion(x,y,blanc);
             configs.clear(); // on va bouger un pion , on ne retrouvera jamais la configuration du plateau actuel
             first = 0; // cette ligne est pas trop utile , j'aime pas que first contienne 1 ou -1 si configs est vide.
@@ -212,11 +97,11 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
         }
         if(plateau.getPlateau()[x][y] == 2*couleur)
         {
-            cout<<"test  2\n";
+
             d = Dame(x,y,blanc);
             isDame = true;
         }
-        cout<<"test  2\n";
+
         int nbDeplacement = 0;
         if(isDame)
         {
@@ -230,7 +115,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
             }
             else
             {
-                cout<<"test  2\n";
+
                 Plateau copiePlateau(&plateau);
                 int copieNbPieceAdv = 0;
                 if(blanc)

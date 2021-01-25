@@ -4,9 +4,19 @@
 // 0 pas de pièce , 1 pion blanc , 2 dame blanc , -1 pion noir , -2 dame noir
 Plateau::Plateau(){
     
-    for(int i =0 ; i< 10 ; i++)
-    {
-        plateau.push_back(std::vector<int>(10,0));  //std::vector<int>(10,0) = un tableau de taille 10 avec que des 0
+    for(int i =0 ; i< 10 ; i++) {
+        plateau.push_back(std::vector<int>(10, 0));  //std::vector<int>(10,0) = un tableau de taille 10 avec que des 0
+
+        for (int j = 0; j < 10; j++) {
+            plateau[i][j] = 0;
+        }
+
+
+        /*plateau[1][3]=-1;
+        plateau[1][5]=-1;
+        plateau[1][1]=-1;
+        plateau[0][6]=1;
+        */
 
         for (int j = 0; j < 4; j++) {
             if (i % 2 != 0 && j % 2 == 0) {
@@ -24,7 +34,7 @@ Plateau::Plateau(){
             }
         }
 
-    }   
+    }
     nbPiecesB = 20;
     nbPiecesN = 20;
 }

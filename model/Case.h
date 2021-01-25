@@ -13,8 +13,8 @@ public :
     Case(Case *ca);
     Case();
     //~Case();
-    int getColonne();
-    int getLigne();
+    int getColonne() const;
+    int getLigne() const;
     void setColonne(int x);
     void setLigne(int y);
 
