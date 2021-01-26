@@ -29,7 +29,7 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             int y2Adv = cnextAdv.l;
             dAdv = Dame(xAdv,yAdv,col);
             Case cibleAdv(x2Adv,y2Adv);
-            board.modifPlateauDeplacementNormal(dAdv,cibleAdv); // ce n'est pas grave si on ne différencie pas les deux types de déplacements, car le serveur à valider le coup
+            board.modifPlateauDeplacementNormal(dAdv, cibleAdv); // ce n'est pas grave si on ne différencie pas les deux types de déplacements, car le serveur à valider le coup
             dAdv.setCase(cibleAdv);
 
 
@@ -57,7 +57,7 @@ void CBoard::printMovePiece(const TCoupReq& req) {
             int y2Adv = cnextAdv.l;
             pAdv = Pion(xAdv,yAdv,col);
             Case cibleAdv(x2Adv,y2Adv);
-            board.modifPlateauDeplacementNormal(pAdv,cibleAdv); // ce n'est pas grave si on ne différencies pas les deux types de déplacements, car le serveur à valider le coup
+            board.modifPlateauDeplacementNormal(pAdv, cibleAdv); // ce n'est pas grave si on ne différencies pas les deux types de déplacements, car le serveur à valider le coup
             pAdv.setCase(cibleAdv);
 
 
@@ -164,9 +164,9 @@ CBoard::CBoard(gf::Vector2u SSize, const string& gName, gf::Vector2f begin, int 
         }
 
 CBoard::CBoard(gf::Vector2u SSize, const string& gName, int mycolor): window(gName, SSize),
-                                                         renderer(window),
-                                                         myColor(mycolor),
-                                                         board(){
+                                                                      renderer(window),
+                                                                      myColor(mycolor),
+                                                                      board(){
 
     initBoard();
 

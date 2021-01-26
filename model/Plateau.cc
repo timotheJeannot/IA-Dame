@@ -7,16 +7,6 @@ Plateau::Plateau(){
     for(int i =0 ; i< 10 ; i++) {
         plateau.push_back(std::vector<int>(10, 0));  //std::vector<int>(10,0) = un tableau de taille 10 avec que des 0
 
-        for (int j = 0; j < 10; j++) {
-            plateau[i][j] = 0;
-        }
-
-
-        /*plateau[1][3]=-1;
-        plateau[1][5]=-1;
-        plateau[1][1]=-1;
-        plateau[0][6]=1;
-        */
 
         for (int j = 0; j < 4; j++) {
             if (i % 2 != 0 && j % 2 == 0) {
@@ -48,9 +38,6 @@ Plateau::Plateau(Plateau *p)
 
 Plateau::Plateau(Plateau const& p)
 {
-    /*plateau=p.getPlateau();
-    nbPiecesN = p.getNbPiecesN();
-    nbPiecesB = p.getNbPiecesB();*/
     plateau = p.plateau;
     nbPiecesB = p.nbPiecesB;
     nbPiecesN = p.nbPiecesN;
@@ -75,33 +62,6 @@ int Plateau::getNbPiecesN()
 
 int Plateau::modifPlateauDeplacementNormal(Pion pion, Case cible)
 {
-    /*std::vector<Case> casesDispo = pion.deplacementPossible(this->getPlateau());
-
-    if (std::find(casesDispo.begin(), casesDispo.end(), cible) == casesDispo.end())
-    {
-        return -1;
-    }*/
-
-    /*std::vector<std::vector<Case>> casesDispo = PiecesJouable(pion.getBlanc());
-    int i =0;
-    while(casesDispo[i][0] != pion.getCase() && i < casesDispo.size())
-    {
-        i++;
-    }
-
-    if(i== casesDispo.size()) // la piece ne peut pas jouer
-    {
-        return -1;
-    }
-    if(pion.getCase() == cible)
-    {
-        return -1;
-    }
-
-    if (std::find(casesDispo[i].begin(), casesDispo[i].end(), cible) == casesDispo[i].end()) // la piece ne peut pas jouer sur la cible indiquer
-    {
-        return -1;
-    }*/
 
 
     //Case casePion = pion.getCase();
@@ -946,7 +906,7 @@ string Plateau::afficheTerminal()
                 ret = ret + "--";
             }
             ret = ret + "  |  ";
-            //ret = ret + std::to_string(plateau[j][i])+"  |  ";
+            //ret = ret + std::to_string(board[j][i])+"  |  ";
         }
         ret = ret + "\n---------------------------------------------------------------------\n";
     }

@@ -22,12 +22,10 @@
 #include "CPiece.h"
 #include "CCase.h"
 #include "../../model/Plateau.h"
-#include "Singleton.h"
 #include <utility>
 #include <iostream>
 
 
-using namespace std;
 
 struct cmpByVector2i {
     bool operator()(const gf::Vector2i& a, const gf::Vector2i& b) const {
@@ -126,11 +124,5 @@ public:
 
     void gloryCase(gf::Vector2i pos);
 };
-
-
-
-
-
-
 
 #endif //TEST_GF_CBOARD_H

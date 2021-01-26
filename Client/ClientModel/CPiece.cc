@@ -10,7 +10,11 @@ void CPiece::render(gf::RenderTarget &target) {
     gf::CircleShape shape;
     shape.setRadius(m_size);
     shape.setPosition(m_position);
-    shape.setOutlineColor(gf::Color::Black);
+    if(m_color == gf::Color::Black){
+        shape.setOutlineColor(gf::Color::Gray());
+    }else{
+        shape.setOutlineColor(gf::Color::Black);
+    }
     shape.setOutlineThickness(1);
     shape.setColor(m_color);
     shape.setAnchor(gf::Anchor::Center);
@@ -20,6 +24,11 @@ void CPiece::render(gf::RenderTarget &target) {
         shape2.setRadius(m_size);
         gf::Vector2f twoposition(m_position.x,m_position.y-5);
         shape2.setPosition(twoposition);
+        if(m_color == gf::Color::Black){
+            shape2.setOutlineColor(gf::Color::Gray());
+        }else{
+            shape2.setOutlineColor(gf::Color::Black);
+        }
         shape2.setOutlineColor(gf::Color::Black);
         shape2.setOutlineThickness(1);
         shape2.setColor(m_color);
