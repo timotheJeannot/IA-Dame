@@ -91,7 +91,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
         {
 
             p = Pion(x,y,blanc);
-            configs.clear(); // on va bouger un pion , on ne retrouvera jamais la configuration du plateau actuel
+            configs.clear(); // on va bouger un pion , on ne retrouvera jamais la configuration du board actuel
             first = 0; // cette ligne est pas trop utile , j'aime pas que first contienne 1 ou -1 si configs est vide.
             compteurR2 = 1 ; // on remet à 1 le compteur pour la 2ieme règle de match nul
         }
@@ -133,7 +133,7 @@ TCoupRep buildRepCoup(Plateau& plateau, TCoupReq cr, int couleur,std::vector<Pla
                     first = 0;
                     compteurR2 = 1 ; // on remet à 1 le compteur pour la 2ieme règle de match nul
                 }
-                else // la dame s'est juste déplacé, il faut sauvegarder l'état du plateau d'avant le déplacement et qui a jouer en premier si c'est le premier coup et augmenter le compteur de la 2ieme règle du match nul (voir serverTools.h pour la règle)
+                else // la dame s'est juste déplacé, il faut sauvegarder l'état du board d'avant le déplacement et qui a jouer en premier si c'est le premier coup et augmenter le compteur de la 2ieme règle du match nul (voir serverTools.h pour la règle)
                 {
                     configs.push_back(copiePlateau);
                     if(first ==0) // équivalent à configs.size() == 1

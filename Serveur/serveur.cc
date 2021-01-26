@@ -81,18 +81,15 @@ int main(int argc, char ** argv)
             Plateau plateau;
 
             // --------------------------------------------------------------------------------------
-            //configuration de plateau afin de tester les cas de match nul
+            //configuration de board afin de tester les cas de match nul
             // les cas de match nul sont décris dans serverTools.h et viennent de wikiédia
 
 
-            std::vector<std::vector <int>> test {{-1,0,0,0,0,0,0,0,0,1},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,-2,-2,-2,2,2,2,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
-            plateau.setPlateau(test);
-            // --------------------------------------------------------------------------------------
-            cout<<plateau.afficheTerminal();
+
 
             
             std::vector<Plateau> configs ; // d'après wikipédia , pour la partie nulle : quand la même position des pièces se produit pour la troisième fois, et que c'est au même joueur de jouer 
-                                           // on va stocker les états du plateau successif lors d'un déplacement d'une dame sans prise
+                                           // on va stocker les états du board successif lors d'un déplacement d'une dame sans prise
                                            // pour les autres déplacements on va clear cette liste (impossible de se retrouver dans la config d'avant le déplacement).
             
             int first =0;                  // cet entier vaudra 1 ou -1 pour indiquer qui est le premier à avoir bouger une dame, pour qu'on puisse s'y retroiver dans la liste du dessus
@@ -101,7 +98,7 @@ int main(int argc, char ** argv)
             int compteurR3 = 0;            // compteur pour la troisième règle de nulle (décrit dans serverTools.h)
             int firstR3 = 0 ;              // permet de savoir quel était le premier joueur (blanc ou noir) lors du début du comptage des 16 coups pour chaque joueur
 
-            //cout<<plateau.afficheTerminal();
+            //cout<<board.afficheTerminal();
             /****** Boucle de jeu ********/
             while(true)
             {
@@ -110,7 +107,7 @@ int main(int argc, char ** argv)
                     compteurR3 ++;
                 }
 
-                //cout<<"Attention : nbPieceB = "<<to_string(plateau.getNbPiecesB())<<"  nbPieceN = "<<to_string(plateau.getNbPiecesN())<<"\n";
+                //cout<<"Attention : nbPieceB = "<<to_string(board.getNbPiecesB())<<"  nbPieceN = "<<to_string(board.getNbPiecesN())<<"\n";
                 // le joueur 1 est blanc
                 if(req1.coulPion == 1)
                 {
@@ -318,7 +315,7 @@ int main(int argc, char ** argv)
                     }
 
                     coupRep = buildRepCoup(plateau, coupC1, -1,configs,first, compteurR2,compteurR3);
-                    //cout<<plateau.afficheTerminal();
+                    //cout<<board.afficheTerminal();
 
                     packetC1.is(coupRep);
 

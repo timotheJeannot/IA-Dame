@@ -198,33 +198,7 @@ int Plateau::modifPlateauDeplacementPrise(Pion pion, Case cible)
 
 int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
 {
-    /*std::vector<Case> casesDispo = dame.deplacementPossible(this->getPlateau());
 
-    if (std::find(casesDispo.begin(), casesDispo.end(), cible) == casesDispo.end())
-    {
-        return -1;
-    }*/
-
-    /*std::vector<std::vector<Case>> casesDispo = PiecesJouable(dame.getBlanc());
-    int i =0;
-    while(casesDispo[i][0] != dame.getCase() && i < casesDispo.size())
-    {
-        i++;
-    }
-
-    if(i== casesDispo.size()) // la piece ne peut pas jouer
-    {
-        return -1;
-    }
-    if(dame.getCase() == cible)
-    {
-        return -1;
-    }
-
-    if (std::find(casesDispo[i].begin(), casesDispo[i].end(), cible) == casesDispo[i].end()) // la piece ne peut pas jouer sur la cible indiquer
-    {
-        return -1;
-    }*/
 
     int x = dame.getCase().getColonne();
     int y = dame.getCase().getLigne();
@@ -245,7 +219,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
                 if(plateau[x+i][y+i] == -1 || plateau[x+i][y+i] == -2)
                 {
                     nbPiecesN--;
-                    plateau[x+i][y+i] = 3;
+                    plateau[x+i][y+i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
                     {
@@ -263,7 +237,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
                 if(plateau[x+i][y-i] == -1 || plateau[x+i][y-i] == -2)
                 {
                     nbPiecesN--;
-                    plateau[x+i][y-i] = 3;
+                    plateau[x+i][y-i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
                     {
@@ -281,7 +255,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
                 if(plateau[x-i][y+i] == -1 || plateau[x-i][y+i] == -2)
                 {
                     nbPiecesN--;
-                    plateau[x-i][y+i] = 3;
+                    plateau[x-i][y+i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
                     {
@@ -299,7 +273,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
                 if(plateau[x-i][y-i] == -1 || plateau[x-i][y-i] == -2)
                 {
                     nbPiecesN--;
-                    plateau[x-i][y-i] = 3;
+                    plateau[x-i][y-i] = -3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
                     {
@@ -323,7 +297,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
                 if(plateau[x+i][y+i] == 1 || plateau[x+i][y+i] == 2)
                 {
                     nbPiecesB--;
-                    plateau[x+i][y+i] = -3;
+                    plateau[x+i][y+i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
                     {
@@ -341,7 +315,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
                 if(plateau[x+i][y-i] == 1 || plateau[x+i][y-i] == 2)
                 {
                     nbPiecesB--;
-                    plateau[x+i][y-i] = -3;
+                    plateau[x+i][y-i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
                     {
@@ -359,7 +333,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
                 if(plateau[x-i][y+i] == 1 || plateau[x-i][y+i] == 2)
                 {
                     nbPiecesB--;
-                    plateau[x-i][y+i] = -3;
+                    plateau[x-i][y+i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
                     {
@@ -377,7 +351,7 @@ int Plateau::modifPlateauDeplacementNormal(Dame dame, Case cible)
                 if(plateau[x-i][y-i] == 1 || plateau[x-i][y-i] == 2)
                 {
                     nbPiecesB--;
-                    plateau[x-i][y-i] = -3;
+                    plateau[x-i][y-i] = 3;
                     std::vector<Case> testPrise = dame.deplacementPrisePossible(this->getPlateau());
                     if(testPrise.size() != 0)
                     {

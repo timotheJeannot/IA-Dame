@@ -29,7 +29,6 @@ void CPiece::render(gf::RenderTarget &target) {
         }else{
             shape2.setOutlineColor(gf::Color::Black);
         }
-        shape2.setOutlineColor(gf::Color::Black);
         shape2.setOutlineThickness(1);
         shape2.setColor(m_color);
         shape2.setAnchor(gf::Anchor::Center);
