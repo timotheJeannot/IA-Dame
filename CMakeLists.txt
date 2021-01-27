@@ -66,23 +66,18 @@ add_executable(serveur
 
 
 target_link_libraries(clientIA
-	gf0
-	gfnet0
-	gfcore0
+		gf::net
 )
 
 target_link_libraries(clientIA_V1
-	gf0
-	gfnet0
-	gfcore0
+
+		gf::net
 )
 
 
 
 target_link_libraries(serveur
-	gf0
-	gfnet0
-	gfcore0
+		gf::net
 )
 
 
