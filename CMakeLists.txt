@@ -25,8 +25,8 @@ add_executable(clientIA
 		model/Plateau.cc
 		IA/heuristique.cc
 		IA/MinMax.cc
-        ClientIA/clientIA.cc
-        ClientIA/clientTools.cc ClientIA/clientTools.h)
+		Client/clientIA.cc
+		Client/clientTools.cc Client/clientTools.h)
 		
 add_executable(clientIA_V1
 		model/Case.cc
@@ -36,8 +36,8 @@ add_executable(clientIA_V1
 		model/Plateau.cc
 		IA/heuristique.cc
 		IA/MinMax.cc
-        ClientIA/clientIA_V1.cc
-        ClientIA/clientTools.cc ClientIA/clientTools.h)
+		Client/clientIA_V1.cc
+		Client/clientTools.cc Client/clientTools.h)
 		
 
 
