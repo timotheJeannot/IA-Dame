@@ -117,3 +117,137 @@ TCoupReq buildCoup(Plateau& plateau, int couleur, gf::Vector4i vector4I, int& er
     cont=retmodif;
     return coup;
 }
+
+TCoupReq buildCoupHeur1(Plateau& plateau, int couleur, tree& node, int& choice, double vNbPieceScore, double vPosPieceScore)
+{
+    TCoupReq coup ;
+    coup.idRequest = COUP;
+    coup.estBloque = false;
+    TPion pion ;
+    pion.coulPion = couleur;
+    pion.typePion = PION;
+    coup.pion = pion;
+    coup.propCoup = CONT ;
+    TCase cnext;
+    std::vector<TCase> deplacements;
+    bool blanc =true;
+    if(couleur == -1)
+    {
+        blanc = false;
+    }
+
+    //minMax(node,3,couleur);
+    /*int alpha = 2147483648;
+    int beta = 2147483647;*/
+    double alpha = -2147483648;
+    double beta = 2147483647;
+    alphaBeta(node,3,couleur,alpha,beta,vNbPieceScore,vPosPieceScore);
+    //cout<<"node.p = "<<node.p.afficheTerminal()<<endl;
+    std::vector<Case> listeCoups;
+    for(int i =0 ; i<node.childs.size(); i++)
+    {
+        if(node.value == node.childs[i].value)
+        {
+            choice = i;
+            listeCoups = node.childs[i].listeCoups;
+        }
+        /*cout<<"i = "<<i<<endl;
+        cout<<"node.childs[i].value = "<<node.childs[i].value<<endl;
+        cout<<"node.value = "<<node.value<<endl;*/
+    }
+    Case cible = listeCoups[0];
+    //cout<<"Case choisie : ("<<to_string(cible.getColonne())<<","<<to_string(cible.getLigne())<<")  \n";
+
+
+    TCase c;
+    c.l = cible.getLigne();
+    c.c = cible.getColonne();
+
+    coup.posPionAv = c;
+
+    Pion p;
+    Dame d;
+    bool isDame = false;
+
+    if(plateau.getPlateau()[c.c][c.l] == couleur)
+    {
+        p = Pion(c.c,c.l,blanc);
+    }
+    if(plateau.getPlateau()[c.c][c.l] == 2*couleur)
+    {
+        d = Dame(c.c,c.l,blanc);
+        isDame = true;
+    }
+
+    int nbDeplacement = 0; // représente le nombre de déplacement effectué durant le coup
+
+    if(isDame)
+    {
+
+        cible = listeCoups[1];
+        cnext.c = cible.getColonne();
+        cnext.l = cible.getLigne();
+
+        int retModif = 0;
+
+        retModif= plateau.modifPlateauDeplacementNormal(d, cible);
+        deplacements.push_back(cnext);
+        d.setCase(cible);
+        nbDeplacement++;
+
+        while(retModif == 1)
+        {
+            //cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
+            //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+
+            cible = listeCoups[nbDeplacement+1];
+
+            retModif= plateau.modifPlateauDeplacementPrise(d, cible);
+            cnext.c = cible.getColonne();
+            cnext.l = cible.getLigne();
+            deplacements.push_back(cnext);
+            d.setCase(cible);
+            nbDeplacement++;
+        }
+
+        plateau.enleverPiecesRafle();
+    }
+    else
+    {
+        cible = listeCoups[1];
+
+        cnext.c = cible.getColonne();
+        cnext.l = cible.getLigne();
+
+        int retModif = 0;
+
+        retModif= plateau.modifPlateauDeplacementNormal(p, cible);
+        deplacements.push_back(cnext);
+        p.setCase(cible);
+        nbDeplacement++;
+        while(retModif == 1)
+        {
+            //cout<<"Vous avez fait une prise et vous devez encore en faire une\n";
+            //cout<<"Etat du plateau :\n"<<plateau.afficheTerminal();
+
+            cible = listeCoups[nbDeplacement+1];
+
+            retModif= plateau.modifPlateauDeplacementPrise(p, cible);
+            cnext.c = cible.getColonne();
+            cnext.l = cible.getLigne();
+            deplacements.push_back(cnext);
+            p.setCase(cible);
+            nbDeplacement++;
+        }
+
+        plateau.enleverPiecesRafle();
+    }
+    coup.deplacements = deplacements;
+    /*cout<<"deplacements : ";
+    for(int i =0; i < coup.deplacements.size(); i++)
+    {
+        cout<<to_string(coup.deplacements[i].c)<<" "<<to_string(coup.deplacements[i].l)<<" | |";
+    }
+    cout<<"\n";*/
+    return coup;
+}

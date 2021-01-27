@@ -98,7 +98,7 @@ int main(int argc, char ** argv)
             int compteurR3 = 0;            // compteur pour la troisième règle de nulle (décrit dans serverTools.h)
             int firstR3 = 0 ;              // permet de savoir quel était le premier joueur (blanc ou noir) lors du début du comptage des 16 coups pour chaque joueur
 
-            //cout<<board.afficheTerminal();
+            //cout<<plateau.afficheTerminal();
             /****** Boucle de jeu ********/
             while(true)
             {
@@ -107,7 +107,7 @@ int main(int argc, char ** argv)
                     compteurR3 ++;
                 }
 
-                //cout<<"Attention : nbPieceB = "<<to_string(board.getNbPiecesB())<<"  nbPieceN = "<<to_string(board.getNbPiecesN())<<"\n";
+                //cout<<"Attention : nbPieceB = "<<to_string(plateau.getNbPiecesB())<<"  nbPieceN = "<<to_string(plateau.getNbPiecesN())<<"\n";
                 // le joueur 1 est blanc
                 if(req1.coulPion == 1)
                 {

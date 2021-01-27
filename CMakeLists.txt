@@ -4,15 +4,6 @@ project(TEST_GF
 )
 find_package(gf REQUIRED)
 #find_package(gfnet0 REQUIRED)
-#add_executable(test_gf
-#		model/CBoard.cc
-#		model/Vector2i.cc
-#		model/Piece.cc
-#		model/Pion.cc
-#		model/Dame.cc
-#		model/Plateau.cc
-  # and the rest of your sources
-#)
 
 
 
@@ -31,6 +22,28 @@ add_executable(client
 		model/Plateau.cc
 		Client/clientTools.cc Client/clientTools.h
 		Client/ClientNetwork.cc Client/ClientNetwork.h)
+
+add_executable(clientIA
+		model/Case.cc
+		model/Piece.cc
+		model/Pion.cc
+		model/Dame.cc
+		model/Plateau.cc
+		IA/heuristique.cc
+		IA/MinMax.cc
+		Client/clientIA.cc
+		Client/clientTools.cc Client/clientTools.h)
+
+add_executable(clientIA_V1
+		model/Case.cc
+		model/Piece.cc
+		model/Pion.cc
+		model/Dame.cc
+		model/Plateau.cc
+		IA/heuristique.cc
+		IA/MinMax.cc
+		Client/clientIA_V1.cc
+		Client/clientTools.cc Client/clientTools.h)
 
 add_executable(serveur
 		model/Piece.cc
@@ -60,10 +73,22 @@ target_link_libraries(client
 
 )
 
+target_link_libraries(clientIA
+		gf::net
+		)
+
+target_link_libraries(clientIA_V1
+
+		gf::net
+)
+
+
+
 target_link_libraries(serveur
 	#gf0
 	#gfnet0
 	#gfcore0
+		gf::net
 		gf::net
 )
 
