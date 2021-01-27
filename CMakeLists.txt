@@ -19,6 +19,8 @@ add_executable(client
 		model/Case.cc
 		model/Pion.cc
 		model/Dame.cc
+		IA/heuristique.cc
+		IA/MinMax.cc
 		model/Plateau.cc
 		Client/clientTools.cc Client/clientTools.h
 		Client/ClientNetwork.cc Client/ClientNetwork.h)
