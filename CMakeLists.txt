@@ -16,17 +16,6 @@ find_package(gf REQUIRED)
 
 
 
-add_executable(client
-		model/Graph.cc
-		model/Case.cc
-		model/Piece.cc
-		model/Pion.cc
-		model/Dame.cc
-		model/Plateau.cc
-		IA/heuristique.cc
-		IA/MinMax.cc
-        ClientIA/client.cc
-        ClientIA/clientTools.cc ClientIA/clientTools.h model/Graph.cc)
 
 add_executable(clientIA
 		model/Case.cc
@@ -73,11 +62,8 @@ add_executable(serveur
 
 #)
 
-target_link_libraries(client
-	gf0
-	gfnet0
-	gfcore0
-)
+
+
 
 target_link_libraries(clientIA
 	gf0
